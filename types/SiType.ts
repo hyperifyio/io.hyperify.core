@@ -20,7 +20,7 @@
  * You can do this by adding the following line at the top of your file:
  *
  * ```typescript
- * import { SiType } from "./fi/hg/core/types/SiType";
+ * import { SiType } from "./io/hyperify/types/SiType";
  * ```
  *
  * Once you have imported the SiType enumeration, you can use the constants it
