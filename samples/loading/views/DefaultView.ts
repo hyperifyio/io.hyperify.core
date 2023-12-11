@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Puolustusvoimat <info@pvarki.fi>. All rights reserved.
+// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { createViewDTO, ViewDTO } from "../../../dto/ViewDTO";
 import { StyleEntity } from "../../../entities/StyleEntity";
