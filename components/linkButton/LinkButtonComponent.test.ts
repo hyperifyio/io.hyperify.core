@@ -1,4 +1,4 @@
-import { HyperComponent } from "../../dto/types/HyperComponent";
+import { HyperComponent } from "../../entities/types/HyperComponent";
 import {createLinkButtonComponent, LinkButtonComponent, LINK_BUTTON_COMPONENT_NAME} from "./LinkButtonComponent";
 
 describe('createLinkButtonComponent', () => {

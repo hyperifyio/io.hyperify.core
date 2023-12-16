@@ -5,7 +5,7 @@ import { LogService } from "../../LogService";
 import {
     createViewDTO,
     ViewDTO,
-} from "../../dto/ViewDTO";
+} from "../../entities/view/ViewDTO";
 
 const LOG = LogService.createLogger( 'findHyperViewDTO' );
 

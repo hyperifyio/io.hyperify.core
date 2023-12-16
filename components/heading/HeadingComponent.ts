@@ -1,7 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { createComponentDTO, ComponentDTO } from "../../dto/ComponentDTO";
-import { HyperComponent } from "../../dto/types/HyperComponent";
+import { createComponentDTO, ComponentDTO } from "../../entities/component/ComponentDTO";
+import { HyperComponent } from "../../entities/types/HyperComponent";
 import { ComponentFactory } from "../../services/ComponentFactory";
 
 export const HEADING_COMPONENT_NAME: string = 'HeadingComponent';

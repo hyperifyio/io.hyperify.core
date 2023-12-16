@@ -1,6 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { ComponentEntity, ComponentEntityContent } from "../../../entities/ComponentEntity";
+import { ComponentEntity, ComponentEntityContent } from "../../../entities/component/ComponentEntity";
 import { TableColumnEntity } from "../column/TableColumnEntity";
 import { TABLE_ROW_COMPONENT_NAME } from "./TableRowComponent";
 

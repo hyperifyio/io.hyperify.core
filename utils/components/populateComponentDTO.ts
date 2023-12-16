@@ -1,8 +1,8 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { find } from "../../functions/find";
-import { createComponentDTO, ComponentContent, ComponentDTO } from "../../dto/ComponentDTO";
-import { isHyperComponent } from "../../dto/types/HyperComponent";
+import { createComponentDTO, ComponentContent, ComponentDTO } from "../../entities/component/ComponentDTO";
+import { isHyperComponent } from "../../entities/types/HyperComponent";
 import { mergeComponentContent } from "./mergeComponentContent";
 
 export function populateComponentDTO (

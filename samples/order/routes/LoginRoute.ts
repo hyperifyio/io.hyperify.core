@@ -1,6 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { createRouteDTO, RouteDTO } from "../../../dto/RouteDTO";
+import { createRouteDTO, RouteDTO } from "../../../entities/route/RouteDTO";
 import { LOGIN_VIEW_NAME } from "../views/LoginView";
 
 export type LoginRoute = RouteDTO;

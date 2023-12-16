@@ -1,6 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { ComponentEntity } from "../../entities/ComponentEntity";
+import { ComponentEntity } from "../../entities/component/ComponentEntity";
 import { DIV_COMPONENT_NAME } from "./DivComponent";
 
 export class DivEntity extends ComponentEntity {

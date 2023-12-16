@@ -1,10 +1,10 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { ComponentDTO, createComponentDTO } from "../../dto/ComponentDTO";
-import { BorderStyle } from "../../dto/types/BorderStyle";
-import { HyperComponent } from "../../dto/types/HyperComponent";
-import { BorderEntity } from "../../entities/BorderEntity";
-import { StyleEntity } from "../../entities/StyleEntity";
+import { ComponentDTO, createComponentDTO } from "../../entities/component/ComponentDTO";
+import { BorderStyle } from "../../entities/types/BorderStyle";
+import { HyperComponent } from "../../entities/types/HyperComponent";
+import { BorderEntity } from "../../entities/border/BorderEntity";
+import { StyleEntity } from "../../entities/style/StyleEntity";
 import { ComponentFactory } from "../../services/ComponentFactory";
 
 export const LINK_BUTTON_COMPONENT_NAME: string = 'LinkButtonComponent';

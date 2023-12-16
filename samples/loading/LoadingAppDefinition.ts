@@ -1,6 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { createAppDTO, AppDTO } from "../../dto/AppDTO";
+import { createAppDTO, AppDTO } from "../../entities/app/AppDTO";
 import { createAnyRoute } from "./routes/AnyRoute";
 import { createLoadingRoute } from "./routes/LoadingRoute";
 import { createTextComponent } from "./components/TextComponent";

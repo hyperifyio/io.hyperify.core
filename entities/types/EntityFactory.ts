@@ -1,7 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ReadonlyJsonObject } from "../../Json";
-import { DTO } from "../../dto/types/DTO";
+import { DTO } from "./DTO";
 import { BaseEntity } from "./BaseEntity";
 import { Entity } from "./Entity";
 import {
@@ -9,7 +9,7 @@ import {
     EntityPropertyType,
 } from "./EntityProperty";
 import { EntityType } from "./EntityType";
-import { IsDTO } from "./IsDTO";
+import { IsDTOTestFunction } from "./IsDTOTestFunction";
 
 export type ArrayMapMethod<
     I = any,
@@ -30,6 +30,10 @@ export type SetterMethod<
 
 export interface TypeCheckFn {
     (value: unknown): boolean;
+}
+
+export interface TypeExplainFn {
+    (value: unknown): string;
 }
 
 export interface PropertyTypeCheckFn {
@@ -79,12 +83,13 @@ export interface EntityFactory<
     /**
      * Creates a test function for DTO object.
      */
-    createIsDTO () : IsDTO<D>;
+    createIsDTO () : IsDTOTestFunction<D>;
 
     /**
      * Creates an entity constructor.
      */
     createEntityType (
+        name : string,
         opts : { immutable ?: boolean }
     ) : EntityType<D, T>;
 

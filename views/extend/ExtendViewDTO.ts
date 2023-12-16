@@ -1,6 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { createViewDTO, ViewDTO } from "../../dto/ViewDTO";
+import { createViewDTO, ViewDTO } from "../../entities/view/ViewDTO";
 import { ExtendView } from "./ExtendView";
 
 export const EXTEND_VIEW_NAME: string = 'ExtendView';

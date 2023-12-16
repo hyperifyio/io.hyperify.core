@@ -25,26 +25,6 @@ export function isString (value: unknown): value is string {
  * @__PURE__
  * @nosideeffects
  */
-export function isStringOrFalse (value: unknown): value is string | false {
-    return isString(value) || (value === false);
-}
-
-/**
- *
- * @param value
- * @__PURE__
- * @nosideeffects
- */
-export function isNonEmptyString (value: unknown): value is string {
-    return _isString(value) && !!value;
-}
-
-/**
- *
- * @param value
- * @__PURE__
- * @nosideeffects
- */
 export function explainString (value: any): string {
     return isString(value) ? explainOk() : explainNot('string');
 }
@@ -55,8 +35,49 @@ export function explainString (value: any): string {
  * @__PURE__
  * @nosideeffects
  */
+export function isStringOrFalse (value: unknown): value is string | false {
+    return isString(value) || (value === false);
+}
+
+/**
+ *
+ * @param value
+ * @__PURE__
+ * @nosideeffects
+ */
 export function explainStringOrFalse (value: any): string {
     return isStringOrFalse(value) ? explainOk() : explainNot(explainOr(['string', 'false']));
+}
+
+
+/**
+ *
+ * @param value
+ * @__PURE__
+ * @nosideeffects
+ */
+export function isStringOrNumber (value: unknown): value is string | number {
+    return isString(value) || isNumber(value);
+}
+
+/**
+ *
+ * @param value
+ * @__PURE__
+ * @nosideeffects
+ */
+export function explainStringOrNumber (value: unknown): string {
+    return isStringOrNumber(value) ? explainOk() : explainNot(explainOr(['string', 'number']));
+}
+
+/**
+ *
+ * @param value
+ * @__PURE__
+ * @nosideeffects
+ */
+export function isNonEmptyString (value: unknown): value is string {
+    return _isString(value) && !!value;
 }
 
 /**

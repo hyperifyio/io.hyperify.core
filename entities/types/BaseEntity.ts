@@ -5,7 +5,7 @@ import {
     isReadonlyJsonAny,
     ReadonlyJsonObject,
 } from "../../Json";
-import { DTO } from "../../dto/types/DTO";
+import { DTO } from "./DTO";
 import { Entity } from "./Entity";
 import { EntityType } from "./EntityType";
 

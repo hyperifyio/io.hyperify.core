@@ -1,5 +1,5 @@
 import { findViewDTO } from "./findViewDTO";
-import { createViewDTO } from '../../dto/ViewDTO';
+import { createViewDTO } from '../../entities/view/ViewDTO';
 
 describe('findViewDTO', () => {
   const hyperView1 = createViewDTO('View1', undefined, undefined, undefined, undefined, undefined, undefined, undefined);

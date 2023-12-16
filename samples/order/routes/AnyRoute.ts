@@ -1,6 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { createRouteDTO, RouteDTO } from "../../../dto/RouteDTO";
+import { createRouteDTO, RouteDTO } from "../../../entities/route/RouteDTO";
 
 export const ANY_ROUTE_NAME : string = 'AnyRoute';
 

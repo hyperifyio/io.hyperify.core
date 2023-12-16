@@ -1,6 +1,6 @@
 import { findAndPopulateViewDTO } from "./findAndPopulateViewDTO";
 import { isArrayOf } from "../../types/Array";
-import { createViewDTO } from '../../dto/ViewDTO';
+import { createViewDTO } from '../../entities/view/ViewDTO';
 
 describe('findAndPopulateViewDTO', () => {
 

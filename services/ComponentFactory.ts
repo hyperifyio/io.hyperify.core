@@ -1,6 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { ComponentDTO } from "../dto/ComponentDTO";
+import { ComponentDTO } from "../entities/component/ComponentDTO";
 
 /**
  * Type of Component DTO factory function.

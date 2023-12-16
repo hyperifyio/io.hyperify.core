@@ -1,6 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { ViewDTO } from "../../dto/ViewDTO";
+import { ViewDTO } from "../../entities/view/ViewDTO";
 import { findViewDTO } from "./findViewDTO";
 import { populateViewDTO } from "./populateViewDTO";
 

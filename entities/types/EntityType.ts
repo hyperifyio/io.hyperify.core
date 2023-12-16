@@ -2,7 +2,7 @@
 
 import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
-import { DTO } from "../../dto/types/DTO";
+import { DTO } from "./DTO";
 import { Entity } from "./Entity";
 import { EntityProperty } from "./EntityProperty";
 
@@ -19,6 +19,11 @@ export interface EntityType<
      * The constructor
      */
     new (dto ?: D | undefined) : T;
+
+    /**
+     * The name of the entity.
+     */
+    getEntityName() : string;
 
     /**
      * Creates an entity with default values.
@@ -45,6 +50,13 @@ export interface EntityType<
      * @param value
      */
     isEntity (value: unknown): value is T;
+
+    /**
+     * Returns a string explaining why the value is not a type of this entity, or otherwise that it is.
+     *
+     * @param value
+     */
+    explainEntity (value: unknown): string;
 
     /**
      * Returns `true` if value is type of the entity DTO object.

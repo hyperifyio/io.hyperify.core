@@ -2,8 +2,8 @@
 
 import { ReadonlyJsonAny } from "../../Json";
 import { isString } from "../../types/String";
-import { ComponentEntity } from "../../entities/ComponentEntity";
-import { createActionDTO, ActionDTO } from "../../dto/ActionDTO";
+import { ComponentEntity } from "../../entities/component/ComponentEntity";
+import { createActionDTO, ActionDTO } from "../../entities/action/ActionDTO";
 import { ACTION_BUTTON_COMPONENT_NAME } from "./ActionButtonComponent";
 
 export class ActionButtonEntity extends ComponentEntity {

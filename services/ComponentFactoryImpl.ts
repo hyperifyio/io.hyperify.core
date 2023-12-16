@@ -1,7 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { has } from "../functions/has";
-import { ComponentDTO } from "../dto/ComponentDTO";
+import { ComponentDTO } from "../entities/component/ComponentDTO";
 import { ComponentFactoryService } from "./ComponentFactoryService";
 import { ComponentFactoryFunction, ComponentFactory } from "./ComponentFactory";
 

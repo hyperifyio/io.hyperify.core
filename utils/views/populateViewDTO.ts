@@ -3,8 +3,8 @@
 import { find } from "../../functions/find";
 import { LogService } from "../../LogService";
 import { LogLevel } from "../../types/LogLevel";
-import { ComponentContent } from "../../dto/ComponentDTO";
-import { createViewDTO, ViewDTO } from "../../dto/ViewDTO";
+import { ComponentContent } from "../../entities/component/ComponentDTO";
+import { createViewDTO, ViewDTO } from "../../entities/view/ViewDTO";
 import { mergeComponentContent } from "../components/mergeComponentContent";
 
 const LOG = LogService.createLogger( 'populateViewDTO' );

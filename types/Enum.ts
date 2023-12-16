@@ -1,9 +1,18 @@
 // Copyright (c) 2020-2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { TestCallbackNonStandard } from "./TestCallback";
+import {
+    isRegularObjectOf,
+} from "./RegularObject";
+import {
+    TestCallback,
+    TestCallbackNonStandard,
+} from "./TestCallback";
 import { EXPLAIN_OK } from "./explain";
 import { join } from "../functions/join";
-import { isString } from "./String";
+import {
+    isString,
+    isStringOrNumber,
+} from "./String";
 import { isNumber } from "./Number";
 import { indexOf } from "../functions/indexOf";
 import { map } from "../functions/map";
@@ -14,17 +23,61 @@ export interface Enum<T extends number | string> {
     readonly [key: string]: T;
 }
 
+export type EnumType<T extends number | string> = Enum<T>;
+
 /**
- * Checks the given value is of the given enum.
+ * Checks the given type is of the given enum type object.
  *
- * @template EnumType - The type of the enum.
- * @param {Enum} type - The enum.
+ * @template EnumType - The type of the enum's key.
+ * @param type - The enum object.
+ * @param isValue - The value to explain.
+ * @returns True if the type is an enum type object.
+ */
+export function isEnumType<T extends number | string = string | number> (
+    type: unknown,
+    isValue: TestCallback = isStringOrNumber,
+): type is Enum<T> {
+    return isRegularObjectOf<string, T>(
+        type,
+        isString,
+        isValue,
+    );
+}
+
+/**
+ * Explain the given value with respect to the given enum.
+ *
+ * @template EnumType - The type of the enum's value.
+ * @param name - The name of the enum.
+ * @param {Enum} type - The enum type object.
+ * @param type - The value to explain.
+ * @param isValue - A function that tests if a key is of the correct type.
+ * @returns {string} A string explaining the value with respect to the enum.
+ */
+export function explainEnumType<T extends number | string = string> (
+    name: string,
+    type: unknown,
+    isValue: TestCallback = isStringOrNumber,
+): string {
+    if ( !isEnumType<T>(type, isValue) ) {
+        return `incorrect enum object for ${name}: ${JSON.stringify(type)}`;
+    } else {
+        return EXPLAIN_OK;
+    }
+}
+
+
+/**
+ * Checks the given value is part of the given enum.
+ *
+ * @template EnumType - The type of the enum's key.
+ * @param {Enum} type - The enum type object.
  * @param {unknown} value - The value to explain.
  * @returns {string} A string explaining the value with respect to the enum.
  */
 export function isEnum<T extends number | string = string> (
     type: Enum<T>,
-    value: unknown
+    value: unknown,
 ): value is T {
     if ( isNumber(value) || isString(value) ) {
         return indexOf(EnumUtils.getValues(type), value as T) >= 0;
@@ -47,7 +100,7 @@ export function explainEnum<T extends number | string = string> (
     name: string,
     type: Enum<T>,
     isType: TestCallbackNonStandard,
-    value: unknown
+    value: unknown,
 ): string {
     if ( !isType(value) ) {
         return `incorrect enum value "${value}" for ${name}: Accepted values ${join(EnumUtils.getValues(type), ', ')}`;
@@ -63,7 +116,7 @@ export function explainEnum<T extends number | string = string> (
  */
 export function stringifyEnum<T extends number | string = string> (
     type  : Enum<T>,
-    value : T
+    value : T,
 ) : string {
     const enumValues = EnumUtils.getValues(type);
     const enumKeys = EnumUtils.getKeys(type);

@@ -3,7 +3,7 @@
 import { ReadonlyJsonObject } from "../../Json";
 import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
-import { DTO } from "../../dto/types/DTO";
+import { DTO } from "./DTO";
 import { EntityType } from "./EntityType";
 import { JsonSerializable } from "./JsonSerializable";
 

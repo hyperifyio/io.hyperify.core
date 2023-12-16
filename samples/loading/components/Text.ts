@@ -1,6 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { createComponentDTO, ComponentDTO } from "../../../dto/ComponentDTO";
+import { createComponentDTO, ComponentDTO } from "../../../entities/component/ComponentDTO";
 import { TEXT_COMPONENT_NAME } from "./TextComponent";
 
 export type Text = ComponentDTO;

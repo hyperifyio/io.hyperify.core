@@ -2,7 +2,7 @@
 
 import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
-import { ComponentEntity } from "../ComponentEntity";
+import { ComponentEntity } from "../component/ComponentEntity";
 
 /**
  * Public interface of static `ComponentEntity`.

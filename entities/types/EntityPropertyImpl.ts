@@ -17,7 +17,7 @@ import {
 } from "../../types/Number";
 import { isString } from "../../types/String";
 import { isUndefined } from "../../types/undefined";
-import { DTO } from "../../dto/types/DTO";
+import { DTO } from "./DTO";
 import {
     isEntity,
 } from "./Entity";
@@ -47,12 +47,15 @@ export class EntityPropertyImpl
      * Create an entity property.
      *
      * @param name The name of the property
+     * @param aliases The method aliases of the property
      */
     public static create (
-        name : string
+        name : string,
+        ...aliases : readonly string[]
     ) : EntityPropertyImpl {
         return new EntityPropertyImpl(
             name,
+            aliases,
             [],
             undefined,
             false,
@@ -70,12 +73,15 @@ export class EntityPropertyImpl
      * Create an array property.
      *
      * @param name The name of the property
+     * @param aliases The method aliases of the property
      */
     public static createArray (
         name : string,
+        ...aliases : readonly string[]
     ) : EntityPropertyImpl {
         return new EntityPropertyImpl(
             name,
+            aliases,
             [],
             [],
             true,
@@ -88,12 +94,15 @@ export class EntityPropertyImpl
      * Create an array property which may be undefined.
      *
      * @param name The name of the property
+     * @param aliases The method aliases of the property
      */
     public static createOptionalArray (
         name : string,
+        ...aliases : readonly string[]
     ) : EntityPropertyImpl {
         return new EntityPropertyImpl(
             name,
+            aliases,
             [],
             undefined,
             true,
@@ -162,6 +171,16 @@ export class EntityPropertyImpl
     private readonly _name : string;
 
     /**
+     * Alias names of methods.
+     *
+     * These aliases are only used for methods. It will not create support for
+     * alias DTO properties.
+     *
+     * @private
+     */
+    private readonly _methodAliases : readonly string[];
+
+    /**
      * Type(s) of the property.
      *
      * @private
@@ -206,12 +225,14 @@ export class EntityPropertyImpl
      */
     protected constructor (
         name : string,
+        methodAliases : readonly string[],
         types : readonly EntityPropertyType[],
         defaultValue : EntityPropertyValue,
         isArray : boolean,
         isOptional : boolean,
     ) {
         this._name = name;
+        this._methodAliases = methodAliases;
         this._types = types;
         this._defaultValue = defaultValue;
         this._isArray = isArray;
@@ -230,6 +251,13 @@ export class EntityPropertyImpl
      */
     public getPropertyName () : string {
         return this._name;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public getMethodAliases () : readonly string[] {
+        return this._methodAliases;
     }
 
     /**
@@ -336,6 +364,10 @@ export class EntityPropertyImpl
         const getterName : string = `get${ upperFirst(propertyName) }`;
         return [
             getterName,
+            ...(map(
+                this.getMethodAliases(),
+                (alias) => `get${ upperFirst( alias ) }`
+            )),
         ];
     }
 
@@ -344,13 +376,18 @@ export class EntityPropertyImpl
      */
     public getSetterNames () : readonly string[] {
         const propertyName : string = this.getPropertyName();
-        const setterName : string = `set${ upperFirst(propertyName) }`;
-        const setterName2 : string = `${ propertyName }`;
         return [
-            setterName,
-            setterName2,
+            `set${ upperFirst(propertyName) }`,
+            ...(map(
+                this.getMethodAliases(),
+                (alias) => `set${ upperFirst( alias ) }`
+            )),
+            `${ propertyName }`,
+            ...(map(
+                this.getMethodAliases(),
+                (alias) => `${ alias }`
+            )),
         ];
     }
-
 
 }

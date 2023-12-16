@@ -1,6 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { DTO } from "../../dto/types/DTO";
+import { DTO } from "./DTO";
 import { Entity } from "./Entity";
 import { Extendable } from "./Extendable";
 

@@ -3,7 +3,7 @@
 import { LogLevel } from "../../types/LogLevel";
 import { populateViewDTO } from "./populateViewDTO";
 import { isArrayOf } from "../../types/Array";
-import { createViewDTO } from '../../dto/ViewDTO';
+import { createViewDTO } from '../../entities/view/ViewDTO';
 
 describe('populateViewDTO', () => {
 

@@ -1,13 +1,13 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { some } from "../functions/some";
-import { explainViewDTO, ViewDTO, isViewDTO } from "../dto/ViewDTO";
-import { AppDTO } from "../dto/AppDTO";
+import { explainViewDTO, ViewDTO, isViewDTO } from "../entities/view/ViewDTO";
+import { AppDTO } from "../entities/app/AppDTO";
 import { HttpService } from "../HttpService";
 import { LogService } from "../LogService";
 import { ReadonlyJsonAny } from "../Json";
-import { explainComponentDTO, ComponentDTO, isComponentDTO } from "../dto/ComponentDTO";
-import { explainRouteDTO, RouteDTO, isRouteDTO } from "../dto/RouteDTO";
+import { explainComponentDTO, ComponentDTO, isComponentDTO } from "../entities/component/ComponentDTO";
+import { explainRouteDTO, RouteDTO, isRouteDTO } from "../entities/route/RouteDTO";
 
 const LOG = LogService.createLogger('populateAppDTO');
 

@@ -1,7 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { beforeEach } from "@jest/globals";
-import { DTO } from "../../dto/types/DTO";
+import { DTO } from "./DTO";
 import { Entity } from "./Entity";
 import { EntityFactoryImpl } from "./EntityFactoryImpl";
 import { VariableType } from "./EntityProperty";

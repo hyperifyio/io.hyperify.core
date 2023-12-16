@@ -1,4 +1,4 @@
-import { HyperComponent } from "../../dto/types/HyperComponent";
+import { HyperComponent } from "../../entities/types/HyperComponent";
 import {createTitleComponent, TITLE_COMPONENT_NAME, TitleComponent} from "./TitleComponent";
 
 describe('createTitleTextComponent', () => {
