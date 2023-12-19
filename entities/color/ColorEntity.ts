@@ -5,6 +5,7 @@ import {
     explainOk,
     explainOr,
 } from "../../types/explain";
+import { VariableType } from "../types/VariableType";
 import {
     ColorDTO,
 } from "./ColorDTO";
@@ -15,23 +16,20 @@ import {
     isColor,
 } from "./Color";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { VariableType } from "../types/EntityProperty";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const ColorEntityFactory = (
-    EntityFactoryImpl.create<ColorDTO, Color>()
+    EntityFactoryImpl.create<ColorDTO, Color>('Color')
                      .add( EntityPropertyImpl.create("value").setTypes(VariableType.STRING) )
 );
 
-export const isColorDTO = ColorEntityFactory.createIsDTO();
+export const isColorDTO = ColorEntityFactory.createTestFunctionOfDTO();
 
-export const explainColorDTO = ColorEntityFactory.createExplainDTO();
+export const explainColorDTO = ColorEntityFactory.createExplainFunctionOfDTO();
 
-export const isColorDTOOrUndefined = ColorEntityFactory.createIsDTOOr(VariableType.UNDEFINED);
+export const isColorDTOOrUndefined = ColorEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
 
-export function explainColorDTOOrUndefined (value: unknown): string {
-    return isColorDTOOrUndefined(value) ? explainOk() : explainNot(explainOr(['ColorDTO', 'undefined']));
-}
+export const explainColorDTOOrUndefined = ColorEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
 
 export const BaseColorEntity = ColorEntityFactory.createEntityType();
 

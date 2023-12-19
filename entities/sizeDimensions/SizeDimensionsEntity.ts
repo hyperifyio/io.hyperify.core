@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { VariableType } from "../types/VariableType";
 import {
     SizeDimensionsDTO,
     createSizeDimensionsDTO,
@@ -16,7 +17,6 @@ import {
     isSizeDimensions,
 } from "./SizeDimensions";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { VariableType } from "../types/EntityProperty";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const SizeDimensionsEntityFactory = (

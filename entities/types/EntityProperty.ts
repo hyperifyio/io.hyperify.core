@@ -3,20 +3,12 @@
 import { Enum } from "../../types/Enum";
 import { Entity } from "./Entity";
 import { EntityType } from "./EntityType";
-
-export enum VariableType {
-    STRING = "string",
-    NUMBER = "number",
-    INTEGER = "integer",
-    BOOLEAN = "boolean",
-    NULL = "null",
-    UNDEFINED = "undefined",
-}
+import { VariableType } from "./VariableType";
 
 /**
  *
  */
-export type EntityPropertyType = EntityType<any, Entity<any>> | Enum<any> | VariableType;
+export type EntityPropertyType = EntityType<any, Entity<any>> | Enum<any> | VariableType | string;
 
 /**
  *

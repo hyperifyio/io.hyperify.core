@@ -4,6 +4,9 @@ import { forEach } from "../../functions/forEach";
 import { ReadonlyJsonObject } from "../../Json";
 import { isArray } from "../../types/Array";
 import { ComponentDTO } from "../component/ComponentDTO";
+import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
+import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
+import { VariableType } from "../types/VariableType";
 import { createAppDTO, AppDTO } from "./AppDTO";
 import { RouteDTO } from "../route/RouteDTO";
 import { ViewDTO } from "../view/ViewDTO";
@@ -14,173 +17,35 @@ import { JsonSerializable } from "../types/JsonSerializable";
 import { isRouteEntity, RouteEntity } from "../route/RouteEntity";
 import { isViewEntity, ViewEntity } from "../view/ViewEntity";
 
+export const AppEntityFactory = (
+    EntityFactoryImpl.create<AppDTO, App>('App')
+                     .add( EntityPropertyImpl.create("value").setTypes(VariableType.STRING) )
+);
+
+export const isAppDTO = AppEntityFactory.createTestFunctionOfDTO();
+
+export const explainAppDTO = AppEntityFactory.createExplainFunctionOfDTO();
+
+export const isAppDTOOrUndefined = AppEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const explainAppDTOOrUndefined = AppEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const BaseAppEntity = AppEntityFactory.createEntityType();
+
+
 export class AppEntity
-    implements
-        App
+    extends BaseAppEntity
+    implements App
 {
 
-    public static create (name : string) : AppEntity {
-        return new this(name);
+    public static create (name ?: string) : AppEntity {
+        return name ? (new this( )).setName(name) : (new this());
     }
 
-    protected _name : string;
-    protected _extend : string | undefined;
-    protected _components : ComponentDTO[];
-    protected _views : ViewDTO[];
-    protected _routes : RouteDTO[];
-    protected _publicUrl ?: string;
-    protected _language ?: string;
-
-    protected constructor (
-        name : string,
+    public constructor (
+        dto ?: AppDTO,
     ) {
-        this._name = name;
-        this._extend = undefined;
-        this._components = [];
-        this._views = [];
-        this._routes = [];
-        this._publicUrl = undefined;
-        this._language = undefined;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public getName () : string {
-        return this._name;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public getDTO () : AppDTO {
-        return createAppDTO(
-            this._name,
-            this._extend,
-            this._routes,
-            this._publicUrl,
-            this._language,
-            this._components,
-            this._views,
-        );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public valueOf() : ReadonlyJsonObject {
-        return this.toJSON();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public toJSON () : ReadonlyJsonObject {
-        return this.getDTO() as unknown as ReadonlyJsonObject;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public getExtend () : string | undefined {
-        return this._extend;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public extend (name : string) : this {
-        this._extend = name;
-        return this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public addRoute (
-        route : RouteDTO | RouteEntity | readonly (RouteDTO | RouteEntity)[]
-    ) : this {
-        if ( isArray(route) ) {
-            forEach(
-                route,
-                (item: RouteDTO | RouteEntity) : void => {
-                    this.addRoute(item);
-                }
-            );
-        } else if( isRouteEntity(route) ) {
-            this._routes.push( route.getDTO() );
-        } else {
-            this._routes.push( route );
-        }
-        return this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public addView (view : ViewDTO | ViewEntity | readonly (ViewDTO | ViewEntity)[]) : this {
-        if ( isArray(view) ) {
-            forEach(
-                view,
-                (item: ViewDTO | ViewEntity) : void => {
-                    this.addView(item);
-                }
-            );
-        } else if( isViewEntity(view) ) {
-            this._views.push( view.getDTO() );
-        } else {
-            this._views.push( view );
-        }
-        return this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public addComponent (component : ComponentDTO | ComponentEntity | readonly (ComponentDTO | ComponentEntity)[] ) : this {
-        if ( isArray(component) ) {
-            forEach(
-                component,
-                (item: ComponentDTO | ComponentEntity) : void => {
-                    this.addComponent(item);
-                }
-            );
-        } else if( isComponentEntity(component) ) {
-            this._components.push( component.getDTO() );
-        } else {
-            this._components.push( component );
-        }
-        return this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public getLanguage () : string | undefined {
-        return this._language;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public setLanguage (value : string) : this {
-        this._language = value;
-        return this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public getPublicUrl () : string | undefined {
-        return this._publicUrl;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public setPublicUrl (value : string) : this {
-        this._publicUrl = value;
-        return this;
+        super(dto);
     }
 
 }

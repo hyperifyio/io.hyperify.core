@@ -16,10 +16,22 @@ import { ViewEntity } from "../view/ViewEntity";
 export interface App
     extends ExtendableEntity<AppDTO> {
 
+
     /**
      * @inheritDoc
      */
     getName () : string;
+
+    /**
+     * @inheritDoc
+     */
+    name (name : string) : this;
+
+    /**
+     * @inheritDoc
+     */
+    setName (name : string) : this;
+
 
     /**
      * Get DTO presentation.
@@ -36,6 +48,7 @@ export interface App
      */
     toJSON () : ReadonlyJsonObject;
 
+
     /**
      * @inheritDoc
      */
@@ -45,6 +58,12 @@ export interface App
      * @inheritDoc
      */
     extend (name : string) : this;
+
+    /**
+     * @inheritDoc
+     */
+    setExtend (name : string) : this;
+
 
     /**
      * Add a route.

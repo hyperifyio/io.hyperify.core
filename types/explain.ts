@@ -4,6 +4,7 @@
 import { default as _isString } from "lodash/isString";
 import { default as _every } from "lodash/every";
 import { default as _filter } from "lodash/filter";
+import { map } from "../functions/map";
 import { prefixLines } from "./String";
 
 /**
@@ -13,6 +14,21 @@ export const EXPLAIN_OK = 'OK';
 
 export function explainNot (value: string): string {
     return `not ${value}`;
+}
+
+export function explainOneOf (names: readonly string[]): string {
+    if ( names.length < 1 ) {
+        throw new TypeError(`explainOneOf: at least one name required`);
+    }
+    if ( names.length < 2 ) {
+        return names[0];
+    }
+    return `one of:\n${
+        map(
+            names,
+            (item: string) : string => ` - ${item}`
+        ).join('\n')
+    }`;
 }
 
 export function explainOr (value: string[]): string {

@@ -7,13 +7,9 @@ import { has } from "../../functions/has";
 import { map } from "../../functions/map";
 import { reduce } from "../../functions/reduce";
 import { some } from "../../functions/some";
-import {
-    ReadonlyJsonObject,
-} from "../../Json";
+import { ReadonlyJsonObject } from "../../Json";
 import { isArray } from "../../types/Array";
-import {
-    isBoolean,
-} from "../../types/Boolean";
+import { isBoolean } from "../../types/Boolean";
 import {
     EnumType,
     isEnum,
@@ -23,11 +19,10 @@ import {
     explain,
     explainNot,
     explainOk,
+    explainOneOf,
     explainProperty,
 } from "../../types/explain";
-import {
-    isNull,
-} from "../../types/Null";
+import { isNull } from "../../types/Null";
 import {
     isInteger,
     isNumber,
@@ -44,21 +39,16 @@ import {
     isString,
     isStringOrNumber,
 } from "../../types/String";
-import {
-    isUndefined,
-} from "../../types/undefined";
-import { DTO } from "./DTO";
+import { isUndefined } from "../../types/undefined";
 import { BaseEntity } from "./BaseEntity";
+import { DTO } from "./DTO";
 import {
     Entity,
     isEntity,
 } from "./Entity";
 import {
-    EntityType,
-    isEntityType,
-} from "./EntityType";
-import {
     ArrayMapMethod,
+    CreateEntityTypeOpts,
     EntityFactory,
     GetterMethod,
     PropertyTypeCheckFn,
@@ -70,14 +60,22 @@ import {
     EntityProperty,
     EntityPropertyType,
     EntityPropertyValue,
-    VariableType,
+
 } from "./EntityProperty";
 import { EntityPropertyImpl } from "./EntityPropertyImpl";
 import {
+    EntityType,
+    isEntityType,
+} from "./EntityType";
+import {
     IsDTOExplainFunction,
-    IsDTOTestFunction,
     IsDTOOrTestFunction,
+    IsDTOTestFunction,
 } from "./IsDTOTestFunction";
+import {
+    isVariableType,
+    VariableType,
+} from "./VariableType";
 
 export interface PropertyGetterOptions {
     readonly entityAsDTO ?: boolean;
@@ -91,6 +89,23 @@ export class EntityFactoryImpl<
     T extends Entity<D>,
 >
     implements EntityFactory<D, T> {
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    ///////////////////////  static private globals  ///////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    private static _entityFactories : {
+        [key: string]: EntityFactory<any, Entity<any>>
+    } = {};
+
+
+    private static _entities : {
+        [key: string]: EntityType<any, Entity<any>>
+    } = {};
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -147,8 +162,62 @@ export class EntityFactoryImpl<
     public static create<
         D extends DTO,
         T extends Entity<D>,
-    > () : EntityFactoryImpl<D, T> {
-        return new EntityFactoryImpl<D, T>();
+    > (
+        name : string,
+    ) : EntityFactoryImpl<D, T> {
+        if (has(this._entityFactories, name)) {
+            throw new TypeError(`EntityFactoryImpl.create(): Factory exists by name: ${name}`);
+        }
+        const factory = new EntityFactoryImpl<D, T>(name);
+        this._entityFactories[name] = factory;
+        return factory;
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////  #deleteFactory  /////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Unregister an entity factory by name.
+     */
+    public static deleteFactory (name : string) : typeof EntityFactoryImpl {
+        if ( has( this._entityFactories, name ) ) {
+            delete this._entityFactories[name];
+        }
+        return this;
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////  #deleteEntity  //////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Unregister an entity factory by name.
+     */
+    public static deleteEntity (name : string) : typeof EntityFactoryImpl {
+        if ( has( this._entities, name ) ) {
+            delete this._entities[name];
+        }
+        return this;
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////  #destroy  ////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Destroy global state.
+     */
+    public static destroy () : typeof EntityFactoryImpl {
+        this._entityFactories = {};
+        this._entities = {};
+        return this;
     }
 
 
@@ -189,6 +258,36 @@ export class EntityFactoryImpl<
 
 
     ////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////  #getTypeNames  /////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    public static getTypeNames (
+        ...types: readonly EntityPropertyType[]
+    ) : string[] {
+        return map(
+            types,
+            (item: EntityPropertyType) : string => {
+                if (isEntityType(item)) {
+                    return item.getEntityName();
+                }
+                if (isEnumType<any>(item)) {
+                    return `enum (${EnumUtils.getValues<any>(item).join(' | ')})`;
+                }
+                switch (item) {
+                    case VariableType.BOOLEAN: return 'boolean';
+                    case VariableType.STRING: return 'string';
+                    case VariableType.INTEGER: return 'integer';
+                    case VariableType.NUMBER: return 'number';
+                    case VariableType.NULL: return 'null';
+                    case VariableType.UNDEFINED: return 'undefined';
+                    default: throw new TypeError(`createTypeExplainFn: Unknown variable type: ${item}`);
+                }
+            },
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////
     ///////////////////////////  #createTypeExplainFn  /////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
@@ -201,49 +300,12 @@ export class EntityFactoryImpl<
     public static createTypeExplainFn (
         ...types: readonly EntityPropertyType[]
     ) : TypeExplainFn {
-
         if (!types.length) throw new TypeError(`createTypeExplainFn: There must be at least one type`);
-
         const isType = this.createTypeCheckFn(...types);
-
-        type Fn = () => string;
-
-        const explainFunctions : Fn[] = map(
-            types,
-            (item: EntityPropertyType) : Fn => {
-                if (isEntityType(item)) {
-                    const typeName = item.getEntityName();
-                    return () : string => typeName;
-                }
-                if (isEnumType<any>(item)) {
-                    const isType = (value: unknown) : boolean => isEnum<any>(item, value);
-                    return () : string => `enum (${EnumUtils.getValues<any>(item).join(' | ')})`;
-                }
-                switch (item) {
-                    case VariableType.BOOLEAN: return () : string => 'boolean';
-                    case VariableType.STRING: return () : string => 'string';
-                    case VariableType.INTEGER: return () : string => 'integer';
-                    case VariableType.NUMBER: return () : string => 'number';
-                    case VariableType.NULL: return () : string => 'null';
-                    case VariableType.UNDEFINED: return () : string => 'undefined';
-                    default: throw new TypeError(`createTypeExplainFn: Unknown variable type: ${item}`);
-                }
-            },
-        );
-
-        const explainNotOneOf : string = explainFunctions.length >= 2 ? explainNot(
-            `one of:\n${
-                map(
-                    explainFunctions,
-                    (item: Fn) : string => ` - ${item()}`
-                ).join('\n')
-            }`
-        ) : explainNot(explainFunctions[0]());
-
-        return (value : unknown) : string => {
-            return isType(value) ? explainOk() : explainNotOneOf;
-        };
-
+        const typeNames : string[] = EntityFactoryImpl.getTypeNames(...types);
+        const explainNotOneOf : string = explainNot( explainOneOf(typeNames) );
+        const ok = explainOk();
+        return (value : unknown) : string => isType(value) ? ok : explainNotOneOf;
     }
 
 
@@ -274,6 +336,14 @@ export class EntityFactoryImpl<
                 type: EntityPropertyType
             ) : GetterMethod<D, T, any> => {
 
+                if ( isString(type) && !isVariableType(type) ) {
+                    if ( has(this._entities, type) ) {
+                        type = this._entities[type];
+                    } else {
+                        throw new TypeError(`EntityFactoryImpl.createPropertyGetter(): Could not initialize entity by name: ${type}`);
+                    }
+                }
+
                 let fn : GetterMethod<D, T, any>;
                 if ( isEntityType(type) && !entityAsDTO ) {
                     fn = this.createEntityPropertyGetter<D, T>(
@@ -285,11 +355,13 @@ export class EntityFactoryImpl<
                         propertyName,
                         type,
                     );
-                } else {
+                } else if ( isVariableType(type) || entityAsDTO ) {
                     fn = this.createScalarPropertyGetter<D, T>(
                         propertyName,
                         type,
                     );
+                } else {
+                    throw new TypeError(`createPropertyGetter(): Unsupported type: ${type}`);
                 }
 
                 if (prev === undefined) return fn;
@@ -333,6 +405,14 @@ export class EntityFactoryImpl<
                 prev: ArrayMapMethod<EntityPropertyValue, EntityPropertyValue> | undefined,
                 type: EntityPropertyType,
             ) : ArrayMapMethod<EntityPropertyValue, EntityPropertyValue> => {
+
+                if ( isString(type) && !isVariableType(type) ) {
+                    if ( has(this._entities, type) ) {
+                        type = this._entities[type];
+                    } else {
+                        throw new TypeError(`EntityFactoryImpl.createArrayPropertyGetter(): Could not initialize entity by name: ${type}`);
+                    }
+                }
 
                 const fn = this.createArrayItemGetter(
                     type,
@@ -591,6 +671,12 @@ export class EntityFactoryImpl<
     ///////////////////////////  private properties ////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * The default name of the entity.
+     *
+     * @private
+     */
+    private readonly _name : string;
 
     /**
      * Internal properties.
@@ -610,7 +696,8 @@ export class EntityFactoryImpl<
      *
      * @protected
      */
-    protected constructor () {
+    protected constructor (name : string) {
+        this._name = name;
         this._properties = [];
     }
 
@@ -619,6 +706,9 @@ export class EntityFactoryImpl<
     /////////////////////////////  public methods //////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
+    public getName () : string {
+        return this._name;
+    }
 
     /**
      * @inheritDoc
@@ -656,7 +746,7 @@ export class EntityFactoryImpl<
      * @inheritDoc
      * @fixme Cache the value and use it so that multiple calls do not generate new ones unless state changes
      */
-    public createIsDTO () : IsDTOTestFunction<D> {
+    public createTestFunctionOfDTO () : IsDTOTestFunction<D> {
 
         const properties : readonly EntityProperty[] = this.getProperties();
 
@@ -688,7 +778,9 @@ export class EntityFactoryImpl<
      * @inheritDoc
      * @fixme Cache the value and use it so that multiple calls do not generate new ones unless state changes
      */
-    public createExplainDTO () : IsDTOExplainFunction {
+    public createExplainFunctionOfDTO () : IsDTOExplainFunction {
+
+        const typeName = this.getName();
 
         const properties : readonly EntityProperty[] = this.getProperties();
 
@@ -697,31 +789,27 @@ export class EntityFactoryImpl<
             (item : EntityProperty) : string => item.getPropertyName()
         );
 
-        const checkProperties = reduce(
-            properties,
-            (prev: PropertyTypeCheckFn, item: EntityProperty): PropertyTypeCheckFn => {
-                const propertyName = item.getPropertyName();
-                const isType = EntityFactoryImpl.createTypeCheckFn(...item.getTypes());
-                return (value: ReadonlyJsonObject) : boolean => prev(value) && isType(value[propertyName]);
-            },
-            (): boolean => true,
-        );
-
         const explainProperties = map(
             properties,
             (item: EntityProperty): IsDTOExplainFunction => {
                 const propertyName = item.getPropertyName();
                 const explainFunction = EntityFactoryImpl.createTypeExplainFn(...item.getTypes());
                 return (value : unknown) : string => {
+                    if (!isRegularObject(value)) return 'parent not object';
                     return explainProperty(propertyName, explainFunction((value as any)[propertyName]))
                 };
             }
         )
 
+        const ok = explainOk();
+
         return (value : unknown) : string => {
-            return explain(
+            const regularResult = explainRegularObject(value);
+            if (regularResult !== ok) {
+                return explainNot(typeName + ' DTO: ' + regularResult);
+            }
+            const result = explain(
                 [
-                    explainRegularObject(value),
                     explainNoOtherKeysInDevelopment(value, propertyNames),
                     ...map(
                         explainProperties,
@@ -729,6 +817,7 @@ export class EntityFactoryImpl<
                     ),
                 ]
             );
+            return result === ok ? explainOk() : explainNot(typeName + ' DTO: ' + result);
         };
     }
 
@@ -736,13 +825,39 @@ export class EntityFactoryImpl<
      * @inheritDoc
      * @fixme Cache the value and use it so that multiple calls do not generate new ones unless state changes
      */
-    public createIsDTOOr<T> (...types : EntityPropertyType[]) : IsDTOOrTestFunction<D, T> {
-        const isDTO = this.createIsDTO();
+    public createTestFunctionOfDTOorOneOf<T> ( ...types : EntityPropertyType[] ) : IsDTOOrTestFunction<D, T> {
+        const isDTO = this.createTestFunctionOfDTO();
         const anotherFn = EntityFactoryImpl.createTypeCheckFn(
             ...types,
         ) as unknown as IsDTOOrTestFunction<D, T>;
         return (value: unknown) : value is D | T => isDTO( value ) || anotherFn( value );
     }
+
+    /**
+     * @inheritDoc
+     * @fixme Cache the value and use it so that multiple calls do not generate new ones unless state changes
+     */
+    public createExplainFunctionOfDTOorOneOf ( ...types : EntityPropertyType[] ) : IsDTOExplainFunction {
+        const name = this.getName();
+        const testDTO = this.createTestFunctionOfDTO();
+        const testOtherTypes = EntityFactoryImpl.createTypeCheckFn(
+            ...types,
+        );
+        const ok = explainOk();
+        const typeNames : string[] = EntityFactoryImpl.getTypeNames(...types);
+        const notOk = explainNot(
+            explainOneOf(
+                [
+                    `DTO of ${name}`,
+                    ...typeNames,
+                ]
+            )
+        );
+        return (value: unknown) : string => (
+            testDTO( value ) || testOtherTypes( value ) ? ok : notOk
+        );
+    }
+
 
     /**
      * @inheritDoc
@@ -784,18 +899,30 @@ export class EntityFactoryImpl<
         );
     }
 
+
     /**
      * @inheritDoc
      */
     public createEntityType (
-        name : string,
-        opts : { immutable ?: boolean } = {}
+        arg1 ?: CreateEntityTypeOpts | string | undefined,
+        arg2 ?: CreateEntityTypeOpts | undefined,
     ) : EntityType<D, T> {
 
-        const { immutable } = opts;
+        const arg1IsString= isString(arg1);
+        const opts : CreateEntityTypeOpts | undefined = (
+            arg2 !== undefined ? arg2 : (
+                arg1IsString || arg1 === undefined ? undefined : arg1
+            )
+        );
+        const name : string = (arg1IsString ? arg1 : opts?.name) ?? this.getName();
+        const immutable : boolean = !!(opts?.immutable);
+
+        if (has(EntityFactoryImpl._entities, name)) {
+            throw new TypeError(`EntityFactoryImpl.createEntityType(): The entity by this name exists already`);
+        }
 
         const properties : readonly EntityProperty[] = this.getProperties();
-        const isDTO = this.createIsDTO();
+        const isDTO = this.createTestFunctionOfDTO();
         const defaultDto : D = this.createDefaultDTO();
 
         /**
@@ -939,7 +1066,9 @@ export class EntityFactoryImpl<
             }
         );
 
-        return FinalType as unknown as EntityType<D, T>;
+        const Type = FinalType as unknown as EntityType<D, T>;
+        EntityFactoryImpl._entities[name] = Type;
+        return Type;
 
     }
 

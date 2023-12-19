@@ -25,12 +25,13 @@ import {
     EntityProperty,
     EntityPropertyType,
     EntityPropertyValue,
-    VariableType,
+
 } from "./EntityProperty";
 import {
     EntityType,
     isEntityType,
 } from "./EntityType";
+import { VariableType } from "./VariableType";
 
 const LOG = LogService.createLogger('EntityPropertyImpl');
 

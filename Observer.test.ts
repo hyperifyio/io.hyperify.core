@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { Observer } from './Observer';
 
 describe('Observer', () => {
@@ -21,6 +22,7 @@ describe('Observer', () => {
     });
 
     describe('waitForEvent', () => {
+
         it('should resolve the returned Promise when the specified event is triggered', async () => {
             const observer = new Observer('my-observer');
             const eventPromise = observer.waitForEvent('my-event', 100);

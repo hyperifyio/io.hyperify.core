@@ -1,0 +1,115 @@
+// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+
+import { reduce } from "../../functions/reduce";
+import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
+import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
+import { VariableType } from "../types/VariableType";
+import {
+    Action,
+    isAction,
+} from "./Action";
+import { ActionDTO } from "./ActionDTO";
+
+export const ActionEntityFactory = (
+    EntityFactoryImpl.create<ActionDTO, Action>("Action")
+                     .add( EntityPropertyImpl.create("label").setTypes(VariableType.STRING) )
+                     .add( EntityPropertyImpl.create("target").setTypes(VariableType.STRING) )
+                     .add( EntityPropertyImpl.create("method").setTypes(VariableType.STRING) )
+                     .add( EntityPropertyImpl.create("body").setTypes(VariableType.JSON, VariableType.UNDEFINED) )
+                     .add( EntityPropertyImpl.create("successRedirect").setTypes(VariableType.STRING, "Action", VariableType.UNDEFINED) )
+                     .add( EntityPropertyImpl.create("errorRedirect").setTypes(VariableType.STRING, "Action", VariableType.UNDEFINED) )
+);
+
+export const isActionDTO = ActionEntityFactory.createTestFunctionOfDTO();
+
+export const explainActionDTO = ActionEntityFactory.createExplainFunctionOfDTO();
+
+export const isActionDTOOrUndefined = ActionEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const explainActionDTOOrUndefined = ActionEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const BaseActionEntity = ActionEntityFactory.createEntityType();
+
+/**
+ * Action entity.
+ */
+export class ActionEntity
+    extends BaseActionEntity
+    implements Action
+{
+
+    /**
+     * Creates a Action entity.
+     *
+     * @param value The optional DTO of Action
+     */
+    public static create (
+        value ?: ActionDTO,
+    ) : ActionEntity {
+        return new ActionEntity(value);
+    }
+
+    /**
+     * Creates a Action entity from DTO.
+     *
+     * @param dto The optional DTO of Action
+     */
+    public static createFromDTO (
+        dto : ActionDTO,
+    ) : ActionEntity {
+        return new ActionEntity(dto);
+    }
+
+    /**
+     * Merges multiple values as one entity.
+     */
+    public static merge (
+        ...values: readonly (ActionDTO | Action | ActionEntity)[]
+    ) : ActionEntity {
+        return ActionEntity.createFromDTO(
+            reduce(
+                values,
+                (
+                    prev: ActionDTO,
+                    item: ActionDTO | Action | ActionEntity,
+                ) : ActionDTO => {
+                    const dto : ActionDTO = this.toDTO(item);
+                    return {
+                        ...prev,
+                        ...dto,
+                    };
+                },
+                ActionEntityFactory.createDefaultDTO(),
+            )
+        );
+    }
+
+    /**
+     * Normalizes the value as a DTO.
+     */
+    public static toDTO (
+        value: ActionDTO | Action | ActionEntity,
+    ) : ActionDTO {
+        if (isActionEntity(value)) {
+            return value.getDTO();
+        } else if (isAction(value)) {
+            return value.getDTO();
+        } else {
+            return value;
+        }
+    }
+
+    /**
+     * Construct an entity of ActionEntity.
+     */
+    public constructor (
+        dto ?: ActionDTO | undefined,
+    ) {
+        super(dto);
+    }
+
+}
+
+export function isActionEntity (value: unknown): value is ActionEntity {
+    return value instanceof ActionEntity;
+}

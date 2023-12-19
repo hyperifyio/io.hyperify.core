@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { VariableType } from "../types/VariableType";
 import {
     BackgroundImageDTO,
     createBackgroundImageDTO,
@@ -11,7 +12,6 @@ import {
     isBackgroundImage,
 } from "./BackgroundImage";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { VariableType } from "../types/EntityProperty";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BackgroundImageEntityFactory = (

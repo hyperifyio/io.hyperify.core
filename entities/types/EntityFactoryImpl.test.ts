@@ -11,17 +11,22 @@ import { Entity } from "./Entity";
 import { EntityFactoryImpl } from "./EntityFactoryImpl";
 import {
     EntityProperty,
-    VariableType,
+
 } from "./EntityProperty";
 import { EntityPropertyImpl } from "./EntityPropertyImpl";
 import { EntityType } from "./EntityType";
+import { VariableType } from "./VariableType";
 
 describe('EntityFactoryImpl', () => {
+
+    afterEach( () => {
+        EntityFactoryImpl.destroy();
+    });
 
     describe('#create', () => {
 
         it('can create an entity factory instance', () => {
-            const item = EntityFactoryImpl.create();
+            const item = EntityFactoryImpl.create('Item');
             expect( item ).toBeDefined();
             expect( item ).toBeInstanceOf(EntityFactoryImpl);
         });
@@ -29,7 +34,7 @@ describe('EntityFactoryImpl', () => {
         it('can create an entity factory instance with a property', () => {
             const item = (
                 EntityFactoryImpl
-                    .create()
+                    .create('Item')
                     .add( "name", VariableType.STRING)
             );
             const properties = item.getProperties();
@@ -41,7 +46,7 @@ describe('EntityFactoryImpl', () => {
         it('can create an entity factory instance with an optional property', () => {
             const item = (
                 EntityFactoryImpl
-                    .create()
+                    .create('Item')
                     .add( "name", VariableType.STRING, VariableType.UNDEFINED)
             );
             const properties = item.getProperties();
@@ -59,7 +64,7 @@ describe('EntityFactoryImpl', () => {
 
             const item = (
                 EntityFactoryImpl
-                    .create()
+                    .create('Car')
                     .add( "name", VariableType.STRING)
                     .add( "type", CarType )
             );
@@ -86,7 +91,7 @@ describe('EntityFactoryImpl', () => {
 
             const item = (
                 EntityFactoryImpl
-                    .create()
+                    .create('Car')
                     .add( "name", VariableType.STRING)
                     .add(  EntityFactoryImpl.createArrayProperty("types").setTypes(CarType) )
             );
@@ -113,7 +118,7 @@ describe('EntityFactoryImpl', () => {
 
             const item = (
                 EntityFactoryImpl
-                    .create()
+                    .create('Car')
                     .add( "name", VariableType.STRING, VariableType.UNDEFINED)
                     .add( "type", CarType, VariableType.UNDEFINED)
             );
@@ -308,7 +313,7 @@ describe('EntityFactoryImpl', () => {
             }
 
             const carFactory = (
-                EntityFactoryImpl.create<CarDTO, Car>()
+                EntityFactoryImpl.create<CarDTO, Car>('Car')
                                  .add( EntityPropertyImpl.create("model").setDefaultValue("Ford") )
                                  .add( EntityPropertyImpl.create("gear").setTypes(GearType).setDefaultValue(GearType.AUTOMATIC) )
             );
@@ -514,7 +519,7 @@ describe('EntityFactoryImpl', () => {
             }
 
             const carFactory = (
-                EntityFactoryImpl.create<CarDTO, Car>()
+                EntityFactoryImpl.create<CarDTO, Car>('Car')
                                  .add( EntityPropertyImpl.create("model").setDefaultValue("Ford") )
                                  .add( EntityPropertyImpl.create("gear").setTypes(GearType).setDefaultValue(GearType.AUTOMATIC) )
             );
@@ -554,7 +559,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with undefined value', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( "name", VariableType.STRING, VariableType.UNDEFINED)
             );
             expect( item.createDefaultDTO() ).toStrictEqual({});
@@ -562,7 +567,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with null value', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( "name", VariableType.STRING, VariableType.NULL)
             );
             expect( item.createDefaultDTO() ).toStrictEqual({ name: null });
@@ -570,7 +575,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with null and undefined values', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( "name", VariableType.STRING, VariableType.NULL, VariableType.UNDEFINED)
             );
             expect( item.createDefaultDTO() ).toStrictEqual({ });
@@ -578,7 +583,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with string value', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( "name", VariableType.STRING)
             );
             expect( item.createDefaultDTO() ).toStrictEqual({ name : '' });
@@ -586,7 +591,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with number value', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( "name", VariableType.NUMBER)
             );
             expect( item.createDefaultDTO() ).toStrictEqual({ name : 0 });
@@ -594,7 +599,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with boolean value', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Item')
                 .add( "name", VariableType.BOOLEAN)
             );
             expect( item.createDefaultDTO() ).toStrictEqual({ name : false });
@@ -602,7 +607,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with integer value', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( "name", VariableType.INTEGER)
             );
             expect( item.createDefaultDTO() ).toStrictEqual({ name : 0 });
@@ -610,7 +615,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with multiple properties', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( "age", VariableType.INTEGER)
                 .add( "name", VariableType.STRING)
             );
@@ -619,7 +624,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with custom default values', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
                 .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
             );
@@ -628,7 +633,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with non-optional array values', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
                 .add( EntityPropertyImpl.createArray("firstNames").setTypes(VariableType.STRING).setDefaultValue(['John', 'Edward']) )
             );
@@ -643,7 +648,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with non-optional empty array values', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
                 .add( EntityPropertyImpl.createArray("firstNames").setTypes(VariableType.STRING) )
             );
@@ -655,7 +660,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with non-defined optional array values', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
                 .add( EntityPropertyImpl.createOptionalArray("firstNames").setTypes(VariableType.STRING) )
             );
@@ -666,7 +671,7 @@ describe('EntityFactoryImpl', () => {
 
         it('can create a default DTO object with defined optional array values', () => {
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
                 .add( EntityPropertyImpl.createOptionalArray("firstNames").setTypes(VariableType.STRING).setDefaultValue(['John', 'Edward']) )
             );
@@ -681,17 +686,17 @@ describe('EntityFactoryImpl', () => {
 
     });
 
-    describe('.createIsDTO', () => {
+    describe('.createTestFunctionOfDTO', () => {
 
         it('can create a test function for DTOs', () => {
 
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
                 .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
             );
 
-            const fn = item.createIsDTO();
+            const fn = item.createTestFunctionOfDTO();
 
             expect( fn({name : 'John', age: 20}) ).toBe(true);
 
@@ -712,17 +717,48 @@ describe('EntityFactoryImpl', () => {
 
     });
 
-    describe('.createIsDTOOr', () => {
+    describe('.createExplainFunctionOfDTO', () => {
 
-        it('can create a test function for DTOs and undefined', () => {
+        it('can create an explain function for DTOs', () => {
 
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Person')
                 .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
                 .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
             );
 
-            const fn = item.createIsDTOOr(VariableType.UNDEFINED);
+            const fn = item.createExplainFunctionOfDTO();
+
+            expect( fn({name : 'John', age: 20}) ).toBe('OK');
+
+            expect( fn({name : 'John', age: null}) ).toBe(`not Person DTO: \n  property "age" not integer`);
+            expect( fn({name : 123, age: 30}) ).toBe(`not Person DTO: \n  property "name" not string`);
+            expect( fn({age: 30}) ).toBe(`not Person DTO: \n  property "name" not string`);
+            expect( fn({name : 123}) ).toBe(`not Person DTO: \n  property "age" not integer, \n  property "name" not string`);
+            expect( fn(123) ).toBe(`not Person DTO: not regular object`);
+            expect( fn(null) ).toBe(`not Person DTO: not regular object`);
+            expect( fn(undefined) ).toBe(`not Person DTO: not regular object`);
+            expect( fn({}) ).toBe(`not Person DTO: \n  property "age" not integer, \n  property "name" not string`);
+            expect( fn([]) ).toBe(`not Person DTO: not regular object`);
+            expect( fn(true) ).toBe(`not Person DTO: not regular object`);
+            expect( fn(false) ).toBe(`not Person DTO: not regular object`);
+            expect( fn("hello world") ).toBe(`not Person DTO: not regular object`);
+
+        });
+
+    });
+
+    describe('.createTestFunctionOfDTOorOneOf', () => {
+
+        it('can create a test function for DTOs and undefined', () => {
+
+            const item = (
+                EntityFactoryImpl.create('Entity')
+                .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
+                .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
+            );
+
+            const fn = item.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
 
             expect( fn({name : 'John', age: 20}) ).toBe(true);
             expect( fn(undefined) ).toBe(true);
@@ -744,12 +780,12 @@ describe('EntityFactoryImpl', () => {
         it('can create a test function for DTOs, undefined, and null', () => {
 
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
                 .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
             );
 
-            const fn = item.createIsDTOOr(VariableType.UNDEFINED, VariableType.NULL);
+            const fn = item.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED, VariableType.NULL);
 
             expect( fn({name : 'John', age: 20}) ).toBe(true);
             expect( fn(undefined) ).toBe(true);
@@ -771,12 +807,12 @@ describe('EntityFactoryImpl', () => {
         it('can create a test function for DTOs, number, undefined, and null', () => {
 
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
                 .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
             );
 
-            const fn = item.createIsDTOOr(VariableType.NUMBER, VariableType.UNDEFINED, VariableType.NULL);
+            const fn = item.createTestFunctionOfDTOorOneOf(VariableType.NUMBER, VariableType.UNDEFINED, VariableType.NULL);
 
             expect( fn({name : 'John', age: 20}) ).toBe(true);
             expect( fn(undefined) ).toBe(true);
@@ -798,12 +834,12 @@ describe('EntityFactoryImpl', () => {
         it('can create a test function for DTOs, string, number, undefined, and null', () => {
 
             const item = (
-                EntityFactoryImpl.create()
+                EntityFactoryImpl.create('Entity')
                 .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
                 .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
             );
 
-            const fn = item.createIsDTOOr(
+            const fn = item.createTestFunctionOfDTOorOneOf(
                 VariableType.STRING,
                 VariableType.NUMBER,
                 VariableType.UNDEFINED,
@@ -824,6 +860,123 @@ describe('EntityFactoryImpl', () => {
             expect( fn([]) ).toBe(false);
             expect( fn(true) ).toBe(false);
             expect( fn(false) ).toBe(false);
+
+        });
+
+    });
+
+    describe('.createExplainFunctionOfDTOorOneOf', () => {
+
+        it('can create an explain function for DTOs or undefined', () => {
+
+            const item = (
+                EntityFactoryImpl.create('MyEntity')
+                .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
+                .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
+            );
+
+            const fn = item.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+            expect( fn({name : 'John', age: 20}) ).toBe('OK');
+            expect( fn(undefined) ).toBe('OK');
+
+            expect( fn({name : 'John', age: null}) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined`);
+            expect( fn({name : 123, age: 30}) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined`);
+            expect( fn({age: 30}) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined`);
+            expect( fn({name : 123}) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined`);
+            expect( fn(123) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined`);
+            expect( fn(null) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined`);
+            expect( fn({}) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined`);
+            expect( fn([]) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined`);
+            expect( fn(true) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined`);
+            expect( fn(false) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined`);
+            expect( fn("hello world") ).toBe(`not one of:\n - DTO of MyEntity\n - undefined`);
+
+        });
+
+        it('can create an explain function for DTOs, undefined, and null', () => {
+
+            const item = (
+                EntityFactoryImpl.create('MyEntity')
+                .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
+                .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
+            );
+
+            const fn = item.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED, VariableType.NULL);
+
+            expect( fn({name : 'John', age: 20}) ).toBe('OK');
+            expect( fn(undefined) ).toBe('OK');
+            expect( fn(null) ).toBe('OK');
+
+            expect( fn({name : 'John', age: null}) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined\n - null`);
+            expect( fn({name : 123, age: 30}) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined\n - null`);
+            expect( fn({age: 30}) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined\n - null`);
+            expect( fn({name : 123}) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined\n - null`);
+            expect( fn(123) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined\n - null`);
+            expect( fn({}) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined\n - null`);
+            expect( fn([]) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined\n - null`);
+            expect( fn(true) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined\n - null`);
+            expect( fn(false) ).toBe(`not one of:\n - DTO of MyEntity\n - undefined\n - null`);
+            expect( fn("hello world") ).toBe(`not one of:\n - DTO of MyEntity\n - undefined\n - null`);
+
+        });
+
+        it('can create an explain function for DTOs, number, undefined, and null', () => {
+
+            const item = (
+                EntityFactoryImpl.create('MyEntity')
+                .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
+                .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
+            );
+
+            const fn = item.createExplainFunctionOfDTOorOneOf(VariableType.NUMBER, VariableType.UNDEFINED, VariableType.NULL);
+
+            expect( fn({name : 'John', age: 20}) ).toBe('OK');
+            expect( fn(undefined) ).toBe('OK');
+            expect( fn(null) ).toBe('OK');
+            expect( fn(123) ).toBe('OK');
+
+            expect( fn({name : 'John', age: null}) ).toBe(`not one of:\n - DTO of MyEntity\n - number\n - undefined\n - null`);
+            expect( fn({name : 123, age: 30}) ).toBe(`not one of:\n - DTO of MyEntity\n - number\n - undefined\n - null`);
+            expect( fn({age: 30}) ).toBe(`not one of:\n - DTO of MyEntity\n - number\n - undefined\n - null`);
+            expect( fn({name : 123}) ).toBe(`not one of:\n - DTO of MyEntity\n - number\n - undefined\n - null`);
+            expect( fn({}) ).toBe(`not one of:\n - DTO of MyEntity\n - number\n - undefined\n - null`);
+            expect( fn([]) ).toBe(`not one of:\n - DTO of MyEntity\n - number\n - undefined\n - null`);
+            expect( fn(true) ).toBe(`not one of:\n - DTO of MyEntity\n - number\n - undefined\n - null`);
+            expect( fn(false) ).toBe(`not one of:\n - DTO of MyEntity\n - number\n - undefined\n - null`);
+            expect( fn("hello world") ).toBe(`not one of:\n - DTO of MyEntity\n - number\n - undefined\n - null`);
+
+        });
+
+        it('can create an explain function for DTOs, string, number, undefined, and null', () => {
+
+            const item : EntityFactoryImpl<DTO, Entity<DTO>> = (
+                EntityFactoryImpl.create('MyEntity')
+                .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
+                .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
+            );
+
+            const fn = item.createExplainFunctionOfDTOorOneOf(
+                VariableType.STRING,
+                VariableType.NUMBER,
+                VariableType.UNDEFINED,
+                VariableType.NULL,
+            );
+
+            expect( fn({name : 'John', age: 20}) ).toBe('OK');
+            expect( fn(undefined) ).toBe('OK');
+            expect( fn(null) ).toBe('OK');
+            expect( fn(123) ).toBe('OK');
+            expect( fn("hello world") ).toBe('OK');
+
+            expect( fn({name : 'John', age: null}) ).toBe(`not one of:\n - DTO of MyEntity\n - string\n - number\n - undefined\n - null`);
+            expect( fn({name : 123, age: 30}) ).toBe(`not one of:\n - DTO of MyEntity\n - string\n - number\n - undefined\n - null`);
+            expect( fn({age: 30}) ).toBe(`not one of:\n - DTO of MyEntity\n - string\n - number\n - undefined\n - null`);
+            expect( fn({name : 123}) ).toBe(`not one of:\n - DTO of MyEntity\n - string\n - number\n - undefined\n - null`);
+            expect( fn({}) ).toBe(`not one of:\n - DTO of MyEntity\n - string\n - number\n - undefined\n - null`);
+            expect( fn([]) ).toBe(`not one of:\n - DTO of MyEntity\n - string\n - number\n - undefined\n - null`);
+            expect( fn(true) ).toBe(`not one of:\n - DTO of MyEntity\n - string\n - number\n - undefined\n - null`);
+            expect( fn(false) ).toBe(`not one of:\n - DTO of MyEntity\n - string\n - number\n - undefined\n - null`);
 
         });
 
@@ -854,7 +1007,7 @@ describe('EntityFactoryImpl', () => {
 
         beforeEach ( () => {
             factory = (
-                EntityFactoryImpl.create<MyDTO, MyEntity>()
+                EntityFactoryImpl.create<MyDTO, MyEntity>('MyEntity')
                     .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
                     .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
             );
@@ -1109,14 +1262,14 @@ describe('EntityFactoryImpl', () => {
         beforeEach(() => {
 
             carFactory = (
-                EntityFactoryImpl.create<CarDTO, Car>()
+                EntityFactoryImpl.create<CarDTO, Car>('Car')
                 .add( EntityPropertyImpl.create("model").setDefaultValue("Ford") )
                 .add( EntityPropertyImpl.create("gear").setTypes(GearType).setDefaultValue(GearType.MANUAL) )
             );
             CarType = carFactory.createEntityType('CarType');
 
             driverFactory = (
-                EntityFactoryImpl.create<DriverDTO, Driver>()
+                EntityFactoryImpl.create<DriverDTO, Driver>('Driver')
                 .add( EntityPropertyImpl.create("age").setDefaultValue(30) )
                 .add( EntityPropertyImpl.create("name").setDefaultValue('Smith') )
                 .add( EntityPropertyImpl.create("car").setTypes(CarType) )
@@ -1232,13 +1385,13 @@ describe('EntityFactoryImpl', () => {
         beforeEach(() => {
 
             carFactory = (
-                EntityFactoryImpl.create<CarDTO, Car>()
+                EntityFactoryImpl.create<CarDTO, Car>('Car')
                 .add( EntityPropertyImpl.create("model").setDefaultValue("Ford") )
             );
             CarType = carFactory.createEntityType('CarType');
 
             driverFactory = (
-                EntityFactoryImpl.create<DriverDTO, Driver>()
+                EntityFactoryImpl.create<DriverDTO, Driver>('Driver')
                 .add( EntityPropertyImpl.create("age").setDefaultValue(30) )
                 .add( EntityPropertyImpl.create("name").setDefaultValue('Smith') )
                 .add( EntityPropertyImpl.createArray("cars").setTypes(CarType) )
@@ -1388,7 +1541,7 @@ describe('EntityFactoryImpl', () => {
 
         beforeEach(() => {
             carFactory = (
-                EntityFactoryImpl.create<CarDTO, Car>()
+                EntityFactoryImpl.create<CarDTO, Car>('Car')
                 .add( EntityPropertyImpl.create("model").setDefaultValue("Ford") )
             );
             CarEntity = carFactory.createEntityType('CarEntity');

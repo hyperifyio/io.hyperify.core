@@ -4,6 +4,7 @@ import { ReadonlyJsonObject } from "../../Json";
 import {
     ColorDTO,
 } from "../color/ColorDTO";
+import { VariableType } from "../types/VariableType";
 import {
     TextDecorationDTO,
     createTextDecorationDTO,
@@ -15,7 +16,6 @@ import {
 } from "../color/ColorEntity";
 import { SizeEntity } from "../size/SizeEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { VariableType } from "../types/EntityProperty";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import {
     isTextDecoration,

@@ -5,7 +5,7 @@ import { explainNot, explainOk, explainOr } from "../../types/explain";
 import { isUndefined } from "../../types/undefined";
 import { SizeEntity } from "../size/SizeEntity";
 import { isSizeDTO, SizeDTO } from "../size/SizeDTO";
-import { BackgroundSize, isBackgroundSize } from "../backgroundSize/BackgroundSize";
+import { BackgroundSize, isBackgroundSize } from "./BackgroundSize";
 
 export type BackgroundSizeOptions  = (
     BackgroundSize

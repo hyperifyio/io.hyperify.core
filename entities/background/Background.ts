@@ -3,6 +3,7 @@
 import { ReadonlyJsonObject } from "../../Json";
 import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
+import { ColorEntity } from "../color/ColorEntity";
 import { BackgroundDTO } from "./BackgroundDTO";
 import { BackgroundImageDTO } from "../backgroundImage/BackgroundImageDTO";
 import { BackgroundRepeatDTO } from "../backgroundRepeat/BackgroundRepeatDTO";
@@ -57,21 +58,35 @@ export interface Background extends Entity<BackgroundDTO> {
     getRepeatDTO () : BackgroundRepeatDTO | undefined;
     getSize () : BackgroundSizeOptions | undefined;
 
+    setAttachment (value : BackgroundAttachment | undefined) : this;
+    setBlendMode (value : BackgroundBlendMode | undefined) : this;
+    setClip (value : BackgroundClip | undefined) : this;
+    setColor (value : ColorEntity | Color | ColorDTO | undefined) : this;
+    setTransparentColor () : this;
+    setSetTransparentColor () : this;
+    setImage (value : BackgroundImage | BackgroundImageDTO | undefined) : this;
+    setOrigin (value : BackgroundOrigin | undefined) : this;
+    setPosition (
+        a : BackgroundPosition | undefined,
+        b : BackgroundPosition | undefined,
+    ) : this;
+    setPosition (value : BackgroundPositionOptions | undefined) : this;
+    setRepeat (value : BackgroundRepeat | BackgroundRepeatDTO | undefined) : this;
+    setSize (value : BackgroundSizeOptions | undefined) : this;
+
     attachment (value : BackgroundAttachment | undefined) : this;
     blendMode (value : BackgroundBlendMode | undefined) : this;
     clip (value : BackgroundClip | undefined) : this;
-    color (value : Color | ColorDTO | undefined) : this;
+    color (value : ColorEntity | Color | ColorDTO | undefined) : this;
     transparentColor () : this;
     setTransparentColor () : this;
     image (value : BackgroundImage | BackgroundImageDTO | undefined) : this;
     origin (value : BackgroundOrigin | undefined) : this;
-
     position (
         a : BackgroundPosition | undefined,
         b : BackgroundPosition | undefined,
     ) : this;
     position (value : BackgroundPositionOptions | undefined) : this;
-
     repeat (value : BackgroundRepeat | BackgroundRepeatDTO | undefined) : this;
     size (value : BackgroundSizeOptions | undefined) : this;
 

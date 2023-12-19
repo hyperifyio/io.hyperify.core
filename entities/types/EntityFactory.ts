@@ -40,6 +40,11 @@ export interface PropertyTypeCheckFn {
     (value: ReadonlyJsonObject): boolean;
 }
 
+export interface CreateEntityTypeOpts {
+    readonly immutable ?: boolean,
+    readonly name ?: string,
+}
+
 /**
  * Factory for entity classes.
  */
@@ -83,14 +88,38 @@ export interface EntityFactory<
     /**
      * Creates a test function for DTO object.
      */
-    createIsDTO () : IsDTOTestFunction<D>;
+    createTestFunctionOfDTO () : IsDTOTestFunction<D>;
 
     /**
-     * Creates an entity constructor.
+     * Creates an entity constructor by default name.
+     */
+    createEntityType () : EntityType<D, T>;
+
+    /**
+     * Creates an entity constructor by another name.
      */
     createEntityType (
         name : string,
-        opts : { immutable ?: boolean }
+    ) : EntityType<D, T>;
+
+    /**
+     * Creates an entity constructor by name and options.
+     *
+     * @param name
+     * @param opts
+     */
+    createEntityType (
+        name : string,
+        opts: CreateEntityTypeOpts,
+    ) : EntityType<D, T>;
+
+    /**
+     * Creates an entity constructor by default name and options.
+     *
+     * @param opts
+     */
+    createEntityType (
+        opts: CreateEntityTypeOpts,
     ) : EntityType<D, T>;
 
 }

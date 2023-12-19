@@ -7,7 +7,7 @@ import { ColorDTO } from "./ColorDTO";
 import { Entity } from "../types/Entity";
 
 /**
- * Presents a color value
+ * Presents an interface for color value
  */
 export interface Color extends Entity<ColorDTO> {
 
@@ -36,7 +36,16 @@ export interface Color extends Entity<ColorDTO> {
      *
      * @param value
      */
-    setValue (value : string ) : this;
+    setValue (value : string) : this;
+
+    /**
+     * Set a value.
+     *
+     * An alias for `.setValue(value)`.
+     *
+     * @param value
+     */
+    value (value : string) : this;
 
     /**
      * Returns CSS styles.

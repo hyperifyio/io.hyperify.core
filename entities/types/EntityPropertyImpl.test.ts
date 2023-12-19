@@ -4,9 +4,9 @@ import { beforeEach } from "@jest/globals";
 import { DTO } from "./DTO";
 import { Entity } from "./Entity";
 import { EntityFactoryImpl } from "./EntityFactoryImpl";
-import { VariableType } from "./EntityProperty";
 import { EntityPropertyImpl } from "./EntityPropertyImpl";
 import { EntityType } from "./EntityType";
+import { VariableType } from "./VariableType";
 
 describe('EntityPropertyImpl', () => {
 

@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { VariableType } from "../types/VariableType";
 import {
     createFontDTO,
     FontDTO,
@@ -11,7 +12,6 @@ import {
     SizeEntity,
 } from "../size/SizeEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { VariableType } from "../types/EntityProperty";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import {
     Font,

@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { VariableType } from "../types/VariableType";
 import {
     createSizeDTO,
     isAutoSizeType,
@@ -9,7 +10,6 @@ import {
 } from "./SizeDTO";
 import { isNumber } from "../../types/Number";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { VariableType } from "../types/EntityProperty";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import {
     isSize,

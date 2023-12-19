@@ -1,7 +1,7 @@
 // Copyright (c) 2023. Heusala Group Oy <info@hg.fi>. All rights reserved.
 
 import { LogUtils } from "./LogUtils";
-import "../testing/jest/matchers/index";
+import "../testing/jest/matchers";
 
 describe('LogUtils', () => {
 

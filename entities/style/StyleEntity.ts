@@ -3,15 +3,11 @@
 import { BackgroundDTO } from "../background/BackgroundDTO";
 import {
     BorderDTO,
-    createBorderDTO,
-    isBorderDTO,
 } from "../border/BorderDTO";
 import {
     ColorDTO,
-    createColorDTO,
 } from "../color/ColorDTO";
 import {
-    createFontDTO,
     FontDTO,
 } from "../font/FontDTO";
 import {
@@ -19,6 +15,7 @@ import {
     isSizeDTO,
     SizeDTO,
 } from "../size/SizeDTO";
+import { VariableType } from "../types/VariableType";
 import {
     createStyleDTO,
     StyleDTO,
@@ -39,6 +36,7 @@ import {
 import { BorderBoxEntity } from "../borderBox/BorderBoxEntity";
 import {
     BorderEntity,
+    isBorderDTO,
     isBorderEntity,
 } from "../border/BorderEntity";
 import {
@@ -64,9 +62,7 @@ import {
     Border,
     isBorder,
 } from "../border/Border";
-import { isBorderBox } from "../borderBox/BorderBox";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { VariableType } from "../types/EntityProperty";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import {
     Font,
@@ -90,7 +86,7 @@ const BOTTOM_MARGIN_INDEX = 2;
 const LEFT_MARGIN_INDEX = 3;
 
 export const StyleEntityFactory = (
-    EntityFactoryImpl.create<StyleDTO, Style>()
+    EntityFactoryImpl.create<StyleDTO, Style>('Style')
                      .add( EntityPropertyImpl.create("textAlign").setTypes(TextAlign, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("textColor").setTypes(ColorEntity, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("width").setTypes(SizeEntity, VariableType.UNDEFINED) )
@@ -120,8 +116,9 @@ export class StyleEntity
 {
 
     public static create (
+        dto ?: StyleDTO,
     ) : StyleEntity {
-        return new this();
+        return new this(dto);
     }
 
     /**
@@ -159,7 +156,7 @@ export class StyleEntity
         value : ColorEntity | ColorDTO | string | undefined
     ) : ColorDTO | undefined {
         if (value === undefined) return undefined;
-        if (isString(value)) return createColorDTO(value);
+        if (isString(value)) return ColorEntity.create(value).getDTO();
         if (isColorEntity(value)) return value.getDTO();
         return value;
     }
@@ -179,24 +176,10 @@ export class StyleEntity
     ) : FontDTO | undefined {
         if (value === undefined) return undefined;
         if (isNumber(value)) {
-            return createFontDTO(
-                undefined,
-                undefined,
-                undefined,
-                SizeEntity.create(value).getDTO(),
-                undefined,
-                undefined,
-            );
+            return FontEntity.create().setFontSize( SizeEntity.create(value).getDTO() ).getDTO();
         }
         if (isString(value)) {
-            return createFontDTO(
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                value,
-            );
+            return FontEntity.create().setFontFamily( value ).getDTO();
         }
         if (isFontEntity(value)) return value.getDTO();
         if (isFont(value)) return value.getDTO();
@@ -208,12 +191,7 @@ export class StyleEntity
     ) : BorderDTO | undefined {
         if (value === undefined) return undefined;
         if (isNumber(value)) {
-            return createBorderDTO(
-                createSizeDTO(value),
-                undefined,
-                undefined,
-                undefined,
-            );
+            return BorderEntity.create().setWidth(value).getDTO();
         }
         if (isBorderEntity(value)) return value.getDTO();
         if (isBorder(value)) return value.getDTO();
@@ -301,12 +279,7 @@ export class StyleEntity
     ) : BorderDTO | [BorderDTO, BorderDTO, BorderDTO, BorderDTO] | undefined {
         if (value === undefined) return undefined;
         if (isNumber(value)) {
-            return createBorderDTO(
-                createSizeDTO( value ),
-                undefined,
-                undefined,
-                undefined,
-            );
+            return BorderEntity.create().setWidth( SizeEntity.create(value) ).getDTO();
         }
         if (isBorderEntity(value)) return value.getDTO();
         if (isBorder(value)) return value.getDTO();
@@ -380,7 +353,7 @@ export class StyleEntity
 
         if (isBorderDTO(value)) {
             return {
-                border: BorderEntity.createFromDTO(value).getCssStyles()
+                border: BorderEntity.create(value).getCssStyles()
             };
         }
 
