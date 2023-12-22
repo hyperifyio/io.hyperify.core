@@ -1,6 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { isObject } from "lodash";
+import { isObject } from "../../types/Object";
 import { EnumUtils } from "../../EnumUtils";
 import { filter } from "../../functions/filter";
 import { forEach } from "../../functions/forEach";
