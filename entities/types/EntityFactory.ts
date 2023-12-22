@@ -40,6 +40,10 @@ export interface PropertyTypeCheckFn {
     (value: ReadonlyJsonObject): boolean;
 }
 
+export interface MethodTypeCheckFn {
+    (value: Object): boolean;
+}
+
 export interface CreateEntityTypeOpts {
     readonly immutable ?: boolean,
     readonly name ?: string,

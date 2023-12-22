@@ -982,6 +982,112 @@ describe('EntityFactoryImpl', () => {
 
     });
 
+    describe.only('.createTestFunctionOfInterface', () => {
+
+        let item : EntityFactoryImpl<any, any>;
+        let fn : any;
+
+        beforeEach(() => {
+
+            item = (
+                EntityFactoryImpl.create('Entity')
+                                 .add( EntityPropertyImpl.create("age").setTypes(VariableType.INTEGER).setDefaultValue(30) )
+                                 .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING).setDefaultValue('Smith') )
+            );
+
+            fn = item.createTestFunctionOfInterface();
+
+        });
+
+        it('can create a test function for valid interfaces', () => {
+            expect( fn({
+                getEntityType () { return {}; },
+                getDTO () { return {}; },
+                valueOf () { return {}; },
+                toJSON () { return {}; },
+
+                getAge () { return 30; },
+                setAge (age: string) { return this; },
+                age (age: string) { return this; },
+
+                getName () { return 'John'; },
+                setName (name: string) { return this; },
+                name (name: string) { return this; },
+
+            }) ).toBe(true);
+        });
+
+        it('can create a test function for interfaces which detects missing property methods', () => {
+            expect( fn({
+                getEntityType () { return {}; },
+                getDTO () { return {}; },
+                valueOf () { return {}; },
+                toJSON () { return {}; },
+
+                getAge () { return 30; },
+                setAge (age: string) { return this; },
+                age (age: string) { return this; },
+
+                getName () { return 'John'; },
+                // Missing setName
+                name (name: string) { return this; },
+
+            }) ).toBe(false);
+        });
+
+        it('can create a test function for interfaces which detects missing base methods', () => {
+            expect( fn({
+
+                // Missing getEntityType, getDTO, valueOf and toJSON
+
+                getAge () { return 30; },
+                setAge (age: string) { return this; },
+                age (age: string) { return this; },
+
+                getName () { return 'John'; },
+                setName (name: string) { return this; },
+                name (name: string) { return this; },
+
+            }) ).toBe(false);
+        });
+
+        it('can create a test function for invalid interfaces', () => {
+            expect( fn({
+
+                getEntityType : null,
+                getDTO () { return {}; },
+                valueOf () { return {}; },
+                toJSON () { return {}; },
+
+                getAge () { return 30; },
+                setAge (age: string) { return this; },
+                age (age: string) { return this; },
+
+                getName () { return 'John'; },
+                setName (name: string) { return this; },
+                name (name: string) { return this; },
+
+            }) ).toBe(false);
+        });
+
+        it('can create a test function for interfaces which detects invalid values', () => {
+            expect( fn({name : 'John', age: 20}) ).toBe(false);
+            expect( fn({name : 'John', age: null}) ).toBe(false);
+            expect( fn({name : 123, age: 30}) ).toBe(false);
+            expect( fn({age: 30}) ).toBe(false);
+            expect( fn({name : 123}) ).toBe(false);
+            expect( fn(123) ).toBe(false);
+            expect( fn(null) ).toBe(false);
+            expect( fn(undefined) ).toBe(false);
+            expect( fn({}) ).toBe(false);
+            expect( fn([]) ).toBe(false);
+            expect( fn(true) ).toBe(false);
+            expect( fn(false) ).toBe(false);
+            expect( fn("hello world") ).toBe(false);
+        });
+
+    });
+
     describe('.createEntityType', () => {
 
         interface MyDTO extends DTO {

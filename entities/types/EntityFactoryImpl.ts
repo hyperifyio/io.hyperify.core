@@ -1,5 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { uniq } from "../../functions/uniq";
+import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
 import { EnumUtils } from "../../EnumUtils";
 import { filter } from "../../functions/filter";
@@ -52,6 +54,7 @@ import {
     CreateEntityTypeOpts,
     EntityFactory,
     GetterMethod,
+    MethodTypeCheckFn,
     PropertyTypeCheckFn,
     SetterMethod,
     TypeCheckFn,
@@ -859,39 +862,48 @@ export class EntityFactoryImpl<
         );
     }
 
-    public createTestFunction () {
+    /**
+     * @inheritDoc
+     */
+    public createTestFunctionOfInterface () {
+
         const properties : readonly EntityProperty[] = this.getProperties();
 
-        // const propertyNames : readonly string[] = map(
-        //     properties,
-        //     (item : EntityProperty) : string => item.getPropertyName()
-        // );
-
-        const methods = [
-            ...properties.map((prop: EntityProperty) : readonly string[] => prop.getMethodAliases()),
-            ...properties.map((prop: EntityProperty) : readonly string[] => prop.getGetterNames()),
-            ...properties.map((prop: EntityProperty) : readonly string[] => prop.getSetterNames())
-        ].flat();
-
-        const checkProperties = reduce(
+        const methodNames : string[] = uniq(reduce(
             properties,
-            (prev: PropertyTypeCheckFn, item: EntityProperty): PropertyTypeCheckFn => {
-                const propertyName = item.getPropertyName();
-                const isType = EntityFactoryImpl.createTypeCheckFn(...item.getTypes());
-                return (value: ReadonlyJsonObject) : boolean => prev(value) && isType(value[propertyName]);
+            (prev: string[], item: EntityProperty) : string[] => {
+                return [
+                    ...prev,
+                    ...item.getGetterNames(),
+                    ...item.getSetterNames(),
+                    ...item.getMethodAliases(),
+                ];
             },
-            (value: ReadonlyJsonObject): boolean => isObject(value),
+            [
+                'valueOf',
+                'toJSON',
+                'getDTO',
+                'getEntityType',
+            ]
+        ));
+
+        const checkFunctions : MethodTypeCheckFn | undefined = reduce(
+            methodNames,
+            (prev: MethodTypeCheckFn | undefined, methodName: string): MethodTypeCheckFn => {
+                if (prev === undefined) {
+                    return (value: any) : boolean => isFunction(value[methodName]);
+                } else {
+                    return (value: any) : boolean => prev(value) && isFunction(value[methodName]);
+                }
+            },
+            undefined
         );
 
-        return (value : unknown) : value is D => {
-            return (
-                isRegularObject(value)
-                && hasNoOtherKeysInDevelopment(value, propertyNames)
-                && checkProperties(value)
-            );
-        };
+        if (checkFunctions === undefined) {
+            return (value : unknown) : value is D => isObject(value);
+        }
 
-
+        return (value : unknown) : value is D => isObject(value) && checkFunctions(value);
     }
 
 

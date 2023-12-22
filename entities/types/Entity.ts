@@ -44,5 +44,6 @@ export function isEntity (value : unknown) : value is Entity<DTO> {
         && isFunction(value?.valueOf)
         && isFunction(value?.toJSON)
         && isFunction(value?.getDTO)
+        && isFunction(value?.getEntityType)
     );
 }
