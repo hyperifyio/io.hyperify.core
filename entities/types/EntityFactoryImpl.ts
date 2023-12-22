@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { isObject } from "lodash";
 import { EnumUtils } from "../../EnumUtils";
 import { filter } from "../../functions/filter";
 import { forEach } from "../../functions/forEach";
@@ -856,6 +857,41 @@ export class EntityFactoryImpl<
         return (value: unknown) : string => (
             testDTO( value ) || testOtherTypes( value ) ? ok : notOk
         );
+    }
+
+    public createTestFunction () {
+        const properties : readonly EntityProperty[] = this.getProperties();
+
+        // const propertyNames : readonly string[] = map(
+        //     properties,
+        //     (item : EntityProperty) : string => item.getPropertyName()
+        // );
+
+        const methods = [
+            ...properties.map((prop: EntityProperty) : readonly string[] => prop.getMethodAliases()),
+            ...properties.map((prop: EntityProperty) : readonly string[] => prop.getGetterNames()),
+            ...properties.map((prop: EntityProperty) : readonly string[] => prop.getSetterNames())
+        ].flat();
+
+        const checkProperties = reduce(
+            properties,
+            (prev: PropertyTypeCheckFn, item: EntityProperty): PropertyTypeCheckFn => {
+                const propertyName = item.getPropertyName();
+                const isType = EntityFactoryImpl.createTypeCheckFn(...item.getTypes());
+                return (value: ReadonlyJsonObject) : boolean => prev(value) && isType(value[propertyName]);
+            },
+            (value: ReadonlyJsonObject): boolean => isObject(value),
+        );
+
+        return (value : unknown) : value is D => {
+            return (
+                isRegularObject(value)
+                && hasNoOtherKeysInDevelopment(value, propertyNames)
+                && checkProperties(value)
+            );
+        };
+
+
     }
 
 
