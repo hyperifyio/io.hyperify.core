@@ -13,26 +13,27 @@ import { prefixLines } from "../../types/String";
 import { isUndefined } from "../../types/undefined";
 import {
     ComponentDTO,
-    explainStringOrComponentDTO,
-    isStringOrComponentDTO,
 } from "./ComponentDTO";
+import {
+    explainComponentDTOOrString,
+    isComponentDTOOrString,
+} from "./ComponentEntity";
 
 export type ComponentContent = readonly (string|ComponentDTO)[];
 
 export function isComponentContent ( value: unknown) : value is ComponentContent {
-    return isArrayOf<string|ComponentDTO>(value, isStringOrComponentDTO);
+    return isArrayOf<string|ComponentDTO>(value, isComponentDTOOrString);
 }
 
 export function explainComponentContent (value: any) : string {
     return isComponentContent(value) ? explainOk() : explainNot(
         `Array<string|ComponentDTO>(\n${prefixLines(explainArrayOf<string|ComponentDTO>(
             "string|ComponentDTO",
-            explainStringOrComponentDTO,
+            explainComponentDTOOrString,
             value,
-            isStringOrComponentDTO
+            isComponentDTOOrString
         ), '  ')}\n)`
     );
-
 }
 
 export function isComponentContentOrUndefined ( value: unknown) : value is ComponentContent | undefined {

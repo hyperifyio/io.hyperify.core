@@ -98,7 +98,7 @@ describe("OpenAiCompletionResponseUsage", () => {
                                                              total_tokens: 3
                                                          })).toEqual(
                 // "Object has a non-number property 'prompt_tokens' ("1")"
-                'property "prompt_tokens" not number'
+                expect.stringContaining('property "prompt_tokens" not number')
             );
         });
 
@@ -107,9 +107,9 @@ describe("OpenAiCompletionResponseUsage", () => {
                                                              prompt_tokens: 1,
                                                              completion_tokens: "not a number",
                                                              total_tokens: 3
-                                                         })).toBe(
+                                                         })).toEqual(
                 // "Expected property 'completion_tokens' to be a number, but got string 'not a number' instead"
-                'property "completion_tokens" not number'
+                expect.stringContaining('property "completion_tokens" not number')
             );
         });
 

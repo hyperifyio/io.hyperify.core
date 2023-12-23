@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@hg.fi>. All rights reserved.
 
+import { jest } from '@jest/globals';
 import { ProcessUtils } from "./ProcessUtils";
 import FS from 'fs';
 

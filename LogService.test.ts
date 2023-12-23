@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { jest } from '@jest/globals';
 import { MockLogger } from "./logger/mock/MockLogger";
 import { LogLevel } from "./types/LogLevel";
 import { LogService } from "./LogService";

@@ -1,9 +1,8 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { VariableType } from "../types/VariableType";
 import {
     BackgroundRepeatDTO,
-    createBackgroundRepeatDTO,
-    isBackgroundRepeatDTO,
 } from "./BackgroundRepeatDTO";
 import {
     BackgroundRepeatType,
@@ -14,10 +13,20 @@ import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BackgroundRepeatEntityFactory = (
-    EntityFactoryImpl.create<BackgroundRepeatDTO, BackgroundRepeat>()
+    EntityFactoryImpl.create<BackgroundRepeatDTO, BackgroundRepeat>("BackgroundRepeat")
                      .add( EntityPropertyImpl.create("x").setTypes(BackgroundRepeatType) )
                      .add( EntityPropertyImpl.create("y").setTypes(BackgroundRepeatType) )
 );
+
+export const isBackgroundRepeatDTO = BackgroundRepeatEntityFactory.createTestFunctionOfDTO();
+
+export const isBackgroundRepeat = BackgroundRepeatEntityFactory.createTestFunctionOfInterface();
+
+export const explainBackgroundRepeatDTO = BackgroundRepeatEntityFactory.createExplainFunctionOfDTO();
+
+export const isBackgroundRepeatDTOOrUndefined = BackgroundRepeatEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const explainBackgroundRepeatDTOOrUndefined = BackgroundRepeatEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
 
 export const BaseBackgroundRepeatEntity = BackgroundRepeatEntityFactory.createEntityType();
 
@@ -98,7 +107,7 @@ export class BackgroundRepeatEntity
         if (x === undefined) {
             super();
         } else if ( isBackgroundRepeatType(x) && isBackgroundRepeatType(y) ) {
-            super( createBackgroundRepeatDTO(x, y) );
+            super( { x, y } );
         } else if (isBackgroundRepeatDTO(x) ) {
             super( x );
         } else {

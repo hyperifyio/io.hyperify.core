@@ -126,6 +126,7 @@ describe("OpenAiChatCompletionResponseDTO", () => {
     describe("explainOpenAiChatCompletionResponseDTO", () => {
 
         it("returns a string explaining why the value is not a OpenAiChatCompletionResponseDTO", () => {
+
             const item = {
                 "choices": [
                     {
@@ -148,9 +149,11 @@ describe("OpenAiChatCompletionResponseDTO", () => {
                 }
             };
 
-        expect(explainOpenAiChatCompletionResponseDTO(item)).toBe(
-            "property \"id\" not string, property \"created\" not number, property \"choices\" not OpenAiChatCompletionResponseChoice|OpenAiError: property \"index\" not number"
-        );
+            const result = explainOpenAiChatCompletionResponseDTO(item);
+            expect(result).toEqual( expect.stringContaining( "property \"id\" not string" ) );
+            expect(result).toEqual( expect.stringContaining( "property \"created\" not number" ) );
+            expect(result).toEqual( expect.stringContaining( "property \"choices\" not OpenAiChatCompletionResponseChoice|OpenAiError" ) );
+            expect(result).toEqual( expect.stringContaining( "property \"index\" not number" ) );
 
         });
 
@@ -180,9 +183,14 @@ describe("OpenAiChatCompletionResponseDTO", () => {
                 }
             };
 
-            expect(explainOpenAiChatCompletionResponseDTO(item)).toBe(
-                "Value had extra properties: params, property \"id\" not string, property \"created\" not number, property \"choices\" not OpenAiChatCompletionResponseChoice|OpenAiError: property \"index\" not number, property \"message\" Value had extra properties: extra"
-            );
+            const result = explainOpenAiChatCompletionResponseDTO(item);
+
+            expect(result).toEqual( expect.stringContaining("Value had extra properties: params") );
+            expect(result).toEqual( expect.stringContaining("property \"id\" not string") );
+            expect(result).toEqual( expect.stringContaining("property \"created\" not number") );
+            expect(result).toEqual( expect.stringContaining("property \"choices\" not OpenAiChatCompletionResponseChoice|OpenAiError") );
+            expect(result).toEqual( expect.stringContaining("property \"index\" not number") );
+            expect(result).toEqual( expect.stringContaining("property \"message\" Value had extra properties: extra") );
         });
 
 

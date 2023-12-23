@@ -3,32 +3,42 @@
 import { VariableType } from "../types/VariableType";
 import {
     BorderBoxDTO,
-    createBorderBoxDTO,
-    isBorderBoxDTO,
 } from "./BorderBoxDTO";
 import {
-    isBorderDTO,
     BorderDTO,
 } from "../border/BorderDTO";
 import { reduce } from "../../functions/reduce";
 import { ReadonlyJsonObject } from "../../Json";
-import { BorderEntity } from "../border/BorderEntity";
+import {
+    BorderEntity,
+    isBorderDTO,
+} from "../border/BorderEntity";
 import {
     BorderBox,
-    isBorderBox,
 } from "./BorderBox";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BorderBoxEntityFactory = (
-    EntityFactoryImpl.create<BorderBoxDTO, BorderBox>()
+    EntityFactoryImpl.create<BorderBoxDTO, BorderBox>('BorderBox')
                      .add( EntityPropertyImpl.create("top").setTypes(BorderEntity, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("right").setTypes(BorderEntity, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("bottom").setTypes(BorderEntity, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("left").setTypes(BorderEntity, VariableType.UNDEFINED) )
 );
 
+export const isBorderBoxDTO = BorderBoxEntityFactory.createTestFunctionOfDTO();
+
+export const isBorderBox = BorderBoxEntityFactory.createTestFunctionOfInterface();
+
+export const explainBorderBoxDTO = BorderBoxEntityFactory.createExplainFunctionOfDTO();
+
+export const isBorderBoxDTOOrUndefined = BorderBoxEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const explainBorderBoxDTOOrUndefined = BorderBoxEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
 export const BaseBorderBoxEntity = BorderBoxEntityFactory.createEntityType();
+
 
 /**
  * BorderBox entity.
@@ -89,9 +99,9 @@ export class BorderBoxEntity
         } else if ( isBorderBox(top) ) {
             return new BorderBoxEntity(top.getDTO());
         } else if ( isBorderDTO(top) && isBorderDTO(right) && bottom === undefined && left === undefined  ) {
-            return new BorderBoxEntity( createBorderBoxDTO(top, right, top, right) );
+            return new BorderBoxEntity( { top, right, bottom: top, left: right } );
         } else if ( isBorderDTO(top) && isBorderDTO(right) && isBorderDTO(bottom) && isBorderDTO(left) ) {
-            return new BorderBoxEntity( createBorderBoxDTO(top, right, bottom, left) );
+            return new BorderBoxEntity( { top, right, bottom, left } );
         } else {
             throw new TypeError(`Invalid arguments for create: ${top}, ${right}, ${bottom}, ${left}`);
         }
@@ -124,12 +134,7 @@ export class BorderBoxEntity
                         ...dto,
                     };
                 },
-                createBorderBoxDTO(
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                ),
+                {},
             )
         );
     }

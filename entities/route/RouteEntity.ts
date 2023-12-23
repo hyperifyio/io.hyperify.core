@@ -1,15 +1,13 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { ReadonlyJsonObject } from "../../Json";
 import { RouteDTO } from "./RouteDTO";
 import { Extendable } from "../types/Extendable";
 import { JsonSerializable } from "../types/JsonSerializable";
-import {EntityFactoryImpl} from "../types/EntityFactoryImpl";
-import {Route} from "./Route";
-import {EntityPropertyImpl} from "../types/EntityPropertyImpl";
-import {VariableType} from "../types/VariableType";
-import {isString} from "../../types/String";
-
+import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
+import { Route } from "./Route";
+import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
+import { VariableType } from "../types/VariableType";
+import { isString } from "../../types/String";
 
 
 export const RouteEntityFactory = (
@@ -21,6 +19,8 @@ export const RouteEntityFactory = (
         .add( EntityPropertyImpl.create("view").setTypes(VariableType.UNDEFINED) )
         .add( EntityPropertyImpl.create("redirect").setTypes(VariableType.UNDEFINED) )
 );
+
+export const isRoute = RouteEntityFactory.createTestFunctionOfInterface();
 
 export const isRouteDTO = RouteEntityFactory.createTestFunctionOfDTO();
 

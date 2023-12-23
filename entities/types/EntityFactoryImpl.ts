@@ -75,6 +75,7 @@ import {
     IsDTOExplainFunction,
     IsDTOOrTestFunction,
     IsDTOTestFunction,
+    IsInterfaceTestFunction,
 } from "./IsDTOTestFunction";
 import {
     isVariableType,
@@ -229,7 +230,6 @@ export class EntityFactoryImpl<
     ///////////////////////////  #createTypeCheckFn  ///////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-
     /**
      *
      * @param types
@@ -237,27 +237,56 @@ export class EntityFactoryImpl<
     public static createTypeCheckFn (
         ...types: readonly EntityPropertyType[]
     ) : TypeCheckFn {
-        return reduce(
+
+        let func = reduce(
             types,
-            (prev: TypeCheckFn, item: EntityPropertyType) : TypeCheckFn => {
-                if (isEntityType(item)) {
-                    return (value: unknown) : boolean => prev(value) || item.isEntity(value);
-                }
-                if (isEnumType<any>(item)) {
-                    return (value: unknown) : boolean => prev(value) || isEnum<any>(item, value);
-                }
-                switch (item) {
-                    case VariableType.BOOLEAN: return (value: unknown) : boolean => prev(value) || isBoolean(value);
-                    case VariableType.STRING: return (value: unknown) : boolean => prev(value) || isString(value);
-                    case VariableType.INTEGER: return (value: unknown) : boolean => prev(value) || isInteger(value);
-                    case VariableType.NUMBER: return (value: unknown) : boolean => prev(value) || isNumber(value);
-                    case VariableType.NULL: return (value: unknown) : boolean => prev(value) || isNull(value);
-                    case VariableType.UNDEFINED: return (value: unknown) : boolean => prev(value) || isUndefined(value);
-                    default: throw new TypeError(`createTypeCheckFn: Unknown variable type: ${item}`);
+            (prev: TypeCheckFn | undefined, item: EntityPropertyType) : TypeCheckFn => {
+                const testFunc = this._createTypeCheckFn(item);
+                if (prev === undefined) {
+                    return (value: unknown) : boolean => testFunc(value);
+                } else {
+                    return (value: unknown) : boolean => prev(value) && testFunc(value);
                 }
             },
-            () : boolean => false,
+            undefined,
         );
+
+        if (func === undefined) {
+            throw new TypeError(`createTypeCheckFn: At least one type must be defined`);
+        }
+
+        return func;
+
+    }
+
+    protected static _createTypeCheckFn (item: EntityPropertyType) {
+
+        if ( isString(item) && !isVariableType(item) ) {
+            if ( has(EntityFactoryImpl._entities, item) ) {
+                item = EntityFactoryImpl._entities[item];
+            } else {
+                throw new TypeError(`EntityFactoryImpl.createTypeCheckFn(): Could not initialize entity by name: ${item}`);
+            }
+        }
+
+        if (isEntityType(item)) {
+            let isEntity = item.isEntity;
+            return (value: unknown) : boolean => isEntity(value);
+        } else if (isEnumType<any>(item)) {
+            let enumType = item;
+            return (value: unknown) : boolean => isEnum<any>(enumType, value);
+        }
+
+        switch (item) {
+            case VariableType.BOOLEAN: return (value: unknown) : boolean => isBoolean(value);
+            case VariableType.STRING: return (value: unknown) : boolean => isString(value);
+            case VariableType.INTEGER: return (value: unknown) : boolean => isInteger(value);
+            case VariableType.NUMBER: return (value: unknown) : boolean => isNumber(value);
+            case VariableType.NULL: return (value: unknown) : boolean => isNull(value);
+            case VariableType.UNDEFINED: return (value: unknown) : boolean => isUndefined(value);
+            default: throw new TypeError(`createTypeCheckFn: Unknown variable type: ${item}`);
+        }
+
     }
 
 
@@ -270,24 +299,36 @@ export class EntityFactoryImpl<
     ) : string[] {
         return map(
             types,
-            (item: EntityPropertyType) : string => {
-                if (isEntityType(item)) {
-                    return item.getEntityName();
-                }
-                if (isEnumType<any>(item)) {
-                    return `enum (${EnumUtils.getValues<any>(item).join(' | ')})`;
-                }
-                switch (item) {
-                    case VariableType.BOOLEAN: return 'boolean';
-                    case VariableType.STRING: return 'string';
-                    case VariableType.INTEGER: return 'integer';
-                    case VariableType.NUMBER: return 'number';
-                    case VariableType.NULL: return 'null';
-                    case VariableType.UNDEFINED: return 'undefined';
-                    default: throw new TypeError(`createTypeExplainFn: Unknown variable type: ${item}`);
-                }
-            },
+            (item: EntityPropertyType) : string => this._getTypeName( item ),
         );
+    }
+
+    private static _getTypeName (
+        item: EntityPropertyType
+    ) : string {
+
+        if ( isString(item) && !isVariableType(item) ) {
+            if ( has(this._entities, item) ) {
+                item = this._entities[item];
+            } else {
+                throw new TypeError(`EntityFactoryImpl.createPropertyGetter(): Could not initialize entity by name: ${item}`);
+            }
+        }
+
+        if (isEntityType(item)) {
+            return item.getEntityName();
+        } else if (isEnumType<any>(item)) {
+            return `enum (${EnumUtils.getValues<any>(item).join(' | ')})`;
+        }
+        switch (item) {
+            case VariableType.BOOLEAN: return 'boolean';
+            case VariableType.STRING: return 'string';
+            case VariableType.INTEGER: return 'integer';
+            case VariableType.NUMBER: return 'number';
+            case VariableType.NULL: return 'null';
+            case VariableType.UNDEFINED: return 'undefined';
+            default: throw new TypeError(`createTypeExplainFn: Unknown variable type: ${item}`);
+        }
     }
 
 
@@ -865,7 +906,7 @@ export class EntityFactoryImpl<
     /**
      * @inheritDoc
      */
-    public createTestFunctionOfInterface () {
+    public createTestFunctionOfInterface () : IsInterfaceTestFunction<D, T> {
 
         const properties : readonly EntityProperty[] = this.getProperties();
 
@@ -900,10 +941,10 @@ export class EntityFactoryImpl<
         );
 
         if (checkFunctions === undefined) {
-            return (value : unknown) : value is D => isObject(value);
+            return (value : unknown) : value is T => isObject(value);
         }
 
-        return (value : unknown) : value is D => isObject(value) && checkFunctions(value);
+        return (value : unknown) : value is T => isObject(value) && checkFunctions(value);
     }
 
 

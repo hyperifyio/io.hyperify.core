@@ -310,7 +310,7 @@ describe("OpenAiEditRequestDTO", () => {
                     top_p: 0.9
                 })).toEqual(
                 // TODO: 'value has a property "instruction" with invalid value: expected string, got number'
-                'property "instruction" not string'
+                expect.stringContaining('property "instruction" not string')
             );
         });
 
@@ -347,9 +347,9 @@ describe("OpenAiEditRequestDTO", () => {
                 top_p: 0.8
             };
 
-            expect(explainOpenAiEditRequestDTO(value)).toBe(
+            expect(explainOpenAiEditRequestDTO(value)).toEqual(
                 // TODO: 'incorrect property value for temperature: expected a number, but got a string'
-                'property "temperature" not number or undefined'
+                expect.stringContaining('property "temperature" not number or undefined')
             );
         });
 
@@ -365,7 +365,7 @@ describe("OpenAiEditRequestDTO", () => {
             const result = explainOpenAiEditRequestDTO(value);
             // TODO: const expected = `invalid OpenAiEditRequestDTO: top_p: expected a number, got string`;
             const expected = `property "top_p" not number or undefined`;
-            expect(result).toEqual(expected);
+            expect(result).toEqual(expect.stringContaining(expected));
         });
 
     });

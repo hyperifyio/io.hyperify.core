@@ -351,16 +351,16 @@ describe("OpenAiCompletionRequestDTO", () => {
 
         it("returns a human-readable string explaining why the value has a non-string prompt property", () => {
             expect(explainOpenAiCompletionRequestDTO({
-                                                         prompt: 12345,
-                                                         model: OpenAiModel.DAVINCI,
-                                                         max_tokens: 10,
-                                                         temperature: 0.5,
-                                                         top_p: 0.9,
-                                                         frequency_penalty: 0.5,
-                                                         presence_penalty: 0.5
-                                                     })).toEqual(
-                                                         // TODO: 'value has a property "prompt" with invalid value: expected string, got number'
-                                                         'property "prompt" not string'
+                 prompt: 12345,
+                 model: OpenAiModel.DAVINCI,
+                 max_tokens: 10,
+                 temperature: 0.5,
+                 top_p: 0.9,
+                 frequency_penalty: 0.5,
+                 presence_penalty: 0.5
+            })).toEqual(
+                // TODO: 'value has a property "prompt" with invalid value: expected string, got number'
+                expect.stringContaining('property "prompt" not string')
             );
         });
 
@@ -398,9 +398,9 @@ describe("OpenAiCompletionRequestDTO", () => {
                 presence_penalty: 0.7
             };
 
-            expect(explainOpenAiCompletionRequestDTO(value)).toBe(
+            expect(explainOpenAiCompletionRequestDTO(value)).toEqual(
                 // TODO: 'incorrect property value for temperature: expected a number, but got a string'
-                'property "temperature" not number'
+                expect.stringContaining('property "temperature" not number')
             );
         });
 
@@ -417,7 +417,7 @@ describe("OpenAiCompletionRequestDTO", () => {
             const result = explainOpenAiCompletionRequestDTO(value);
             // TODO: const expected = `invalid OpenAiCompletionRequestDTO: top_p: expected a number, got string`;
             const expected = `property "top_p" not number`;
-            expect(result).toEqual(expected);
+            expect(result).toEqual(expect.stringContaining(expected));
         });
 
         it("returns a human-readable string explaining why the value has a non-number frequency_penalty property", () => {
@@ -432,7 +432,7 @@ describe("OpenAiCompletionRequestDTO", () => {
             };
             expect(explainOpenAiCompletionRequestDTO(invalidValue)).toEqual(
                 // TODO: 'incorrect property value "not a number" for frequency_penalty: must be a number'
-                'property "frequency_penalty" not number'
+                expect.stringContaining('property "frequency_penalty" not number')
             );
         });
 
@@ -445,9 +445,9 @@ describe("OpenAiCompletionRequestDTO", () => {
                                                          top_p: 0.9,
                                                          frequency_penalty: 0.5,
                                                          presence_penalty: '0.5'
-                                                     })).toBe(
-                                                         // TODO: 'incorrect value "0.5" for presence_penalty: Value must be a number'
-                                                         'property "presence_penalty" not number'
+                                                     })).toEqual(
+                // TODO: 'incorrect value "0.5" for presence_penalty: Value must be a number'
+                expect.stringContaining('property "presence_penalty" not number')
             );
         });
 

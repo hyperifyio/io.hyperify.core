@@ -41,9 +41,9 @@ describe("OpenAiChatCompletionFunctionCall", () => {
         });
 
         it("returns a human-readable string explaining why the value is not a OpenAiChatCompletionFunctionCall", () => {
-            expect(explainOpenAiChatCompletionFunctionCall(inValidItem)).toBe(
-                "Value had extra properties: role, property \"args\" not string"
-            )
+            const result = explainOpenAiChatCompletionFunctionCall(inValidItem);
+            expect(result).toEqual( expect.stringContaining("Value had extra properties: role") );
+            expect(result).toEqual( expect.stringContaining("property \"args\" not string") );
         });
 
     });

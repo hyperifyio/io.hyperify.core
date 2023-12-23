@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { jest } from '@jest/globals';
 import { ReadonlyJsonObject } from "../Json";
 import { RequestClient } from "../RequestClient";
 import { LogLevel } from "../types/LogLevel";
@@ -56,7 +57,7 @@ const mockTwilioMessage: TwilioMessageDTO = {
 };
 
 class MockRequestClient {
-    postText = jest.fn();
+    postText = jest.fn<() => Promise<string>>();
 
     getClient() {
         throw new Error("Method not implemented.");

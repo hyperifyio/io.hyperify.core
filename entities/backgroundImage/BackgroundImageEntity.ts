@@ -3,23 +3,31 @@
 import { VariableType } from "../types/VariableType";
 import {
     BackgroundImageDTO,
-    createBackgroundImageDTO,
-    isBackgroundImageDTO,
 } from "./BackgroundImageDTO";
 import { isString } from "../../types/String";
 import {
     BackgroundImage,
-    isBackgroundImage,
 } from "./BackgroundImage";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BackgroundImageEntityFactory = (
-    EntityFactoryImpl.create<BackgroundImageDTO, BackgroundImage>()
+    EntityFactoryImpl.create<BackgroundImageDTO, BackgroundImage>('BackgroundImage')
                      .add( EntityPropertyImpl.create("url").setTypes(VariableType.STRING) )
 );
 
 export const BaseBackgroundImageEntity = BackgroundImageEntityFactory.createEntityType();
+
+export const isBackgroundImageDTO = BackgroundImageEntityFactory.createTestFunctionOfDTO();
+
+export const isBackgroundImage = BackgroundImageEntityFactory.createTestFunctionOfInterface();
+
+export const explainBackgroundImageDTO = BackgroundImageEntityFactory.createExplainFunctionOfDTO();
+
+export const isBackgroundImageDTOOrUndefined = BackgroundImageEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const explainBackgroundImageDTOOrUndefined = BackgroundImageEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
 
 /**
  * Background image entity.
@@ -63,7 +71,7 @@ export class BackgroundImageEntity
         if (arg === undefined) {
             super();
         } else if (isString(arg)) {
-            super(createBackgroundImageDTO(arg));
+            super( { url: arg });
         } else if (isBackgroundImageDTO(arg)) {
             super(arg);
         } else if (isBackgroundImageEntity(arg) || isBackgroundImage(arg)) {

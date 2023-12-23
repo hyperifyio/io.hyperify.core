@@ -1,10 +1,5 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import {
-    explainNot,
-    explainOk,
-    explainOr,
-} from "../../types/explain";
 import { VariableType } from "../types/VariableType";
 import {
     ColorDTO,

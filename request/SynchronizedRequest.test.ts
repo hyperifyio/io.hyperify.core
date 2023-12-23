@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@hg.fi>. All rights reserved.
 
+import { jest } from '@jest/globals';
 import { RequestMapping } from "./RequestMapping";
 import { RequestMethod } from "./types/RequestMethod";
 import { RequestRouterImpl } from "../requestServer/RequestRouterImpl";

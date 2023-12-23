@@ -4,9 +4,9 @@ import { ReadonlyJsonAny, ReadonlyJsonArray, ReadonlyJsonArrayOf, ReadonlyJsonOb
 import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
 import { TestCallbackNonStandard } from "../../types/TestCallback";
+import { ComponentContent } from "./ComponentContent";
 import { ComponentDTO } from "./ComponentDTO";
 import { StyleDTO } from "../style/StyleDTO";
-import { ComponentEntityContent } from "./ComponentEntity";
 import { StyleEntity } from "../style/StyleEntity";
 import { ExtendableEntity } from "../types/ExtendableEntity";
 import { Style } from "../style/Style";
@@ -22,6 +22,10 @@ export interface Component
      * @inheritDoc
      */
     getName () : string;
+
+    setName (name : string) : this;
+
+    name (name : string) : this;
 
     /**
      * @inheritDoc
@@ -155,7 +159,7 @@ export interface Component
      *
      * @param value
      */
-    add (value : ComponentEntityContent) : this;
+    addContent (value : ComponentContent) : this;
 
     /**
      * Add inner content as a string.

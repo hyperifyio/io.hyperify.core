@@ -7,8 +7,6 @@ import {
 import { VariableType } from "../types/VariableType";
 import {
     TextDecorationDTO,
-    createTextDecorationDTO,
-    isTextDecorationDTO,
 } from "./TextDecorationDTO";
 import { SizeDTO } from "../size/SizeDTO";
 import {
@@ -18,7 +16,6 @@ import { SizeEntity } from "../size/SizeEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import {
-    isTextDecoration,
     TextDecoration,
 } from "./TextDecoration";
 import {
@@ -29,7 +26,7 @@ import { TextDecorationStyle } from "../types/TextDecorationStyle";
 
 
 export const TextDecorationEntityFactory = (
-    EntityFactoryImpl.create<TextDecorationDTO, TextDecoration>()
+    EntityFactoryImpl.create<TextDecorationDTO, TextDecoration>('TextDecoration')
                      .add( EntityPropertyImpl.create("lineType").setTypes(TextDecorationLineType, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("color").setTypes(ColorEntity, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("style").setTypes(TextDecorationStyle, VariableType.UNDEFINED) )
@@ -37,6 +34,17 @@ export const TextDecorationEntityFactory = (
 );
 
 export const BaseTextDecorationEntity = TextDecorationEntityFactory.createEntityType();
+
+export const isTextDecorationDTO = TextDecorationEntityFactory.createTestFunctionOfDTO();
+
+export const isTextDecoration = TextDecorationEntityFactory.createTestFunctionOfInterface();
+
+export const explainTextDecorationDTO = TextDecorationEntityFactory.createExplainFunctionOfDTO();
+
+export const isTextDecorationDTOOrUndefined = TextDecorationEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const explainTextDecorationDTOOrUndefined = TextDecorationEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
 
 /**
  * Text decoration entity.
@@ -98,12 +106,14 @@ export class TextDecorationEntity
         } else if ( isTextDecoration(lineType) && color === undefined && style === undefined && thickness === undefined ) {
             super( lineType.getDTO() );
         } else if ( isTextDecorationLineType(lineType) ) {
-            super( createTextDecorationDTO(
-                lineType,
-                color,
-                style,
-                thickness,
-            ) );
+            super(
+                {
+                    lineType,
+                    color,
+                    style,
+                    thickness,
+                }
+            );
         } else {
             throw new TypeError(`Unknown new TextDecorationEntity() signature: ${lineType}, ${color}, ${style}, ${thickness}`);
         }

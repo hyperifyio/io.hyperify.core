@@ -120,26 +120,3 @@ export interface BorderBox
     ) : this;
 
 }
-
-export function isBorderBox (value : unknown) : value is BorderBox {
-    return (
-        isObject(value)
-        && isFunction(value?.getDTO)
-        && isFunction(value?.valueOf)
-        && isFunction(value?.toJSON)
-        && isFunction(value?.getCssStyles)
-        && isFunction(value?.getTop)
-        && isFunction(value?.getTopDTO)
-        && isFunction(value?.setTop)
-        && isFunction(value?.getRight)
-        && isFunction(value?.getRightDTO)
-        && isFunction(value?.setRight)
-        && isFunction(value?.getBottom)
-        && isFunction(value?.getBottomDTO)
-        && isFunction(value?.setBottom)
-        && isFunction(value?.getLeft)
-        && isFunction(value?.getLeftDTO)
-        && isFunction(value?.setLeft)
-    );
-}
-

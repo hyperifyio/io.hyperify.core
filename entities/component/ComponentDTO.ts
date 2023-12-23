@@ -16,7 +16,7 @@ export interface ComponentDTO
         ExtendableDTO
 {
     readonly name     : string;
-    readonly content  : ComponentContent;
+    readonly content ?: ComponentContent;
     readonly extend  ?: string;
     readonly meta    ?: ReadonlyJsonObject;
     readonly style   ?: StyleDTO;

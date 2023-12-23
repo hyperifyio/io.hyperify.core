@@ -1,22 +1,30 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { jest } from '@jest/globals';
 import "../../LogService";
 
 jest.mock('../../LogService', () => ({
     LogService: {
-        createLogger: jest.fn().mockImplementation((name: string) => ({
-            name,
-            setLogLevel: jest.fn(),
-            debug: jest.fn(),
-            info: jest.fn(),
-            warn: jest.fn(),
-            error: jest.fn(),
-        }))
+        createLogger: jest.fn<(name: string) => any>().mockImplementation(
+            (name: string) : any => ({
+                name,
+                getLogLevel: jest.fn<() => LogLevel>(),
+                setLogLevel: jest.fn<(level: LogLevel | undefined) => ContextLogger>(),
+                debug: jest.fn<(...args: any) => void>(),
+                info: jest.fn<(...args: any) => void>(),
+                warn: jest.fn<(...args: any) => void>(),
+                error: jest.fn<(...args: any) => void>(),
+            })
+        )
     }
 }));
 
 // @ts-ignore
 import "../../../testing/jest/matchers/index";
+import { debug } from "node:util";
+import { Simulate } from "react-dom/test-utils";
+import { ContextLogger } from "../../logger/context/ContextLogger";
+import { Logger } from "../../types/Logger";
 import { addDestroyService } from './addDestroyService';
 import { autowired } from './autowired';
 import { LogLevel } from "../../types/LogLevel";
@@ -28,6 +36,7 @@ import { AutowireUtils } from "./utils/AutowireUtils";
 import { DestroyService } from "./services/DestroyService";
 import { LogService } from "../../LogService";
 import { find } from "../../functions/find";
+import error = Simulate.error;
 
 jest.mock('../../ProcessUtils', () => ({
     ProcessUtils: {

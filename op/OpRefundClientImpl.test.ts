@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@hg.fi>. All rights reserved.
 
+import { jest } from '@jest/globals';
 import { RequestClient } from "../RequestClient";
 import { MockRequestClient } from "../requestClient/mock/MockRequestClient";
 import { LogLevel } from "../types/LogLevel";

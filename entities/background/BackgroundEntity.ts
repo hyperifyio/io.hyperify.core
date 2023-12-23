@@ -25,7 +25,7 @@ import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BackgroundEntityFactory = (
-    EntityFactoryImpl.create<BackgroundDTO, Background>('BackgroundEntity')
+    EntityFactoryImpl.create<BackgroundDTO, Background>('Background')
                      .add( EntityPropertyImpl.create("attachment").setTypes(BackgroundAttachment, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("blendMode").setTypes(BackgroundBlendMode, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("clip").setTypes(BackgroundClip, VariableType.UNDEFINED) )

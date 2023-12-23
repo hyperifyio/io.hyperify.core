@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@hg.fi>. All rights reserved.
 
+import { jest } from '@jest/globals';
 import { ConsoleLogger } from "./ConsoleLogger";
 import { LogLevel } from "../../types/LogLevel";
 import { Logger } from "../../types/Logger";

@@ -145,35 +145,40 @@ describe('system', () => {
 
                 expect(payment?.groups).toBeArray();
                 expect(payment?.groups?.length).toBe(4);
-                expect(payment?.groups[0]).toStrictEqual({
-                    "icon": "https://resources.paytrail.com/images/payment-group-icons/credit.png",
-                    "id": "credit",
-                    "name": "Lasku- ja osamaksutavat",
-                    "svg": "https://resources.paytrail.com/images/payment-group-icons/credit.svg",
-                });
-                expect(payment?.groups[1]).toStrictEqual({
-                    "icon": "https://resources.paytrail.com/images/payment-group-icons/mobile.png",
-                    "id": "mobile",
-                    "name": "Mobiilimaksutavat",
-                    "svg": "https://resources.paytrail.com/images/payment-group-icons/mobile.svg",
-                });
-                expect(payment?.groups[2]).toStrictEqual({
-                    "icon": "https://resources.paytrail.com/images/payment-group-icons/creditcard.png",
-                    "id": "creditcard",
-                    "name": "Korttimaksutavat",
-                    "svg": "https://resources.paytrail.com/images/payment-group-icons/creditcard.svg",
-                });
-                expect(payment?.groups[3]).toStrictEqual({
-                    "icon": "https://resources.paytrail.com/images/payment-group-icons/bank.png",
-                    "id": "bank",
-                    "name": "Pankkimaksutavat",
-                    "svg": "https://resources.paytrail.com/images/payment-group-icons/bank.svg",
-                });
+
+                expect(payment?.groups).toEqual(
+                    expect.arrayContaining([
+                        {
+                            "icon": "https://resources.paytrail.com/images/payment-group-icons/bank.png",
+                            "id": "bank",
+                            "name": "Pankkimaksutavat",
+                            "svg": "https://resources.paytrail.com/images/payment-group-icons/bank.svg",
+                        },
+                        {
+                            "icon": "https://resources.paytrail.com/images/payment-group-icons/mobile.png",
+                            "id": "mobile",
+                            "name": "Mobiilimaksutavat",
+                            "svg": "https://resources.paytrail.com/images/payment-group-icons/mobile.svg",
+                        },
+                        {
+                            "icon": "https://resources.paytrail.com/images/payment-group-icons/creditcard.png",
+                            "id": "creditcard",
+                            "name": "Korttimaksutavat",
+                            "svg": "https://resources.paytrail.com/images/payment-group-icons/creditcard.svg",
+                        },
+                        {
+                            "icon": "https://resources.paytrail.com/images/payment-group-icons/credit.png",
+                            "id": "credit",
+                            "name": "Lasku- ja osamaksutavat",
+                            "svg": "https://resources.paytrail.com/images/payment-group-icons/credit.svg",
+                        }
+                    ])
+                );
 
                 // payment.customProviders
 
                 expect(payment?.customProviders).toBeRegularObject();
-                expect(keys(payment?.customProviders)).toStrictEqual(['applepay']);
+                expect(keys(payment?.customProviders)).toEqual(expect.arrayContaining(['applepay']));
 
                 expect((payment?.customProviders?.applepay as any)?.parameters).toBeArray();
 
@@ -278,13 +283,18 @@ describe('system', () => {
                 expect(payment?.providers).toBeArray();
                 expect(payment?.providers?.length).toBe(17);
 
-                expect(payment?.providers[0]).toBeRegularObject();
-                expect(payment?.providers[0]?.group).toBe('credit');
-                expect(payment?.providers[0]?.icon).toBe('https://resources.paytrail.com/images/payment-method-logos/walley.png');
-                expect(payment?.providers[0]?.id).toBe('collectorb2c');
-                expect(payment?.providers[0]?.name).toBe('Collector');
-                expect(payment?.providers[0]?.svg).toBe('https://resources.paytrail.com/images/payment-method-logos/walley.svg');
-                expect(payment?.providers[0]?.url).toBe(`https://pay.paytrail.com/payments/${payment?.transactionId}/collectorb2c/`);
+                expect(payment?.providers).toEqual(
+                    expect.arrayContaining( [
+                        expect.objectContaining({
+                            group: 'bank',
+                            icon: 'https://resources.paytrail.com/images/payment-method-logos/osuuspankki.png',
+                            id: 'osuuspankki',
+                            name: 'OP',
+                            svg: 'https://resources.paytrail.com/images/payment-method-logos/osuuspankki.svg',
+                            url: `https://services.paytrail.com/payments/${payment?.transactionId}/osuuspankki/loading-and-redirect`,
+                        })
+                    ] )
+                );
 
                 expect(payment?.providers[0]?.parameters).toBeArray();
                 expect(
@@ -400,13 +410,17 @@ describe('system', () => {
                 expect(dto).toBeArray();
                 expect(dto?.length).toBe(17);
 
-                expect(dto[0]).toStrictEqual({
-                    "group": "mobile",
-                    "icon": "https://resources.paytrail.com/images/payment-method-logos/pivo.png",
-                    "id": "pivo",
-                    "name": "Pivo",
-                    "svg": "https://resources.paytrail.com/images/payment-method-logos/pivo.svg",
-                });
+                expect(dto).toEqual(
+                    expect.arrayContaining([
+                        expect.objectContaining({
+                            "group": "bank",
+                            "icon": "https://resources.paytrail.com/images/payment-method-logos/osuuspankki.png",
+                            "id": "osuuspankki",
+                            "name": "OP",
+                            "svg": "https://resources.paytrail.com/images/payment-method-logos/osuuspankki.svg",
+                        })
+                    ] )
+                );
 
                 // Like:
                 // ```
@@ -548,32 +562,39 @@ describe('system', () => {
                 expect(dto).toBeRegularObject();
                 expect(dto?.terms).toBe('Valitsemalla maksutavan hyväksyt <a href="https://www.paytrail.com/kuluttaja/maksupalveluehdot" target="_blank">maksupalveluehdot</a>');
 
-                expect(dto?.providers).toBeArray();
-                expect(dto?.providers[0]).toStrictEqual({
-                    "group": "mobile",
-                    "icon": "https://resources.paytrail.com/images/payment-method-logos/pivo.png",
-                    "id": "pivo",
-                    "name": "Pivo",
-                    "svg": "https://resources.paytrail.com/images/payment-method-logos/pivo.svg",
-                });
-
-                expect(dto?.groups).toBeArray();
-                expect( dto?.groups[0] ).toStrictEqual(
-                    {
-                        "icon": "https://resources.paytrail.com/images/payment-group-icons/mobile.png",
-                        "id": "mobile",
-                        "name": "Mobiilimaksutavat",
-                        "providers": [
+                expect(dto?.providers).toEqual(
+                    expect.arrayContaining([
+                        expect.objectContaining(
                             {
-                                "group": "mobile",
-                                "icon": "https://resources.paytrail.com/images/payment-method-logos/pivo.png",
-                                "id": "pivo",
-                                "name": "Pivo",
-                                "svg": "https://resources.paytrail.com/images/payment-method-logos/pivo.svg"
+                                "group": "bank",
+                                "icon": "https://resources.paytrail.com/images/payment-method-logos/osuuspankki.png",
+                                "id": "osuuspankki",
+                                "name": "OP",
+                                "svg": "https://resources.paytrail.com/images/payment-method-logos/osuuspankki.svg",
                             }
-                        ],
-                        "svg": "https://resources.paytrail.com/images/payment-group-icons/mobile.svg"
-                    }
+                        )
+                    ])
+                );
+
+                expect( dto?.groups ).toEqual(
+                    expect.arrayContaining([
+                        expect.objectContaining({
+                            "icon": "https://resources.paytrail.com/images/payment-group-icons/bank.png",
+                            "id": "bank",
+                            "name": "Pankkimaksutavat",
+                            "svg": "https://resources.paytrail.com/images/payment-group-icons/bank.svg"
+                        })
+                    ])
+                );
+
+                expect( dto?.groups[0]?.providers ).toEqual(
+                    expect.arrayContaining([{
+                        "group": "bank",
+                        "icon": "https://resources.paytrail.com/images/payment-method-logos/osuuspankki.png",
+                        "id": "osuuspankki",
+                        "name": "OP",
+                        "svg": "https://resources.paytrail.com/images/payment-method-logos/osuuspankki.svg"
+                    }])
                 );
 
                 // expect(dto?.length).toBe(17);

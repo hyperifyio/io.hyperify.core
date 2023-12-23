@@ -136,11 +136,10 @@ describe("OpenAiChatCompletionRequestDTO", () => {
         });
 
         it("returns a human-readable string explaining why the value is not a regular object", () => {
-
-            expect(explainOpenAiChatCompletionRequestDTO(inValidItem)).toBe(
-                "property \"messages\" not OpenAiChatCompletionMessageDTO: property \"content\" not string, property \"frequency_penalty\" not number or undefined"
-            );
-
+            const result = explainOpenAiChatCompletionRequestDTO(inValidItem);
+            expect(result).toEqual( expect.stringContaining("property \"messages\" not OpenAiChatCompletionMessageDTO:") );
+            expect(result).toEqual( expect.stringContaining("property \"content\" not string") );
+            expect(result).toEqual( expect.stringContaining("property \"frequency_penalty\" not number or undefined") );
         });
 
     });

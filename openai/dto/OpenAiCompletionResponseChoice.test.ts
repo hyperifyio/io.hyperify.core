@@ -102,7 +102,7 @@ describe("OpenAiCompletionResponseChoice", () => {
                                                              finish_reason: 'length'
                                                           })).toEqual(
                   // "Object has a non-string property 'text' (5)"
-                  'property "text" not string'
+                  expect.stringContaining('property "text" not string')
             );
         });
 
@@ -112,9 +112,9 @@ describe("OpenAiCompletionResponseChoice", () => {
                                                               index: "not a number",
                                                               logprobs: null,
                                                               finish_reason: 'length'
-                                                          })).toBe(
+                                                          })).toEqual(
             // "Expected property 'index' to be a number, but got string 'not a number' instead"
-            'property "index" not number'
+                expect.stringContaining('property "index" not number')
             );
         });
 

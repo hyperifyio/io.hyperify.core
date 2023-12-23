@@ -17,7 +17,6 @@ import {
 } from "../size/SizeDTO";
 import { VariableType } from "../types/VariableType";
 import {
-    createStyleDTO,
     StyleDTO,
 } from "./StyleDTO";
 import { BorderStyle } from "../types/BorderStyle";
@@ -404,23 +403,7 @@ export class StyleEntity
                         ...dto,
                     };
                 },
-                createStyleDTO(
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                ),
+                {},
             )
         );
     }

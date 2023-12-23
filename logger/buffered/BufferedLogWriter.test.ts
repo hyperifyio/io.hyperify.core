@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { jest } from '@jest/globals';
 import { BufferedLogWriter } from "./BufferedLogWriter";
 
 describe('BufferedLogWriter', () => {

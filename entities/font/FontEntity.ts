@@ -2,9 +2,7 @@
 
 import { VariableType } from "../types/VariableType";
 import {
-    createFontDTO,
     FontDTO,
-    isFontDTO,
 } from "./FontDTO";
 import { SizeDTO } from "../size/SizeDTO";
 import { ReadonlyJsonObject } from "../../Json";
@@ -24,7 +22,7 @@ import { FontVariant } from "./types/FontVariant";
 import { FontWeight } from "./types/FontWeight";
 
 export const FontEntityFactory = (
-    EntityFactoryImpl.create<FontDTO, Font>()
+    EntityFactoryImpl.create<FontDTO, Font>('Font')
                      .add( EntityPropertyImpl.create("style").setTypes( FontStyle, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("variant").setTypes( FontVariant, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("weight").setTypes( FontWeight, VariableType.UNDEFINED) )
@@ -32,6 +30,16 @@ export const FontEntityFactory = (
                      .add( EntityPropertyImpl.create("lineHeight").setTypes( SizeEntity, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("family").setTypes( VariableType.STRING, VariableType.UNDEFINED) )
 );
+
+export const isFontDTO = FontEntityFactory.createTestFunctionOfDTO();
+
+export const isFont = FontEntityFactory.createTestFunctionOfInterface();
+
+export const explainFontDTO = FontEntityFactory.createExplainFunctionOfDTO();
+
+export const isFontDTOOrUndefined = FontEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const explainFontDTOOrUndefined = FontEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
 
 export const BaseFontEntity = FontEntityFactory.createEntityType();
 
@@ -106,14 +114,14 @@ export class FontEntity
         if (style === undefined && variant === undefined && weight === undefined && size === undefined && lineHeight === undefined && family === undefined) {
             super();
         } else if ( isFontStyle(style) ) {
-            super( createFontDTO(
+            super( {
                 style,
                 variant,
                 weight,
                 size,
                 lineHeight,
                 family,
-            ) );
+            } );
         } else if (isFontDTO(style)) {
             super( style );
         } else if (isFontEntity(style)) {
@@ -124,6 +132,7 @@ export class FontEntity
             );
         }
     }
+
     /**
      * @inheritDoc
      */

@@ -21,7 +21,7 @@ import {
 } from "../types/UnitType";
 
 export const SizeEntityFactory = (
-    EntityFactoryImpl.create<SizeDTO, Size>()
+    EntityFactoryImpl.create<SizeDTO, Size>('Size')
     .add( EntityPropertyImpl.create("value").setTypes(VariableType.NUMBER, SpecialSize) )
     .add( EntityPropertyImpl.create("unit", "unitType").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
 );

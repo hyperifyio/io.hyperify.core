@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { jest } from '@jest/globals';
 import { LogLevel } from "../../types/LogLevel";
 import { DiscordLogger } from "./DiscordLogger";
 import { MockRequestClientAdapter } from "../../requestClient/mock/MockRequestClientAdapter";
@@ -26,7 +27,7 @@ describe('DiscordLogger', () => {
         mockRequestClient = new MockRequestClientAdapter();
         prevRequestClient = RequestClientImpl.hasClient() ? RequestClientImpl.getClient() : undefined;
         RequestClientImpl.setClient(mockRequestClient);
-        spy = jest.spyOn(mockRequestClient, 'jsonRequest').mockImplementation();
+        spy = jest.spyOn(mockRequestClient, 'jsonRequest');
         logger = new DiscordLogger(
             TEST_NAME,
             TEST_DISCORD_URL,

@@ -1,21 +1,10 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { forEach } from "../../functions/forEach";
-import { ReadonlyJsonObject } from "../../Json";
-import { isArray } from "../../types/Array";
-import { ComponentDTO } from "../component/ComponentDTO";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import { VariableType } from "../types/VariableType";
-import { createAppDTO, AppDTO } from "./AppDTO";
-import { RouteDTO } from "../route/RouteDTO";
-import { ViewDTO } from "../view/ViewDTO";
+import { AppDTO } from "./AppDTO";
 import { App } from "./App";
-import { ComponentEntity, isComponentEntity } from "../component/ComponentEntity";
-import { Extendable } from "../types/Extendable";
-import { JsonSerializable } from "../types/JsonSerializable";
-import { isRouteEntity, RouteEntity } from "../route/RouteEntity";
-import { isViewEntity, ViewEntity } from "../view/ViewEntity";
 
 export const AppEntityFactory = (
     EntityFactoryImpl.create<AppDTO, App>('App')

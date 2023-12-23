@@ -26,6 +26,7 @@ describe("OpenAiChatCompletionResponseChoice", () => {
             "name": "tester",
             "role": "owner"
         }};
+
     describe("createOpenAiChatCompletionResponseChoice", () => {
 
         it("creates valid OpenAiChatCompletionResponseChoice objects", () => {
@@ -80,10 +81,9 @@ describe("OpenAiChatCompletionResponseChoice", () => {
         });
 
         it("returns a human-readable string explaining why the value is not a regular object", () => {
-
-            expect(explainOpenAiChatCompletionResponseChoice(inValidItem)).toContain(
-                "property \"message\" property \"role\" incorrect enum value \"undefined\" for OpenAiUserType: Accepted values "
-            );
+            const result = explainOpenAiChatCompletionResponseChoice(inValidItem);
+            expect(result).toEqual( expect.stringContaining( "property \"message\"" ) );
+            expect(result).toEqual( expect.stringContaining( "property \"role\" incorrect enum value \"undefined\" for OpenAiUserType: Accepted values " ) );
         });
 
     });

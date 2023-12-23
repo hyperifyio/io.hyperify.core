@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { jest } from '@jest/globals';
 import { ChainQueryBuilder, ChainQueryBuilderFactory } from "../types/ChainQueryBuilder";
 import { ChainQueryBuilderUtils } from "./ChainQueryBuilderUtils";
 import { EntityField } from "../../types/EntityField";

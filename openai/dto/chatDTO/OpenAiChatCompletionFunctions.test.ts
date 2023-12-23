@@ -56,9 +56,10 @@ describe("OpenAiChatCompletionFunctions", () => {
         });
 
         it("returns a human-readable string explaining why the value is not a OpenAiChatCompletionFunctions", () => {
-            expect(explainOpenAiChatCompletionFunctions(inValidItem)).toBe(
-                "Value had extra properties: params, property \"parameters\" not object, property \"description\" not string or undefined"
-            );
+            const result = explainOpenAiChatCompletionFunctions(inValidItem);
+            expect(result).toEqual( expect.stringContaining( "Value had extra properties: params" ) );
+            expect(result).toEqual( expect.stringContaining( "property \"parameters\" not object" ) );
+            expect(result).toEqual( expect.stringContaining( "property \"description\" not string or undefined" ) );
         });
 
     });

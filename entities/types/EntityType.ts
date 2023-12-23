@@ -67,13 +67,15 @@ export interface EntityType<
 
 }
 
-export function isEntityType (value : unknown) : value is EntityType<DTO, any> {
+export function isEntityType (value : unknown) : value is EntityType<any, any> {
     return (
         isObject(value)
+        && isFunction(value?.getEntityName)
         && isFunction(value?.create)
         && isFunction(value?.createFromDTO)
         && isFunction(value?.getProperties)
         && isFunction(value?.isEntity)
+        && isFunction(value?.explainEntity)
         && isFunction(value?.isDTO)
     );
 }

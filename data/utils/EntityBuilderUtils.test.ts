@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@hg.fi>. All rights reserved.
 
+import { jest } from '@jest/globals';
 import { ColumnSelectorCallback, EntityBuilderUtils } from "./EntityBuilderUtils";
 import { EntityField } from "../types/EntityField";
 import { EntityFieldType } from "../types/EntityFieldType";

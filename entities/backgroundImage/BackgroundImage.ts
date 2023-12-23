@@ -1,8 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ReadonlyJsonObject } from "../../Json";
-import { isFunction } from "../../types/Function";
-import { isObject } from "../../types/Object";
 import { BackgroundImageDTO } from "./BackgroundImageDTO";
 import { Entity } from "../types/Entity";
 
@@ -45,16 +43,3 @@ export interface BackgroundImage extends Entity<BackgroundImageDTO> {
     url (value : string) : this;
 
 }
-
-export function isBackgroundImage (value : unknown) : value is BackgroundImage {
-    return (
-        isObject(value)
-        && isFunction(value?.getDTO)
-        && isFunction(value?.valueOf)
-        && isFunction(value?.toJSON)
-        && isFunction(value?.getCssStyles)
-        && isFunction(value?.getUrl)
-        && isFunction(value?.url)
-    );
-}
-

@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@hg.fi>. All rights reserved.
 
+import { jest } from '@jest/globals';
 import { TranslationUtils } from "./TranslationUtils";
 import { Language } from "./types/Language";
 import { TranslationResourceObject } from "./types/TranslationResourceObject";

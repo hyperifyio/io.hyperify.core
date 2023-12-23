@@ -20,7 +20,7 @@ import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const SizeDimensionsEntityFactory = (
-    EntityFactoryImpl.create<SizeDimensionsDTO, SizeDimensions>()
+    EntityFactoryImpl.create<SizeDimensionsDTO, SizeDimensions>('SizeDimensions')
                      .add( EntityPropertyImpl.create("width").setTypes(SizeEntity, VariableType.UNDEFINED) )
                      .add( EntityPropertyImpl.create("height").setTypes(SizeEntity, VariableType.UNDEFINED) )
 );
