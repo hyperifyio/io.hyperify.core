@@ -10,7 +10,6 @@ import {
 } from "../types/BackgroundRepeatType";
 import { BackgroundRepeat } from "./BackgroundRepeat";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BackgroundRepeatEntityFactory = (
     EntityFactoryImpl.create<BackgroundRepeatDTO, BackgroundRepeat>("BackgroundRepeat")

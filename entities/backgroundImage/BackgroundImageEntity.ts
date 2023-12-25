@@ -9,7 +9,6 @@ import {
     BackgroundImage,
 } from "./BackgroundImage";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BackgroundImageEntityFactory = (
     EntityFactoryImpl.create<BackgroundImageDTO, BackgroundImage>('BackgroundImage')

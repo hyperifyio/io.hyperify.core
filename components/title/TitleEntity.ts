@@ -26,7 +26,7 @@ export class TitleEntity extends ComponentEntity {
     }
 
     public addText (value: string) : this {
-        return this.add(value);
+        return this.addContent([value]);
     }
 
 }

@@ -2,7 +2,6 @@
 
 import { reduce } from "../../functions/reduce";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import { VariableType } from "../types/VariableType";
 import {
     Action,

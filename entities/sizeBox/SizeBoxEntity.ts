@@ -17,7 +17,6 @@ import {
     isSizeBox,
 } from "./SizeBox";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const SizeBoxEntityFactory = (
     EntityFactoryImpl.create<SizeBoxDTO, SizeBox>('SizeBox')

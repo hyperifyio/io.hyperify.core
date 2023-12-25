@@ -1,6 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { ComponentEntity, ComponentEntityContent } from "../../../entities/component/ComponentEntity";
+import { ComponentContent } from "../../../entities/component/ComponentContent";
+import { ComponentEntity } from "../../../entities/component/ComponentEntity";
 import { TableColumnEntity } from "../column/TableColumnEntity";
 import { TABLE_ROW_COMPONENT_NAME } from "./TableRowComponent";
 
@@ -12,7 +13,7 @@ export class TableRowEntity extends ComponentEntity {
     }
 
     public addColumn (item : TableColumnEntity) : this {
-        return this.add(item);
+        return this.addContent([item.getDTO()]);
     }
 
     public static create (name : string) : TableRowEntity {
@@ -21,9 +22,9 @@ export class TableRowEntity extends ComponentEntity {
 
     public static createRow (
         name: string,
-        data: ComponentEntityContent,
+        data: ComponentContent,
     ) : TableRowEntity {
-        return this.create(name).add(data);
+        return this.create(name).addContent(data);
     }
 
 }

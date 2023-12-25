@@ -17,7 +17,6 @@ import {
     isSizeDimensions,
 } from "./SizeDimensions";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const SizeDimensionsEntityFactory = (
     EntityFactoryImpl.create<SizeDimensionsDTO, SizeDimensions>('SizeDimensions')

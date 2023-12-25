@@ -5,7 +5,6 @@ import { Extendable } from "../types/Extendable";
 import { JsonSerializable } from "../types/JsonSerializable";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { Route } from "./Route";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import { VariableType } from "../types/VariableType";
 import { isString } from "../../types/String";
 

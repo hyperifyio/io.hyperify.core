@@ -3,7 +3,6 @@
 import { isString } from "../../types/String";
 import { StyleEntity } from "../style/StyleEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import { VariableType } from "../types/VariableType";
 import { Component } from "./Component";
 import { ComponentDTO } from "./ComponentDTO";

@@ -17,7 +17,6 @@ import {
     BorderBox,
 } from "./BorderBox";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BorderBoxEntityFactory = (
     EntityFactoryImpl.create<BorderBoxDTO, BorderBox>('BorderBox')

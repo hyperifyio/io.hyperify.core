@@ -14,10 +14,7 @@ import {
 } from "../color/ColorEntity";
 import { SizeEntity } from "../size/SizeEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
-import {
-    TextDecoration,
-} from "./TextDecoration";
+import { TextDecoration } from "./TextDecoration";
 import {
     isTextDecorationLineType,
     TextDecorationLineType,

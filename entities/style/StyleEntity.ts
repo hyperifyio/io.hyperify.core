@@ -62,7 +62,6 @@ import {
     isBorder,
 } from "../border/Border";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import {
     Font,
     isFont,

@@ -1,6 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { ComponentContent } from "../../entities/component/ComponentDTO";
+import { ComponentContent } from "../../entities/component/ComponentContent";
 import { ComponentEntity } from "../../entities/component/ComponentEntity";
 import { FORM_COMPONENT_NAME } from "./FormComponent";
 
@@ -19,7 +19,7 @@ export class FormEntity extends ComponentEntity {
         name: string,
         content: ComponentContent,
     ) : FormEntity {
-        return this.create(name).add(content).setMeta({});
+        return this.create(name).addContent(content).setMeta({});
     }
 
 }

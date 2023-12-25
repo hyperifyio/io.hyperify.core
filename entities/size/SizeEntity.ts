@@ -11,7 +11,6 @@ import {
 } from "./SizeDTO";
 import { isNumber } from "../../types/Number";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import {
     isSize,
     Size,

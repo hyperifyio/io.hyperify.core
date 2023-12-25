@@ -1,9 +1,10 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { ActionEntity } from "../../entities/action/ActionEntity";
 import { ReadonlyJsonAny } from "../../Json";
 import { isString } from "../../types/String";
 import { ComponentEntity } from "../../entities/component/ComponentEntity";
-import { createActionDTO, ActionDTO } from "../../entities/action/ActionDTO";
+import { ActionDTO } from "../../entities/action/ActionDTO";
 import { ACTION_BUTTON_COMPONENT_NAME } from "./ActionButtonComponent";
 
 export class ActionButtonEntity extends ComponentEntity {
@@ -25,14 +26,11 @@ export class ActionButtonEntity extends ComponentEntity {
         if (isString(dto)) {
             return this.createButton(
                 name,
-                createActionDTO(
-                    '',
-                    dto,
-                    'link',
-                    undefined,
-                    undefined,
-                    undefined,
-                )
+                ActionEntity.create()
+                            .label('')
+                            .target(dto)
+                            .method('link')
+                            .getDTO()
             );
         }
 

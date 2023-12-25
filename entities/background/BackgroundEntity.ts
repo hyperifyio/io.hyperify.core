@@ -22,7 +22,6 @@ import { SizeEntity } from "../size/SizeEntity";
 import { Background } from "./Background";
 import { BackgroundImage } from "../backgroundImage/BackgroundImage";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BackgroundEntityFactory = (
     EntityFactoryImpl.create<BackgroundDTO, Background>('Background')

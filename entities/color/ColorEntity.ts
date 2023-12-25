@@ -11,7 +11,6 @@ import {
     isColor,
 } from "./Color";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const ColorEntityFactory = (
     EntityFactoryImpl.create<ColorDTO, Color>('Color')

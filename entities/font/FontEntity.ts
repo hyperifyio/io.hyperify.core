@@ -10,10 +10,7 @@ import {
     SizeEntity,
 } from "../size/SizeEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
-import {
-    Font,
-} from "./Font";
+import { Font } from "./Font";
 import {
     FontStyle,
     isFontStyle,

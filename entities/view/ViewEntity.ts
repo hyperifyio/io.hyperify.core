@@ -4,7 +4,6 @@ import { isString } from "../../types/String";
 import { VariableType } from "../types/VariableType";
 import { ViewDTO } from "./ViewDTO";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import { View } from "./View";
 
 export const ViewEntityFactory = (
