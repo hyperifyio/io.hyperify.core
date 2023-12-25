@@ -3,12 +3,12 @@
 import {
     SizeDTO,
 } from "../size/SizeDTO";
-import { BackgroundPosition } from "../types/BackgroundPosition";
+import { BackgroundPositionValue } from "../types/BackgroundPositionValue";
 import { DTO } from "../types/DTO";
 
 export interface BackgroundPositionDTO extends DTO {
-    readonly direction ?: BackgroundPosition;
+    readonly position ?: BackgroundPositionValue;
     readonly size ?: SizeDTO;
-    readonly secondDirection ?: BackgroundPosition;
+    readonly secondPosition ?: BackgroundPositionValue;
     readonly secondSize ?: SizeDTO;
 }

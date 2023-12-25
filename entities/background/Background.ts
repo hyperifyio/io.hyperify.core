@@ -12,7 +12,7 @@ import { BackgroundAttachment } from "../types/BackgroundAttachment";
 import { BackgroundBlendMode } from "../types/BackgroundBlendMode";
 import { BackgroundClip } from "../types/BackgroundClip";
 import { BackgroundOrigin } from "../types/BackgroundOrigin";
-import { BackgroundPosition } from "../types/BackgroundPosition";
+import { BackgroundPositionValue } from "../types/BackgroundPositionValue";
 import { BackgroundPositionOptions } from "../types/BackgroundPositionOptions";
 import { BackgroundSizeOptions } from "../types/BackgroundSizeOptions";
 import { BackgroundImage } from "../backgroundImage/BackgroundImage";
@@ -67,8 +67,8 @@ export interface Background extends Entity<BackgroundDTO> {
     setImage (value : BackgroundImage | BackgroundImageDTO | undefined) : this;
     setOrigin (value : BackgroundOrigin | undefined) : this;
     setPosition (
-        a : BackgroundPosition | undefined,
-        b : BackgroundPosition | undefined,
+        a : BackgroundPositionValue | undefined,
+        b : BackgroundPositionValue | undefined,
     ) : this;
     setPosition (value : BackgroundPositionOptions | undefined) : this;
     setRepeat (value : BackgroundRepeat | BackgroundRepeatDTO | undefined) : this;
@@ -83,8 +83,8 @@ export interface Background extends Entity<BackgroundDTO> {
     image (value : BackgroundImage | BackgroundImageDTO | undefined) : this;
     origin (value : BackgroundOrigin | undefined) : this;
     position (
-        a : BackgroundPosition | undefined,
-        b : BackgroundPosition | undefined,
+        a : BackgroundPositionValue | undefined,
+        b : BackgroundPositionValue | undefined,
     ) : this;
     position (value : BackgroundPositionOptions | undefined) : this;
     repeat (value : BackgroundRepeat | BackgroundRepeatDTO | undefined) : this;

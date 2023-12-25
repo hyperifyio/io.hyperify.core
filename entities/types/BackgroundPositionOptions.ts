@@ -8,16 +8,16 @@ import {
     SizeEntity,
 } from "../size/SizeEntity";
 import { SizeDTO } from "../size/SizeDTO";
-import { BackgroundPosition, isBackgroundPosition } from "./BackgroundPosition";
+import { BackgroundPositionValue, isBackgroundPositionValue } from "./BackgroundPositionValue";
 
 export type BackgroundPositionOptions = (
-    BackgroundPosition
-    | [ BackgroundPosition, BackgroundPosition ]
-    | [ BackgroundPosition, SizeDTO, BackgroundPosition ]
-    | [ BackgroundPosition, BackgroundPosition, SizeDTO ]
-    | [ BackgroundPosition, SizeDTO ]
+    BackgroundPositionValue
+    | [ BackgroundPositionValue, BackgroundPositionValue ]
+    | [ BackgroundPositionValue, SizeDTO, BackgroundPositionValue ]
+    | [ BackgroundPositionValue, BackgroundPositionValue, SizeDTO ]
+    | [ BackgroundPositionValue, SizeDTO ]
     | [ SizeDTO, SizeDTO ]
-    | [ BackgroundPosition, SizeDTO, BackgroundPosition, SizeDTO ]
+    | [ BackgroundPositionValue, SizeDTO, BackgroundPositionValue, SizeDTO ]
 );
 
 /**
@@ -25,8 +25,8 @@ export type BackgroundPositionOptions = (
  * @param a
  */
 export function createBackgroundPositionOptions (
-    a : BackgroundPosition,
-) : BackgroundPosition;
+    a : BackgroundPositionValue,
+) : BackgroundPositionValue;
 
 /**
  *
@@ -34,9 +34,9 @@ export function createBackgroundPositionOptions (
  * @param b
  */
 export function createBackgroundPositionOptions (
-    a : BackgroundPosition,
-    b : BackgroundPosition,
-) : [ BackgroundPosition, BackgroundPosition ];
+    a : BackgroundPositionValue,
+    b : BackgroundPositionValue,
+) : [ BackgroundPositionValue, BackgroundPositionValue ];
 
 /**
  *
@@ -45,10 +45,10 @@ export function createBackgroundPositionOptions (
  * @param c
  */
 export function createBackgroundPositionOptions (
-    a : BackgroundPosition,
+    a : BackgroundPositionValue,
     aSize : SizeDTO,
-    c : BackgroundPosition,
-) : [ BackgroundPosition, SizeDTO, BackgroundPosition ];
+    c : BackgroundPositionValue,
+) : [ BackgroundPositionValue, SizeDTO, BackgroundPositionValue ];
 
 /**
  *
@@ -57,10 +57,10 @@ export function createBackgroundPositionOptions (
  * @param bSize
  */
 export function createBackgroundPositionOptions (
-    a : BackgroundPosition,
-    b : BackgroundPosition,
+    a : BackgroundPositionValue,
+    b : BackgroundPositionValue,
     bSize : SizeDTO,
-) : [ BackgroundPosition, BackgroundPosition, SizeDTO ];
+) : [ BackgroundPositionValue, BackgroundPositionValue, SizeDTO ];
 
 /**
  *
@@ -68,9 +68,9 @@ export function createBackgroundPositionOptions (
  * @param size
  */
 export function createBackgroundPositionOptions (
-    a : BackgroundPosition,
+    a : BackgroundPositionValue,
     size : SizeDTO,
-) : [ BackgroundPosition, SizeDTO ];
+) : [ BackgroundPositionValue, SizeDTO ];
 
 /**
  *
@@ -90,22 +90,22 @@ export function createBackgroundPositionOptions (
  * @param bSize
  */
 export function createBackgroundPositionOptions (
-    a : BackgroundPosition,
+    a : BackgroundPositionValue,
     aSize : SizeDTO,
-    b : BackgroundPosition,
+    b : BackgroundPositionValue,
     bSize : SizeDTO,
-) : [ BackgroundPosition, SizeDTO, BackgroundPosition, SizeDTO ];
+) : [ BackgroundPositionValue, SizeDTO, BackgroundPositionValue, SizeDTO ];
 
 export function createBackgroundPositionOptions (
-    a  : BackgroundPosition | SizeDTO,
-    b ?: BackgroundPosition | SizeDTO,
-    c ?: BackgroundPosition | SizeDTO,
-    d ?: BackgroundPosition | SizeDTO,
+    a  : BackgroundPositionValue | SizeDTO,
+    b ?: BackgroundPositionValue | SizeDTO,
+    c ?: BackgroundPositionValue | SizeDTO,
+    d ?: BackgroundPositionValue | SizeDTO,
 ) : BackgroundPositionOptions {
-    if (isBackgroundPosition(a)) {
+    if (isBackgroundPositionValue(a)) {
         if ( b === undefined && c === undefined && d === undefined ) {
             return a;
-        } else if ( isBackgroundPosition(b) ) {
+        } else if ( isBackgroundPositionValue(b) ) {
             if ( c === undefined && d === undefined ) {
                 return [a, b];
             } else if ( isSizeDTO(c) && d === undefined ) {
@@ -114,7 +114,7 @@ export function createBackgroundPositionOptions (
         } else if ( isSizeDTO(b) ) {
             if ( c === undefined && d === undefined ) {
                 return [a, b];
-            } else if ( isBackgroundPosition(c) ) {
+            } else if ( isBackgroundPositionValue(c) ) {
                 if ( d === undefined ) {
                     return [a, b, c];
                 } else if ( isSizeDTO(d) ) {
@@ -130,13 +130,13 @@ export function createBackgroundPositionOptions (
 
 export function isBackgroundPositionOptions (value: unknown) : value is BackgroundPositionOptions {
     return (
-        isBackgroundPosition(value)
+        isBackgroundPositionValue(value)
         || isPairArrayOf<SizeDTO, SizeDTO>(value, isSizeDTO, isSizeDTO)
-        || isPairArrayOf<BackgroundPosition, SizeDTO>(value, isBackgroundPosition, isSizeDTO)
-        || isPairArrayOf<BackgroundPosition, BackgroundPosition>(value, isBackgroundPosition, isBackgroundPosition)
-        || isTripletArrayOf<BackgroundPosition, BackgroundPosition, SizeDTO>(value, isBackgroundPosition, isBackgroundPosition, isSizeDTO)
-        || isTripletArrayOf<BackgroundPosition, SizeDTO, BackgroundPosition>(value, isBackgroundPosition, isSizeDTO, isBackgroundPosition)
-        || isTetradArrayOf<BackgroundPosition, SizeDTO, BackgroundPosition, SizeDTO>(value, isBackgroundPosition, isSizeDTO, isBackgroundPosition, isSizeDTO)
+        || isPairArrayOf<BackgroundPositionValue, SizeDTO>(value, isBackgroundPositionValue, isSizeDTO)
+        || isPairArrayOf<BackgroundPositionValue, BackgroundPositionValue>(value, isBackgroundPositionValue, isBackgroundPositionValue)
+        || isTripletArrayOf<BackgroundPositionValue, BackgroundPositionValue, SizeDTO>(value, isBackgroundPositionValue, isBackgroundPositionValue, isSizeDTO)
+        || isTripletArrayOf<BackgroundPositionValue, SizeDTO, BackgroundPositionValue>(value, isBackgroundPositionValue, isSizeDTO, isBackgroundPositionValue)
+        || isTetradArrayOf<BackgroundPositionValue, SizeDTO, BackgroundPositionValue, SizeDTO>(value, isBackgroundPositionValue, isSizeDTO, isBackgroundPositionValue, isSizeDTO)
     );
 }
 
@@ -186,7 +186,7 @@ export function getCssStylesForBackgroundPosition (
     value : BackgroundPositionOptions,
 ) : string {
 
-    if (isBackgroundPosition(value)) {
+    if (isBackgroundPositionValue(value)) {
         return `${value}`;
     }
 
@@ -198,7 +198,7 @@ export function getCssStylesForBackgroundPosition (
         }`;
     }
 
-    if (isPairArrayOf<BackgroundPosition, SizeDTO>(value, isBackgroundPosition, isSizeDTO)) {
+    if (isPairArrayOf<BackgroundPositionValue, SizeDTO>(value, isBackgroundPositionValue, isSizeDTO)) {
         return `${
             value[0]
         } ${
@@ -206,7 +206,7 @@ export function getCssStylesForBackgroundPosition (
         }`;
     }
 
-    if (isPairArrayOf<BackgroundPosition, BackgroundPosition>(value, isBackgroundPosition, isBackgroundPosition)) {
+    if (isPairArrayOf<BackgroundPositionValue, BackgroundPositionValue>(value, isBackgroundPositionValue, isBackgroundPositionValue)) {
         return `${
             value[0]
         } ${
@@ -214,7 +214,7 @@ export function getCssStylesForBackgroundPosition (
         }`;
     }
 
-    if (isTripletArrayOf<BackgroundPosition, BackgroundPosition, SizeDTO>(value, isBackgroundPosition, isBackgroundPosition, isSizeDTO)) {
+    if (isTripletArrayOf<BackgroundPositionValue, BackgroundPositionValue, SizeDTO>(value, isBackgroundPositionValue, isBackgroundPositionValue, isSizeDTO)) {
         return `${
             value[0]
         } ${
@@ -224,7 +224,7 @@ export function getCssStylesForBackgroundPosition (
         }`;
     }
 
-    if (isTripletArrayOf<BackgroundPosition, SizeDTO, BackgroundPosition>(value, isBackgroundPosition, isSizeDTO, isBackgroundPosition)) {
+    if (isTripletArrayOf<BackgroundPositionValue, SizeDTO, BackgroundPositionValue>(value, isBackgroundPositionValue, isSizeDTO, isBackgroundPositionValue)) {
         return `${
             value[0]
         } ${
@@ -234,7 +234,7 @@ export function getCssStylesForBackgroundPosition (
         }`;
     }
 
-    if (isTetradArrayOf<BackgroundPosition, SizeDTO, BackgroundPosition, SizeDTO>(value, isBackgroundPosition, isSizeDTO, isBackgroundPosition, isSizeDTO)) {
+    if (isTetradArrayOf<BackgroundPositionValue, SizeDTO, BackgroundPositionValue, SizeDTO>(value, isBackgroundPositionValue, isSizeDTO, isBackgroundPositionValue, isSizeDTO)) {
         return `${
             value[0]
         } ${
