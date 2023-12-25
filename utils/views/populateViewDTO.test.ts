@@ -1,9 +1,9 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { ViewEntity } from "../../entities/view/ViewEntity";
 import { LogLevel } from "../../types/LogLevel";
 import { populateViewDTO } from "./populateViewDTO";
 import { isArrayOf } from "../../types/Array";
-import { createViewDTO } from '../../entities/view/ViewDTO';
 
 describe('populateViewDTO', () => {
 
@@ -11,8 +11,33 @@ describe('populateViewDTO', () => {
         populateViewDTO.setLogger(LogLevel.NONE);
     })
 
-    const viewWithoutExtension = createViewDTO('View1', undefined, 'url1', 'en', undefined, ["Content 1", "Content 2"], undefined, undefined);
-    const viewWithExtension = createViewDTO('View2', 'View1', undefined, 'fr', undefined, "Content 3", undefined, undefined);
+    const viewWithoutExtension = (
+        ViewEntity.create('View1')
+                  .setPublicUrl('url1')
+                  .setLanguage('en')
+                  .setContent([
+                      "Content 1",
+                      "Content 2"
+                  ])
+                  .getDTO()
+    );
+
+    const viewWithExtension = (
+        ViewEntity.create('View2')
+                  .setExtend('View1')
+                  .setLanguage('fr')
+                  .setContent(["Content 3"])
+                  .getDTO()
+    );
+
+    const viewNotFound = (
+        ViewEntity.create('View3')
+                  .extend('NonexistentView')
+                  .setLanguage('es')
+                  .setContent(["Content 4"])
+                  .getDTO()
+    );
+
     const components = [viewWithoutExtension, viewWithExtension];
   
     it('should return the original view when extend is undefined', () => {
@@ -36,10 +61,9 @@ describe('populateViewDTO', () => {
     });
   
     it('should throw an error when the extended view is not found', () => {
-      const viewNotFound = createViewDTO('View3', 'NonexistentView', undefined, 'es', undefined, "Content 4", undefined, undefined);
-      expect(() => populateViewDTO(viewNotFound, components, '')).toThrowError(
-        new TypeError('Could not find view by name NonexistentView to extend for View3')
-      );
+        expect(() => populateViewDTO(viewNotFound, components, '')).toThrowError(
+            new TypeError('Could not find view by name NonexistentView to extend for View3')
+        );
     });
 
 });

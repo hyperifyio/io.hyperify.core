@@ -45,7 +45,7 @@ export class RouteEntity
 
     public static create (
         name : string,
-        path : string,
+        path ?: string,
     ): RouteEntity
 
     public static create (

@@ -1,5 +1,8 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import {
+    jest
+} from '@jest/globals';
 import { StateService, StateServiceEvent } from './StateService';
 import { StateServiceImpl } from './StateServiceImpl';
 import { isEqual } from "../../../functions/isEqual";

@@ -1,12 +1,33 @@
+import { ViewEntity } from "../../entities/view/ViewEntity";
 import { findAndPopulateViewDTO } from "./findAndPopulateViewDTO";
 import { isArrayOf } from "../../types/Array";
-import { createViewDTO } from '../../entities/view/ViewDTO';
 
 describe('findAndPopulateViewDTO', () => {
 
-    const viewWithoutExtension = createViewDTO('View1', undefined, 'url1', 'en', undefined, ["Content 1", "Content 2"], undefined, undefined);
-    const viewWithExtension = createViewDTO('View2', 'View1', undefined, 'fr', undefined, "Content 3", undefined, undefined);
-    const viewNotFound = createViewDTO('View3', 'NonexistentView', undefined, 'es', undefined, "Content 4", undefined, undefined);
+    const viewWithoutExtension = (
+        ViewEntity.create('View1')
+            .setPublicUrl('url1')
+            .setLanguage('en')
+            .setContent(["Content 1", "Content 2"])
+            .getDTO()
+    );
+
+    const viewWithExtension = (
+        ViewEntity.create('View2')
+                  .extend('View1')
+                  .setLanguage('fr')
+                  .setContent(["Content 3"])
+                  .getDTO()
+    );
+
+    const viewNotFound = (
+        ViewEntity.create('View3')
+                  .extend('NonexistentView')
+                  .setLanguage('es')
+                  .setContent(["Content 4"])
+                  .getDTO()
+    );
+
     const views = [viewWithoutExtension, viewWithExtension, viewNotFound];
   
     it('should find and return the original view when extend is undefined', () => {

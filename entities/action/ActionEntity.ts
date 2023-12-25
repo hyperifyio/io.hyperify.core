@@ -23,9 +23,13 @@ export const isActionDTO = ActionEntityFactory.createTestFunctionOfDTO();
 
 export const explainActionDTO = ActionEntityFactory.createExplainFunctionOfDTO();
 
-export const isActionDTOOrUndefined = ActionEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+export const isActionDTOOrUndefined = ActionEntityFactory.createTestFunctionOfDTOorOneOf<ActionDTO|undefined>(VariableType.UNDEFINED);
 
 export const explainActionDTOOrUndefined = ActionEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const isActionDTOOrStringOrUndefined = ActionEntityFactory.createTestFunctionOfDTOorOneOf<ActionDTO|string|undefined>(VariableType.STRING, VariableType.UNDEFINED);
+
+export const explainActionDTOOrStringOrUndefined = ActionEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.STRING, VariableType.UNDEFINED);
 
 export const BaseActionEntity = ActionEntityFactory.createEntityType();
 

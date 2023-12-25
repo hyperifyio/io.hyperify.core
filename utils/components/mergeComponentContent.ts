@@ -1,7 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { ComponentContent } from "../../entities/component/ComponentContent";
 import { isArray } from "../../types/Array";
-import { ComponentContent } from "../../entities/component/ComponentDTO";
 
 export function mergeComponentContent (
     a: ComponentContent | undefined,

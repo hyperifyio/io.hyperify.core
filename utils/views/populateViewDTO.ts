@@ -1,10 +1,11 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { ComponentContent } from "../../entities/component/ComponentContent";
+import { ViewEntity } from "../../entities/view/ViewEntity";
 import { find } from "../../functions/find";
 import { LogService } from "../../LogService";
 import { LogLevel } from "../../types/LogLevel";
-import { ComponentContent } from "../../entities/component/ComponentDTO";
-import { createViewDTO, ViewDTO } from "../../entities/view/ViewDTO";
+import { ViewDTO } from "../../entities/view/ViewDTO";
 import { mergeComponentContent } from "../components/mergeComponentContent";
 
 const LOG = LogService.createLogger( 'populateViewDTO' );
@@ -45,25 +46,24 @@ export function populateViewDTO (
     const extendContent: ComponentContent | undefined = extendView.content;
 
     return populateViewDTO(
-        createViewDTO(
-            extendView.name,
-            extendView.extend,
-            extendView.publicUrl ?? view.publicUrl,
-            extendView.language ?? view.language,
-            {
-                ...(extendView.seo ? extendView.seo : {}),
-                ...(view.seo ? view.seo : {}),
-            },
-            mergeComponentContent(extendContent, componentContent),
-            {
-                ...(extendView.style ? extendView.style : {}),
-                ...(view.style ? view.style : {}),
-            },
-            {
-                ...(extendView.meta ? extendView.meta : {}),
-                ...(view.meta ? view.meta : {}),
-            },
-        ),
+        ViewEntity.create(extendView.name)
+                  .extend(extendView.extend)
+                  .setPublicUrl(extendView.publicUrl ?? view.publicUrl)
+                  .setLanguage(extendView.language ?? view.language)
+                  .setSeo({
+                      ...(extendView.seo ? extendView.seo : {}),
+                      ...(view.seo ? view.seo : {}),
+                  })
+                  .setContent( mergeComponentContent(extendContent, componentContent) )
+                  .setStyle({
+                      ...(extendView.style ? extendView.style : {}),
+                      ...(view.style ? view.style : {}),
+                  })
+                  .setMeta({
+                      ...(extendView.meta ? extendView.meta : {}),
+                      ...(view.meta ? view.meta : {}),
+                  })
+                  .getDTO(),
         views,
         publicUrl,
     );

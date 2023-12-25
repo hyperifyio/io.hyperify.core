@@ -1,7 +1,10 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ReadonlyJsonObject } from "../../Json";
+import { Component } from "../component/Component";
 import { ComponentDTO } from "../component/ComponentDTO";
+import { SeoDTO } from "../seo/SeoDTO";
+import { SeoEntity } from "../seo/SeoEntity";
 import { StyleDTO } from "../style/StyleDTO";
 import { ViewDTO } from "./ViewDTO";
 import { ComponentEntity } from "../component/ComponentEntity";
@@ -16,6 +19,12 @@ export interface View
  extends ExtendableEntity<ViewDTO>
 {
 
+
+    ////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////  standard methods  //////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
     /**
      * @inheritDoc
      */
@@ -27,14 +36,28 @@ export interface View
     toJSON () : ReadonlyJsonObject;
 
     /**
-     * @inheritDoc
+     *
      */
-    getName () : string;
+    getDTO () : ViewDTO;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////  name property  /////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * @inheritDoc
      */
-    extend (name : string) : this;
+    getName () : string;
+    setName (name : string) : this;
+    name (name : string) : this;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////  extend property  /////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * @inheritDoc
@@ -42,34 +65,20 @@ export interface View
     getExtend () : string | undefined;
 
     /**
-     *
+     * @inheritDoc
      */
-    getDTO () : ViewDTO;
+    setExtend (name : string | undefined) : this;
 
     /**
-     * Add inner content.
-     *
-     * @param value
+     * @inheritDoc
      */
-    add (value : string | ComponentDTO | readonly (string|ComponentDTO|ComponentEntity)[] | ComponentEntity ) : this;
+    extend (name : string | undefined) : this;
 
-    /**
-     * Add inner text content.
-     *
-     * @param value
-     */
-    addText (value : string) : this;
 
-    /**
-     *
-     */
-    getLanguage () : string | undefined;
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////  publicUrl property  //////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
-    /**
-     *
-     * @param value
-     */
-    setLanguage (value : string) : this;
 
     /**
      *
@@ -80,13 +89,127 @@ export interface View
      *
      * @param value
      */
-    setPublicUrl (value : string) : this;
+    setPublicUrl (value : string | undefined) : this;
 
     /**
      *
      * @param value
      */
-    setMeta (value: ReadonlyJsonObject) : this;
+    publicUrl (value : string | undefined) : this;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////  language property  //////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     *
+     */
+    getLanguage () : string | undefined;
+
+    /**
+     *
+     * @param value
+     */
+    setLanguage (value : string | undefined) : this;
+
+    /**
+     *
+     * @param value
+     */
+    language (value : string | undefined) : this;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////  seo property  /////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    getSeo () : SeoEntity | undefined;
+    getSeoDTO () : SeoDTO | undefined;
+    setSeo (value: SeoDTO | undefined) : this;
+    seo (value: SeoDTO | undefined) : this;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////  style property  ////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Returns the style entity.
+     */
+    getStyle () : Style | undefined;
+
+    /**
+     * Returns the style DTO.
+     */
+    getStyleDTO () : StyleDTO | undefined;
+
+    /**
+     * Sets the style.
+     *
+     * @param value
+     */
+    setStyle (value : StyleEntity | Style | StyleDTO | undefined) : this;
+
+    /**
+     * Sets the style.
+     *
+     * @param value
+     */
+    style (value : StyleEntity | Style | StyleDTO | undefined) : this;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////  content property  ////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    getContent () : readonly (string|ComponentEntity|Component)[];
+
+    getContentDTO () : readonly (string|ComponentDTO)[];
+
+    /**
+     * Set inner content.
+     *
+     * @param value
+     */
+    setContent (value : readonly (string|ComponentDTO|ComponentEntity|Component)[] ) : this;
+
+    /**
+     * Add inner content.
+     *
+     * @param value
+     */
+    addContent (value : readonly (string|ComponentDTO|ComponentEntity|Component)[] ) : this;
+
+    /**
+     * Add inner text content.
+     *
+     * @param value
+     */
+    addText (value : string) : this;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////  meta property  /////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    getMeta () : ReadonlyJsonObject | undefined;
+
+    /**
+     *
+     * @param value
+     */
+    setMeta (value: ReadonlyJsonObject | undefined) : this;
+
+    /**
+     *
+     * @param value
+     */
+    meta (value: ReadonlyJsonObject | undefined) : this;
 
     /**
      * Set automatic refresh of the view after a timeout.
@@ -114,22 +237,5 @@ export interface View
      * @param value
      */
     setTimestamp (value: string) : this;
-
-    /**
-     * Returns the style entity.
-     */
-    getStyle () : Style | undefined;
-
-    /**
-     * Returns the style DTO.
-     */
-    getStyleDTO () : StyleDTO | undefined;
-
-    /**
-     * Sets the style.
-     *
-     * @param value
-     */
-    setStyle (value : StyleEntity | Style | StyleDTO | undefined) : this;
 
 }

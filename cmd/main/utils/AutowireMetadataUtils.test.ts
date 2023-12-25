@@ -1,5 +1,8 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import {
+    jest
+} from '@jest/globals';
 import "reflect-metadata";
 import { AutowireMetadataUtils } from './AutowireMetadataUtils';
 import { createAutowireMetadata } from '../types/AutowireMetadata';
