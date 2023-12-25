@@ -49,7 +49,7 @@ describe('findAndPopulateViewDTO', () => {
         const result = findAndPopulateViewDTO("View2", views, '');
     
         // Verify that properties from the extended view are merged correctly
-        expect(result.name).toEqual('View1'); // Name from the extended view
+        expect(result.name).toEqual('View2'); // Name from the extended view
         expect(result.publicUrl).toEqual('url1'); // Public URL from the extended view
         expect(result.language).toEqual('en'); // Language from the extended view
         expect(isArrayOf<string>(result?.content, undefined, 3, 3)).toEqual(true); // Merged content from both views
@@ -57,13 +57,14 @@ describe('findAndPopulateViewDTO', () => {
         // Make sure the original view is not modified
         expect(viewWithExtension.name).toEqual('View2');
         expect(viewWithExtension.language).toEqual('fr'); // Original view language should not be modified
-        expect(viewWithExtension.content).toEqual("Content 3"); // Original content
+        expect(viewWithExtension.content).toEqual(["Content 3"]); // Original content
     });
 
-    it('should throw an error when the view is not found', () => {
-        expect(() => findAndPopulateViewDTO('NonexistentView', views, '')).toThrowError(
-            new TypeError('Could not find app by name: NonexistentView')
-        );
+    it('should create empty view if view not found', () => {
+        const result = findAndPopulateViewDTO('NonexistentView', views, '');
+        expect(result).toEqual({
+            name: "NonexistentView"
+        } );
     });
   
     it('should throw an error when the extended view is not found', () => {
