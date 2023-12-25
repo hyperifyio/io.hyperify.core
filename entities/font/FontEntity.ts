@@ -23,12 +23,12 @@ import { FontWeight } from "./types/FontWeight";
 
 export const FontEntityFactory = (
     EntityFactoryImpl.create<FontDTO, Font>('Font')
-                     .add( EntityPropertyImpl.create("style").setTypes( FontStyle, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("variant").setTypes( FontVariant, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("weight").setTypes( FontWeight, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("size").setTypes( SizeEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("lineHeight").setTypes( SizeEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("family").setTypes( VariableType.STRING, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("style").setTypes( FontStyle, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("variant").setTypes( FontVariant, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("weight").setTypes( FontWeight, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("size").setTypes( SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("lineHeight").setTypes( SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("family").setTypes( VariableType.STRING, VariableType.UNDEFINED) )
 );
 
 export const isFontDTO = FontEntityFactory.createTestFunctionOfDTO();

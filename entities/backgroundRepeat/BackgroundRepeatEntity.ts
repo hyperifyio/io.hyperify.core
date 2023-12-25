@@ -14,8 +14,8 @@ import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BackgroundRepeatEntityFactory = (
     EntityFactoryImpl.create<BackgroundRepeatDTO, BackgroundRepeat>("BackgroundRepeat")
-                     .add( EntityPropertyImpl.create("x").setTypes(BackgroundRepeatType) )
-                     .add( EntityPropertyImpl.create("y").setTypes(BackgroundRepeatType) )
+                     .add( EntityFactoryImpl.createProperty("x").setTypes(BackgroundRepeatType) )
+                     .add( EntityFactoryImpl.createProperty("y").setTypes(BackgroundRepeatType) )
 );
 
 export const isBackgroundRepeatDTO = BackgroundRepeatEntityFactory.createTestFunctionOfDTO();

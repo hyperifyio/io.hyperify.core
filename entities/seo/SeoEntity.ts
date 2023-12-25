@@ -2,7 +2,6 @@
 
 import { reduce } from "../../functions/reduce";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 import { VariableType } from "../types/VariableType";
 import {
     isSeo,
@@ -12,9 +11,9 @@ import { SeoDTO } from "./SeoDTO";
 
 export const SeoEntityFactory = (
     EntityFactoryImpl.create<SeoDTO, Seo>('Seo')
-                     .add( EntityPropertyImpl.create("title").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("description").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("siteName").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("title").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("description").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("siteName").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
 );
 
 export const isSeoDTO = SeoEntityFactory.createTestFunctionOfDTO();

@@ -21,10 +21,10 @@ import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BorderBoxEntityFactory = (
     EntityFactoryImpl.create<BorderBoxDTO, BorderBox>('BorderBox')
-                     .add( EntityPropertyImpl.create("top").setTypes(BorderEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("right").setTypes(BorderEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("bottom").setTypes(BorderEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("left").setTypes(BorderEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("top").setTypes(BorderEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("right").setTypes(BorderEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("bottom").setTypes(BorderEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("left").setTypes(BorderEntity, VariableType.UNDEFINED) )
 );
 
 export const isBorderBoxDTO = BorderBoxEntityFactory.createTestFunctionOfDTO();

@@ -1,21 +1,16 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { uniq } from "../../functions/uniq";
-import { isFunction } from "../../types/Function";
-import { isObject } from "../../types/Object";
-import { EnumUtils } from "../../EnumUtils";
 import { filter } from "../../functions/filter";
 import { forEach } from "../../functions/forEach";
 import { has } from "../../functions/has";
 import { map } from "../../functions/map";
 import { reduce } from "../../functions/reduce";
 import { some } from "../../functions/some";
+import { uniq } from "../../functions/uniq";
 import { ReadonlyJsonObject } from "../../Json";
 import { isArray } from "../../types/Array";
-import { isBoolean } from "../../types/Boolean";
 import {
     EnumType,
-    isEnum,
     isEnumType,
 } from "../../types/Enum";
 import {
@@ -25,11 +20,8 @@ import {
     explainOneOf,
     explainProperty,
 } from "../../types/explain";
-import { isNull } from "../../types/Null";
-import {
-    isInteger,
-    isNumber,
-} from "../../types/Number";
+import { isFunction } from "../../types/Function";
+import { isObject } from "../../types/Object";
 import {
     explainNoOtherKeysInDevelopment,
     hasNoOtherKeysInDevelopment,
@@ -42,8 +34,8 @@ import {
     isString,
     isStringOrNumber,
 } from "../../types/String";
-import { isUndefined } from "../../types/undefined";
 import { BaseEntity } from "./BaseEntity";
+import { ChainOperation } from "./ChainOperation";
 import { DTO } from "./DTO";
 import {
     Entity,
@@ -57,20 +49,23 @@ import {
     MethodTypeCheckFn,
     PropertyTypeCheckFn,
     SetterMethod,
-    TypeCheckFn,
-    TypeExplainFn,
 } from "./EntityFactory";
-import {
-    EntityProperty,
-    EntityPropertyType,
-    EntityPropertyValue,
-
-} from "./EntityProperty";
+import { EntityMethod } from "./EntityMethod";
+import { EntityMethodImpl } from "./EntityMethodImpl";
+import { EntityProperty } from "./EntityProperty";
 import { EntityPropertyImpl } from "./EntityPropertyImpl";
 import {
     EntityType,
     isEntityType,
 } from "./EntityType";
+import { EntityTypeCheckFactory } from "./EntityTypeCheckFactory";
+import { EntityTypeCheckFactoryImpl } from "./EntityTypeCheckFactoryImpl";
+import { EntityTypeRegistry } from "./EntityTypeRegistry";
+import { EntityTypeRegistryImpl } from "./EntityTypeRegistryImpl";
+import {
+    EntityVariableType,
+    EntityVariableValue,
+} from "./EntityVariableType";
 import {
     IsDTOExplainFunction,
     IsDTOOrTestFunction,
@@ -108,9 +103,8 @@ export class EntityFactoryImpl<
     } = {};
 
 
-    private static _entities : {
-        [key: string]: EntityType<any, Entity<any>>
-    } = {};
+    private static _entities : EntityTypeRegistry = EntityTypeRegistryImpl.create();
+    private static _typeCheckFactory : EntityTypeCheckFactory = EntityTypeCheckFactoryImpl.create(this._entities);
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -121,11 +115,33 @@ export class EntityFactoryImpl<
     /**
      *
      * @param name
+     * @param aliases
      */
     public static createProperty (
-        name : string
+        name : string,
+        ...aliases : string[]
     ): EntityProperty {
-        return EntityPropertyImpl.create(name);
+        return EntityPropertyImpl.create(
+            this._typeCheckFactory,
+            name,
+            ...aliases
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////  #createMethod  //////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     *
+     * @param name
+     */
+    public static createMethod (
+        name : string
+    ): EntityMethod {
+        return EntityMethodImpl.create(name);
     }
 
 
@@ -141,7 +157,7 @@ export class EntityFactoryImpl<
     public static createArrayProperty (
         name : string
     ): EntityProperty {
-        return EntityPropertyImpl.createArray(name);
+        return EntityPropertyImpl.createArray(this._typeCheckFactory, name);
     }
 
 
@@ -152,7 +168,7 @@ export class EntityFactoryImpl<
     public static createOptionalArrayProperty (
         name : string
     ): EntityProperty {
-        return EntityPropertyImpl.createOptionalArray(name);
+        return EntityPropertyImpl.createOptionalArray(this._typeCheckFactory, name);
     }
 
 
@@ -195,21 +211,6 @@ export class EntityFactoryImpl<
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////  #deleteEntity  //////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * Unregister an entity factory by name.
-     */
-    public static deleteEntity (name : string) : typeof EntityFactoryImpl {
-        if ( has( this._entities, name ) ) {
-            delete this._entities[name];
-        }
-        return this;
-    }
-
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////  #destroy  ////////////////////////////////
@@ -221,137 +222,10 @@ export class EntityFactoryImpl<
      */
     public static destroy () : typeof EntityFactoryImpl {
         this._entityFactories = {};
-        this._entities = {};
+        this._entities.destroy();
         return this;
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////  #createTypeCheckFn  ///////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-
-    /**
-     *
-     * @param types
-     */
-    public static createTypeCheckFn (
-        ...types: readonly EntityPropertyType[]
-    ) : TypeCheckFn {
-
-        let func = reduce(
-            types,
-            (prev: TypeCheckFn | undefined, item: EntityPropertyType) : TypeCheckFn => {
-                const testFunc = this._createTypeCheckFn(item);
-                if (prev === undefined) {
-                    return (value: unknown) : boolean => testFunc(value);
-                } else {
-                    return (value: unknown) : boolean => prev(value) && testFunc(value);
-                }
-            },
-            undefined,
-        );
-
-        if (func === undefined) {
-            throw new TypeError(`createTypeCheckFn: At least one type must be defined`);
-        }
-
-        return func;
-
-    }
-
-    protected static _createTypeCheckFn (item: EntityPropertyType) {
-
-        if ( isString(item) && !isVariableType(item) ) {
-            if ( has(EntityFactoryImpl._entities, item) ) {
-                item = EntityFactoryImpl._entities[item];
-            } else {
-                throw new TypeError(`EntityFactoryImpl.createTypeCheckFn(): Could not initialize entity by name: ${item}`);
-            }
-        }
-
-        if (isEntityType(item)) {
-            let isEntity = item.isEntity;
-            return (value: unknown) : boolean => isEntity(value);
-        } else if (isEnumType<any>(item)) {
-            let enumType = item;
-            return (value: unknown) : boolean => isEnum<any>(enumType, value);
-        }
-
-        switch (item) {
-            case VariableType.BOOLEAN: return (value: unknown) : boolean => isBoolean(value);
-            case VariableType.STRING: return (value: unknown) : boolean => isString(value);
-            case VariableType.INTEGER: return (value: unknown) : boolean => isInteger(value);
-            case VariableType.NUMBER: return (value: unknown) : boolean => isNumber(value);
-            case VariableType.NULL: return (value: unknown) : boolean => isNull(value);
-            case VariableType.UNDEFINED: return (value: unknown) : boolean => isUndefined(value);
-            default: throw new TypeError(`createTypeCheckFn: Unknown variable type: ${item}`);
-        }
-
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////  #getTypeNames  /////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-
-    public static getTypeNames (
-        ...types: readonly EntityPropertyType[]
-    ) : string[] {
-        return map(
-            types,
-            (item: EntityPropertyType) : string => this._getTypeName( item ),
-        );
-    }
-
-    private static _getTypeName (
-        item: EntityPropertyType
-    ) : string {
-
-        if ( isString(item) && !isVariableType(item) ) {
-            if ( has(this._entities, item) ) {
-                item = this._entities[item];
-            } else {
-                throw new TypeError(`EntityFactoryImpl.createPropertyGetter(): Could not initialize entity by name: ${item}`);
-            }
-        }
-
-        if (isEntityType(item)) {
-            return item.getEntityName();
-        } else if (isEnumType<any>(item)) {
-            return `enum (${EnumUtils.getValues<any>(item).join(' | ')})`;
-        }
-        switch (item) {
-            case VariableType.BOOLEAN: return 'boolean';
-            case VariableType.STRING: return 'string';
-            case VariableType.INTEGER: return 'integer';
-            case VariableType.NUMBER: return 'number';
-            case VariableType.NULL: return 'null';
-            case VariableType.UNDEFINED: return 'undefined';
-            default: throw new TypeError(`createTypeExplainFn: Unknown variable type: ${item}`);
-        }
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////  #createTypeExplainFn  /////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * @inheritDoc
-     * @param types
-     * @fixme This creates a new isType function which could be reused from cache
-     */
-    public static createTypeExplainFn (
-        ...types: readonly EntityPropertyType[]
-    ) : TypeExplainFn {
-        if (!types.length) throw new TypeError(`createTypeExplainFn: There must be at least one type`);
-        const isType = this.createTypeCheckFn(...types);
-        const typeNames : string[] = EntityFactoryImpl.getTypeNames(...types);
-        const explainNotOneOf : string = explainNot( explainOneOf(typeNames) );
-        const ok = explainOk();
-        return (value : unknown) : string => isType(value) ? ok : explainNotOneOf;
-    }
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -370,7 +244,7 @@ export class EntityFactoryImpl<
         T extends BaseEntity<D, T>,
     > (
         propertyName : string,
-        types : readonly EntityPropertyType[],
+        types : readonly EntityVariableType[],
         opts ?: PropertyGetterOptions | undefined,
     ) : GetterMethod<D, T, any> {
         const entityAsDTO = !!opts?.entityAsDTO;
@@ -378,35 +252,36 @@ export class EntityFactoryImpl<
             types,
             (
                 prev: GetterMethod<D, T, any> | undefined,
-                type: EntityPropertyType
+                item: EntityVariableType
             ) : GetterMethod<D, T, any> => {
 
-                if ( isString(type) && !isVariableType(type) ) {
-                    if ( has(this._entities, type) ) {
-                        type = this._entities[type];
+                if ( isString(item) && !isVariableType(item) ) {
+                    const Type = this._entities.findType(item);
+                    if ( Type ) {
+                        item = Type;
                     } else {
-                        throw new TypeError(`EntityFactoryImpl.createPropertyGetter(): Could not initialize entity by name: ${type}`);
+                        throw new TypeError(`EntityFactoryImpl.createPropertyGetter(): Could not initialize entity by name: ${item}`);
                     }
                 }
 
                 let fn : GetterMethod<D, T, any>;
-                if ( isEntityType(type) && !entityAsDTO ) {
+                if ( isEntityType(item) && !entityAsDTO ) {
                     fn = this.createEntityPropertyGetter<D, T>(
                         propertyName,
-                        type,
+                        item,
                     );
-                } else if (isEnumType<any>(type, isStringOrNumber)) {
+                } else if (isEnumType<any>(item, isStringOrNumber)) {
                     fn = this.createEnumPropertyGetter<D, T>(
                         propertyName,
-                        type,
+                        item,
                     );
-                } else if ( isVariableType(type) || entityAsDTO ) {
+                } else if ( isVariableType(item) || entityAsDTO ) {
                     fn = this.createScalarPropertyGetter<D, T>(
                         propertyName,
-                        type,
+                        item,
                     );
                 } else {
-                    throw new TypeError(`createPropertyGetter(): Unsupported type: ${type}`);
+                    throw new TypeError(`createPropertyGetter(): Unsupported type: ${item}`);
                 }
 
                 if (prev === undefined) return fn;
@@ -438,29 +313,30 @@ export class EntityFactoryImpl<
         T extends BaseEntity<D, T>,
     > (
         propertyName : string,
-        types : readonly EntityPropertyType[],
+        types : readonly EntityVariableType[],
         opts ?: PropertyGetterOptions | undefined,
     ) : GetterMethod<any, any, any> {
 
         const entityAsDTO = !!opts?.entityAsDTO;
 
-        const iterator: ArrayMapMethod<EntityPropertyValue, EntityPropertyValue> = reduce(
+        const iterator: ArrayMapMethod<EntityVariableValue, EntityVariableValue> = reduce(
             types,
             (
-                prev: ArrayMapMethod<EntityPropertyValue, EntityPropertyValue> | undefined,
-                type: EntityPropertyType,
-            ) : ArrayMapMethod<EntityPropertyValue, EntityPropertyValue> => {
+                prev: ArrayMapMethod<EntityVariableValue, EntityVariableValue> | undefined,
+                item: EntityVariableType,
+            ) : ArrayMapMethod<EntityVariableValue, EntityVariableValue> => {
 
-                if ( isString(type) && !isVariableType(type) ) {
-                    if ( has(this._entities, type) ) {
-                        type = this._entities[type];
+                if ( isString(item) && !isVariableType(item) ) {
+                    const Type = this._entities.findType(item);
+                    if ( Type ) {
+                        item = Type;
                     } else {
-                        throw new TypeError(`EntityFactoryImpl.createArrayPropertyGetter(): Could not initialize entity by name: ${type}`);
+                        throw new TypeError(`EntityFactoryImpl.createArrayPropertyGetter(): Could not initialize entity by name: ${item}`);
                     }
                 }
 
                 const fn = this.createArrayItemGetter(
-                    type,
+                    item,
                     { entityAsDTO }
                 );
 
@@ -503,7 +379,7 @@ export class EntityFactoryImpl<
     > (
         propertyName : string,
         type: EntityType<any, any> | VariableType,
-    ): GetterMethod<D, T, EntityPropertyValue> {
+    ): GetterMethod<D, T, EntityVariableValue> {
         return function scalarGetterMethod (
             this: T,
         ) : any {
@@ -529,7 +405,7 @@ export class EntityFactoryImpl<
     > (
         propertyName : string,
         type: EnumType<any>,
-    ): GetterMethod<D, T, EntityPropertyValue> {
+    ): GetterMethod<D, T, EntityVariableValue> {
         return function enumGetterMethod (
             this: T,
         ) : any {
@@ -555,7 +431,7 @@ export class EntityFactoryImpl<
     > (
         propertyName : string,
         type: EntityType<any, any>,
-    ): GetterMethod<D, T, EntityPropertyValue> {
+    ): GetterMethod<D, T, EntityVariableValue> {
         return function entityGetterMethod (
             this: T,
         ) : Entity<any> | undefined {
@@ -579,12 +455,12 @@ export class EntityFactoryImpl<
     public static createArrayItemGetter (
         Type: EntityType<any, any> | EnumType<any> | VariableType,
         opts ?: PropertyGetterOptions | undefined,
-    ): ArrayMapMethod<EntityPropertyValue, EntityPropertyValue> {
+    ): ArrayMapMethod<EntityVariableValue, EntityVariableValue> {
         const entityAsDTO = !!opts?.entityAsDTO;
         if ( isEntityType(Type) && !entityAsDTO ) {
-            return (item : EntityPropertyValue) : EntityPropertyValue => Type.isDTO(item) ? Type.createFromDTO(item) : undefined;
+            return (item : EntityVariableValue) : EntityVariableValue => Type.isDTO(item) ? Type.createFromDTO(item) : undefined;
         }
-        return (item : EntityPropertyValue) : EntityPropertyValue => item;
+        return (item : EntityVariableValue) : EntityVariableValue => item;
     }
 
 
@@ -598,7 +474,7 @@ export class EntityFactoryImpl<
         T extends BaseEntity<D, T>,
     > (
         propertyName : string,
-        types : readonly EntityPropertyType[]
+        types : readonly EntityVariableType[]
     ) : SetterMethod<D, T, unknown> {
 
         const entityTypes : EntityType<DTO, Entity<DTO>>[] = filter(types, isEntityType);
@@ -649,7 +525,7 @@ export class EntityFactoryImpl<
         T extends BaseEntity<D, T>,
     > (
         propertyName : string,
-        types : readonly EntityPropertyType[]
+        types : readonly EntityVariableType[]
     ) : SetterMethod<D, T, unknown> {
 
         /**
@@ -730,6 +606,14 @@ export class EntityFactoryImpl<
      */
     private readonly _properties : EntityProperty[];
 
+    /**
+     * Static methods, e.g. methods available on the type of the entity like
+     * `.create()`.
+     *
+     * @private
+     */
+    private readonly _staticMethods : EntityMethod[];
+
 
     ////////////////////////////////////////////////////////////////////////////
     /////////////////////////////  new constructor /////////////////////////////
@@ -744,6 +628,7 @@ export class EntityFactoryImpl<
     protected constructor (name : string) {
         this._name = name;
         this._properties = [];
+        this._staticMethods = [];
     }
 
 
@@ -775,9 +660,41 @@ export class EntityFactoryImpl<
     /**
      * @inheritDoc
      */
+    public getStaticMethods () : readonly EntityMethod[] {
+        return map(
+            this._staticMethods,
+            (item : EntityMethod) => item
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public createMethod (name : string) : EntityMethod {
+        return EntityFactoryImpl.createMethod(name);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public addStaticMethod (
+        name  : EntityMethod | string,
+        ...types : EntityVariableType[]
+    ) : this {
+        if ( isString(name) ) {
+            this._staticMethods.push( this.createMethod(name).returnType(...types) );
+        } else {
+            this._staticMethods.push( name );
+        }
+        return this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public add (
         name  : EntityProperty | string,
-        ...types : EntityPropertyType[]
+        ...types : EntityVariableType[]
     ) : this {
         if ( isString(name) ) {
             this._properties.push( this.createProperty(name).types(...types) );
@@ -804,7 +721,10 @@ export class EntityFactoryImpl<
             properties,
             (prev: PropertyTypeCheckFn, item: EntityProperty): PropertyTypeCheckFn => {
                 const propertyName = item.getPropertyName();
-                const isType = EntityFactoryImpl.createTypeCheckFn(...item.getTypes());
+                const isType = EntityFactoryImpl._typeCheckFactory.createChainedTypeCheckFunction(
+                    ChainOperation.OR,
+                    ...item.getTypes()
+                );
                 return (value: ReadonlyJsonObject) : boolean => prev(value) && isType(value[propertyName]);
             },
             (): boolean => true,
@@ -838,7 +758,10 @@ export class EntityFactoryImpl<
             properties,
             (item: EntityProperty): IsDTOExplainFunction => {
                 const propertyName = item.getPropertyName();
-                const explainFunction = EntityFactoryImpl.createTypeExplainFn(...item.getTypes());
+                const explainFunction = EntityFactoryImpl._typeCheckFactory.createChainedTypeExplainFunction(
+                    ChainOperation.OR,
+                    ...item.getTypes()
+                );
                 return (value : unknown) : string => {
                     if (!isRegularObject(value)) return 'parent not object';
                     return explainProperty(propertyName, explainFunction((value as any)[propertyName]))
@@ -870,9 +793,10 @@ export class EntityFactoryImpl<
      * @inheritDoc
      * @fixme Cache the value and use it so that multiple calls do not generate new ones unless state changes
      */
-    public createTestFunctionOfDTOorOneOf<T> ( ...types : EntityPropertyType[] ) : IsDTOOrTestFunction<D, T> {
+    public createTestFunctionOfDTOorOneOf<T> ( ...types : EntityVariableType[] ) : IsDTOOrTestFunction<D, T> {
         const isDTO = this.createTestFunctionOfDTO();
-        const anotherFn = EntityFactoryImpl.createTypeCheckFn(
+        const anotherFn = EntityFactoryImpl._typeCheckFactory.createChainedTypeCheckFunction(
+            ChainOperation.OR,
             ...types,
         ) as unknown as IsDTOOrTestFunction<D, T>;
         return (value: unknown) : value is D | T => isDTO( value ) || anotherFn( value );
@@ -882,14 +806,15 @@ export class EntityFactoryImpl<
      * @inheritDoc
      * @fixme Cache the value and use it so that multiple calls do not generate new ones unless state changes
      */
-    public createExplainFunctionOfDTOorOneOf ( ...types : EntityPropertyType[] ) : IsDTOExplainFunction {
+    public createExplainFunctionOfDTOorOneOf ( ...types : EntityVariableType[] ) : IsDTOExplainFunction {
         const name = this.getName();
         const testDTO = this.createTestFunctionOfDTO();
-        const testOtherTypes = EntityFactoryImpl.createTypeCheckFn(
+        const testOtherTypes = EntityFactoryImpl._typeCheckFactory.createChainedTypeCheckFunction(
+            ChainOperation.OR,
             ...types,
         );
         const ok = explainOk();
-        const typeNames : string[] = EntityFactoryImpl.getTypeNames(...types);
+        const typeNames : string[] = EntityFactoryImpl._typeCheckFactory.getTypeNameList(...types);
         const notOk = explainNot(
             explainOneOf(
                 [
@@ -957,7 +882,7 @@ export class EntityFactoryImpl<
             properties,
             (prev: D, item : EntityProperty): D => {
 
-                let defValue : EntityPropertyValue = item.getDefaultValue();
+                let defValue : EntityVariableValue = item.getDefaultValue();
 
                 if (item.isArray()) {
                     if (isArray(defValue)) {
@@ -1006,13 +931,31 @@ export class EntityFactoryImpl<
         const name : string = (arg1IsString ? arg1 : opts?.name) ?? this.getName();
         const immutable : boolean = !!(opts?.immutable);
 
-        if (has(EntityFactoryImpl._entities, name)) {
+        if (EntityFactoryImpl._entities.hasType(name)) {
             throw new TypeError(`EntityFactoryImpl.createEntityType(): The entity by this name exists already`);
         }
 
         const properties : readonly EntityProperty[] = this.getProperties();
-        const isDTO = this.createTestFunctionOfDTO();
-        const defaultDto : D = this.createDefaultDTO();
+
+        /**
+         * This is a "hack" which initializes the entity type in order to
+         * have the instance registered in the global state before other parts
+         * of code uses it, e.g. `this.createTestFunctionOfDTO()`.
+         *
+         * @param Type
+         */
+        const typeInitializer = (Type: any) : boolean => {
+            EntityFactoryImpl._entities.registerType(name, Type);
+            return true;
+        };
+
+        const isDtoInitializer = () : IsDTOTestFunction<D> => {
+            return this.createTestFunctionOfDTO();
+        };
+
+        const createDefaultDtoInitializer = () : D => {
+            return this.createDefaultDTO();
+        };
 
         /**
          * @see EntityType as well, which describes the static API.
@@ -1021,6 +964,10 @@ export class EntityFactoryImpl<
             extends BaseEntity<D, T>
             implements Entity<D>
         {
+
+            private static _initialized : boolean = typeInitializer(FinalType);
+            private static _isDTO : IsDTOTestFunction<D> = isDtoInitializer();
+            private static _defaultDto : D = createDefaultDtoInitializer();
 
             public static create () : FinalType {
                 return new FinalType();
@@ -1051,13 +998,13 @@ export class EntityFactoryImpl<
             }
 
             public static isDTO (value: unknown) : value is D {
-                return isDTO(value);
+                return this._isDTO(value);
             }
 
             public constructor (
                 dto ?: D | undefined,
             ) {
-                super( dto ?? defaultDto );
+                super( dto ?? FinalType._defaultDto );
             }
 
             public getEntityType () : EntityType<D, T> {
@@ -1071,7 +1018,7 @@ export class EntityFactoryImpl<
             (item: EntityProperty) : void => {
                 const propertyName : string = item.getPropertyName();
                 const isArray : boolean = item.isArray();
-                const types : readonly EntityPropertyType[] = item.getTypes();
+                const types : readonly EntityVariableType[] = item.getTypes();
 
                 const hasEntityType : boolean = some(types, isEntityType);
 
@@ -1155,9 +1102,7 @@ export class EntityFactoryImpl<
             }
         );
 
-        const Type = FinalType as unknown as EntityType<D, T>;
-        EntityFactoryImpl._entities[name] = Type;
-        return Type;
+        return FinalType as unknown as EntityType<D, T>;
 
     }
 

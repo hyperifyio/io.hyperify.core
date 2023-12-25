@@ -1,75 +1,129 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { beforeEach } from "@jest/globals";
+import { jest, describe, beforeEach, afterEach, expect } from '@jest/globals';
+import { ChainOperation } from "./ChainOperation";
 import { DTO } from "./DTO";
 import { Entity } from "./Entity";
+import {
+    TypeCheckFn,
+    TypeExplainFn,
+} from "./EntityFactory";
 import { EntityFactoryImpl } from "./EntityFactoryImpl";
 import { EntityPropertyImpl } from "./EntityPropertyImpl";
 import { EntityType } from "./EntityType";
+import { EntityTypeCheckFactory } from "./EntityTypeCheckFactory";
+import {
+    EntityVariableType,
+    EntityVariableValue,
+} from "./EntityVariableType";
 import { VariableType } from "./VariableType";
 
 describe('EntityPropertyImpl', () => {
 
+    let typeCheckFactory : EntityTypeCheckFactory;
+
+    beforeEach(() => {
+        typeCheckFactory = {
+
+            createDefaultValueFromTypes: jest.fn<(
+                types: readonly EntityVariableType[],
+            ) => EntityVariableValue>().mockImplementation( () => undefined ),
+
+            createChainedTypeCheckFunction: jest.fn<(
+                op: ChainOperation,
+                ...types: readonly EntityVariableType[]
+            ) => TypeCheckFn>().mockImplementation( () => {
+                return () : boolean => false;
+            } ),
+
+            createChainedTypeExplainFunction: jest.fn<(
+                op: ChainOperation,
+                ...types: readonly EntityVariableType[]
+            ) => TypeExplainFn>().mockImplementation( () => {
+                return () : string => '';
+            } ),
+
+            createTypeCheckFunction: jest.fn<( item: EntityVariableType ) => TypeCheckFn>().mockImplementation(
+                () => {
+                    return () : boolean => false;
+                }
+            ),
+
+            getTypeNameList: jest.fn<( ...types: readonly EntityVariableType[] ) => string[]>().mockImplementation(
+                () : string[] => []
+            ),
+
+            getTypeName: jest.fn<( type: EntityVariableType ) => string>().mockImplementation(
+                () : string => ''
+            ),
+
+        }
+    });
+
+    afterEach( () => {
+        EntityFactoryImpl.destroy();
+    });
+
     describe('#create', () => {
 
         it('can create a property', () => {
-            const item = EntityPropertyImpl.create("test");
+            const item = EntityPropertyImpl.create(typeCheckFactory ,"test");
             expect( item ).toBeDefined();
             expect( item ).toBeInstanceOf(EntityPropertyImpl);
         });
 
         it('can create a property which may be optional', () => {
-            const item = EntityPropertyImpl.create("test");
+            const item = EntityPropertyImpl.create(typeCheckFactory, "test");
             expect( item.isOptional() ).toBe(true);
         });
 
         it('can create a property which is not an array', () => {
-            const item = EntityPropertyImpl.create("test");
+            const item = EntityPropertyImpl.create(typeCheckFactory, "test");
             expect( item.isArray() ).toBe(false);
         });
 
         it('can create property with a name', () => {
-            const item = EntityPropertyImpl.create("test");
+            const item = EntityPropertyImpl.create(typeCheckFactory,"test");
             expect( item.getPropertyName() ).toBe("test");
         });
 
         it('can create property with string type', () => {
-            const item = EntityPropertyImpl.create("test").setTypes(VariableType.STRING);
+            const item = EntityPropertyImpl.create(typeCheckFactory,"test").setTypes(VariableType.STRING);
             expect( item.getTypes() ).toStrictEqual(["string"]);
         });
 
         it('can create property with number type', () => {
-            const item = EntityPropertyImpl.create("test").setTypes(VariableType.NUMBER);
+            const item = EntityPropertyImpl.create(typeCheckFactory,"test").setTypes(VariableType.NUMBER);
             expect( item.getTypes() ).toStrictEqual(["number"]);
         });
 
         it('can create property with boolean type', () => {
-            const item = EntityPropertyImpl.create("test").setTypes(VariableType.BOOLEAN);
+            const item = EntityPropertyImpl.create(typeCheckFactory,"test").setTypes(VariableType.BOOLEAN);
             expect( item.getTypes() ).toStrictEqual(["boolean"]);
         });
 
         it('can create property with null type', () => {
-            const item = EntityPropertyImpl.create("test").setTypes(VariableType.NULL);
+            const item = EntityPropertyImpl.create(typeCheckFactory,"test").setTypes(VariableType.NULL);
             expect( item.getTypes() ).toStrictEqual(["null"]);
         });
 
         it('can create property with undefined type', () => {
-            const item = EntityPropertyImpl.create("test").setTypes(VariableType.UNDEFINED);
+            const item = EntityPropertyImpl.create(typeCheckFactory,"test").setTypes(VariableType.UNDEFINED);
             expect( item.getTypes() ).toStrictEqual(["undefined"]);
         });
 
         it('can create property with number and undefined types', () => {
-            const item = EntityPropertyImpl.create("test").setTypes(VariableType.NUMBER, VariableType.UNDEFINED);
+            const item = EntityPropertyImpl.create(typeCheckFactory,"test").setTypes(VariableType.NUMBER, VariableType.UNDEFINED);
             expect( item.getTypes() ).toStrictEqual(["number", "undefined"]);
         });
 
         it('can create property with Entity type', () => {
             const carFactory = (
-                EntityFactoryImpl.create()
-                .add( EntityPropertyImpl.create("model").setTypes(VariableType.STRING).setDefaultValue("Ford") )
+                EntityFactoryImpl.create('Entity')
+                .add( EntityPropertyImpl.create(typeCheckFactory,"model").setTypes(VariableType.STRING).setDefaultValue("Ford") )
             );
             const CarType = carFactory.createEntityType();
-            const item = EntityPropertyImpl.create(
+            const item = EntityPropertyImpl.create(typeCheckFactory,
                 "test").setTypes(CarType);
             expect( item.getTypes() ).toStrictEqual([CarType]);
         });
@@ -81,7 +135,7 @@ describe('EntityPropertyImpl', () => {
         let item : EntityPropertyImpl;
 
         beforeEach(() => {
-            item = EntityPropertyImpl.createArray("test");
+            item = EntityPropertyImpl.createArray(typeCheckFactory,"test");
         });
 
         it('can create a property', () => {
@@ -114,7 +168,7 @@ describe('EntityPropertyImpl', () => {
         let item : EntityPropertyImpl;
 
         beforeEach(() => {
-            item = EntityPropertyImpl.createOptionalArray("test");
+            item = EntityPropertyImpl.createOptionalArray(typeCheckFactory,"test");
         });
 
         it('can create a array property', () => {
@@ -145,19 +199,25 @@ describe('EntityPropertyImpl', () => {
 
         it('can get a default value', () => {
             const item = EntityPropertyImpl.create(
-                "test").setTypes(VariableType.STRING).setDefaultValue('Hello');
+                typeCheckFactory,
+                "test"
+            ).setTypes(VariableType.STRING).setDefaultValue('Hello');
             expect( item.getDefaultValue() ).toBe('Hello');
         });
 
         it('can get a default value for an entity', () => {
             const carFactory = (
-                EntityFactoryImpl.create()
-                .add( EntityPropertyImpl.create("model").setTypes(VariableType.STRING).setDefaultValue("Ford") )
+                EntityFactoryImpl.create('Entity')
+                .add( EntityPropertyImpl.create(typeCheckFactory,"model").setTypes(VariableType.STRING).setDefaultValue("Ford") )
             );
             const CarType = carFactory.createEntityType();
-            const item = EntityPropertyImpl.create(
-                "test").setTypes(CarType);
+
+            EntityFactoryImpl.createProperty("test").setTypes(CarType)
+
+            const item = EntityFactoryImpl.createProperty("test").setTypes(CarType);
+
             expect( (item.getDefaultValue() as any)?.getDTO() ).toStrictEqual({model: "Ford"});
+
         });
 
     });
@@ -165,7 +225,7 @@ describe('EntityPropertyImpl', () => {
     describe('#setDefaultValue', () => {
 
         it('can set a default value', () => {
-            const item = EntityPropertyImpl.create("test").setTypes(VariableType.STRING).setDefaultValue('Hello');
+            const item = EntityPropertyImpl.create(typeCheckFactory,"test").setTypes(VariableType.STRING).setDefaultValue('Hello');
             expect( item.getDefaultValue() ).toBe('Hello');
         });
 
@@ -174,7 +234,7 @@ describe('EntityPropertyImpl', () => {
     describe('#defaultValue', () => {
 
         it('can set a default value', () => {
-            const item = EntityPropertyImpl.create(
+            const item = EntityPropertyImpl.create(typeCheckFactory,
                 "test").setTypes(VariableType.STRING).defaultValue('Hello');
             expect( item.getDefaultValue() ).toBe('Hello');
         });
@@ -227,8 +287,8 @@ describe('EntityPropertyImpl', () => {
 
             beforeEach(() => {
                 carFactory = (
-                    EntityFactoryImpl.create<CarDTO, Car>()
-                    .add( EntityPropertyImpl.create("model").setDefaultValue("Ford") )
+                    EntityFactoryImpl.create<CarDTO, Car>('Car')
+                    .add( EntityPropertyImpl.create(typeCheckFactory,"model").setDefaultValue("Ford") )
                 );
                 CarEntity = carFactory.createEntityType();
             });

@@ -12,12 +12,12 @@ import { ActionDTO } from "./ActionDTO";
 
 export const ActionEntityFactory = (
     EntityFactoryImpl.create<ActionDTO, Action>("Action")
-                     .add( EntityPropertyImpl.create("label").setTypes(VariableType.STRING) )
-                     .add( EntityPropertyImpl.create("target").setTypes(VariableType.STRING) )
-                     .add( EntityPropertyImpl.create("method").setTypes(VariableType.STRING) )
-                     .add( EntityPropertyImpl.create("body").setTypes(VariableType.JSON, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("successRedirect").setTypes(VariableType.STRING, "Action", VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("errorRedirect").setTypes(VariableType.STRING, "Action", VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("label").setTypes(VariableType.STRING) )
+                     .add( EntityFactoryImpl.createProperty("target").setTypes(VariableType.STRING) )
+                     .add( EntityFactoryImpl.createProperty("method").setTypes(VariableType.STRING) )
+                     .add( EntityFactoryImpl.createProperty("body").setTypes(VariableType.JSON, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("successRedirect").setTypes(VariableType.STRING, "Action", VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("errorRedirect").setTypes(VariableType.STRING, "Action", VariableType.UNDEFINED) )
 );
 
 export const isActionDTO = ActionEntityFactory.createTestFunctionOfDTO();

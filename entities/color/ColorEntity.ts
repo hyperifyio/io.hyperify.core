@@ -15,7 +15,7 @@ import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const ColorEntityFactory = (
     EntityFactoryImpl.create<ColorDTO, Color>('Color')
-                     .add( EntityPropertyImpl.create("value").setTypes(VariableType.STRING) )
+                     .add( EntityFactoryImpl.createProperty("value").setTypes(VariableType.STRING) )
 );
 
 export const isColorDTO = ColorEntityFactory.createTestFunctionOfDTO();

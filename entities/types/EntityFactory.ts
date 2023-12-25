@@ -6,8 +6,9 @@ import { BaseEntity } from "./BaseEntity";
 import { Entity } from "./Entity";
 import {
     EntityProperty,
-    EntityPropertyType,
+
 } from "./EntityProperty";
+import { EntityVariableType } from "./EntityVariableType";
 import { EntityType } from "./EntityType";
 import { IsDTOTestFunction } from "./IsDTOTestFunction";
 
@@ -75,7 +76,7 @@ export interface EntityFactory<
      * @param name The name of the property
      * @param types Type(s) of the property
      */
-    add (name: string, ...types : EntityPropertyType[]) : this;
+    add (name: string, ...types : EntityVariableType[]) : this;
 
     /**
      * Add a property with a property entity.

@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { EntityMethodImpl } from "../types/EntityMethodImpl";
 import { VariableType } from "../types/VariableType";
 import {
     createSizeDTO,
@@ -22,8 +23,18 @@ import {
 
 export const SizeEntityFactory = (
     EntityFactoryImpl.create<SizeDTO, Size>('Size')
-    .add( EntityPropertyImpl.create("value").setTypes(VariableType.NUMBER, SpecialSize) )
-    .add( EntityPropertyImpl.create("unit", "unitType").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
+                     .addStaticMethod(
+                         EntityMethodImpl.create('create')
+                                         .addArgument(VariableType.NUMBER)
+                                         .returnType('Size')
+                     )
+                     .addStaticMethod(
+                         EntityMethodImpl.create('create')
+                                         .addArgument(SpecialSize)
+                                         .returnType('Size')
+                     )
+                     .add( EntityFactoryImpl.createProperty("value").setTypes(VariableType.NUMBER, SpecialSize) )
+                     .add( EntityFactoryImpl.createProperty("unit", "unitType").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
 );
 
 export const BaseSizeEntity = SizeEntityFactory.createEntityType();
@@ -39,6 +50,11 @@ export class SizeEntity
     }
 
     /**
+     * Creates a size entity with auto size.
+     */
+    public static create () : SizeEntity;
+
+    /**
      * Creates a size with pixels.
      *
      * @param value
@@ -46,11 +62,6 @@ export class SizeEntity
     public static create (
         value  : Size,
     ) : SizeEntity;
-
-    /**
-     * Creates a size entity with auto size.
-     */
-    public static create () : SizeEntity;
 
     /**
      * Creates a size with pixels.

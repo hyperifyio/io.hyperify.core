@@ -26,15 +26,15 @@ import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BackgroundEntityFactory = (
     EntityFactoryImpl.create<BackgroundDTO, Background>('Background')
-                     .add( EntityPropertyImpl.create("attachment").setTypes(BackgroundAttachment, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("blendMode").setTypes(BackgroundBlendMode, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("clip").setTypes(BackgroundClip, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("color").setTypes(ColorEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("image").setTypes(BackgroundImageEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("origin").setTypes(BackgroundOrigin, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("position").setTypes(SizeBoxEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("repeat").setTypes(BackgroundRepeatEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("size").setTypes(BackgroundSize, SizeEntity, SizeDimensionsEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("attachment").setTypes(BackgroundAttachment, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("blendMode").setTypes(BackgroundBlendMode, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("clip").setTypes(BackgroundClip, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("color").setTypes(ColorEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("image").setTypes(BackgroundImageEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("origin").setTypes(BackgroundOrigin, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("position").setTypes(SizeBoxEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("repeat").setTypes(BackgroundRepeatEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("size").setTypes(BackgroundSize, SizeEntity, SizeDimensionsEntity, VariableType.UNDEFINED) )
 );
 
 export const BaseBackgroundEntity = BackgroundEntityFactory.createEntityType();

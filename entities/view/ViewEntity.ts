@@ -9,10 +9,10 @@ import { View } from "./View";
 
 export const ViewEntityFactory = (
     EntityFactoryImpl.create<ViewDTO, View>('View')
-    .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING) )
-    .add( EntityPropertyImpl.create("extend").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
-    .add( EntityPropertyImpl.create("publicUrl").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
-    .add( EntityPropertyImpl.create("language").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
+        .add( EntityFactoryImpl.createProperty("name").setTypes(VariableType.STRING) )
+        .add( EntityFactoryImpl.createProperty("extend").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
+        .add( EntityFactoryImpl.createProperty("publicUrl").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
+        .add( EntityFactoryImpl.createProperty("language").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
 );
 
 export const isViewDTO = ViewEntityFactory.createTestFunctionOfDTO();

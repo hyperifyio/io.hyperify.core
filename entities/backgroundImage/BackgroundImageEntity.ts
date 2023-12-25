@@ -13,7 +13,7 @@ import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BackgroundImageEntityFactory = (
     EntityFactoryImpl.create<BackgroundImageDTO, BackgroundImage>('BackgroundImage')
-                     .add( EntityPropertyImpl.create("url").setTypes(VariableType.STRING) )
+                     .add( EntityFactoryImpl.createProperty("url").setTypes(VariableType.STRING) )
 );
 
 export const BaseBackgroundImageEntity = BackgroundImageEntityFactory.createEntityType();

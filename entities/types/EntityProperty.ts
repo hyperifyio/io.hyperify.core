@@ -1,19 +1,9 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { Enum } from "../../types/Enum";
-import { Entity } from "./Entity";
-import { EntityType } from "./EntityType";
-import { VariableType } from "./VariableType";
-
-/**
- *
- */
-export type EntityPropertyType = EntityType<any, Entity<any>> | Enum<any> | VariableType | string;
-
-/**
- *
- */
-export type EntityPropertyValue = Entity<any> | string | number | boolean | null | undefined | Enum<any> | EntityPropertyValue[];
+import {
+    EntityVariableType,
+    EntityVariableValue,
+} from "./EntityVariableType";
 
 /**
  * Presents a property of an entity or entity DTO with a name and type(s).
@@ -34,7 +24,7 @@ export interface EntityProperty {
     /**
      * Accepted type(s) of the property.
      */
-    getTypes () : readonly EntityPropertyType[];
+    getTypes () : readonly EntityVariableType[];
 
     /**
      * Set types.
@@ -42,7 +32,7 @@ export interface EntityProperty {
      * @param types
      */
     setTypes (
-        ...types : readonly EntityPropertyType[]
+        ...types : readonly EntityVariableType[]
     ): this;
 
     /**
@@ -51,26 +41,26 @@ export interface EntityProperty {
      * @param types
      */
     types (
-        ...types : readonly EntityPropertyType[]
+        ...types : readonly EntityVariableType[]
     ) : this;
 
     /**
      *
      */
-    getDefaultValue () : EntityPropertyValue;
+    getDefaultValue () : EntityVariableValue;
 
     /**
      *
      * @param value
      */
-    setDefaultValue (value: EntityPropertyValue) : this;
+    setDefaultValue (value: EntityVariableValue) : this;
 
     /**
      * Alternative name for .setDefaultValue()
      *
      * @param value
      */
-    defaultValue (value: EntityPropertyValue) : this;
+    defaultValue (value: EntityVariableValue) : this;
 
     /**
      * Returns names for getter functions.

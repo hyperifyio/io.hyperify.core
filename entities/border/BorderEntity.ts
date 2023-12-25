@@ -29,10 +29,10 @@ import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const BorderEntityFactory = (
     EntityFactoryImpl.create<BorderDTO, Border>('Border')
-                     .add( EntityPropertyImpl.create("style").setTypes(BorderStyle, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("width").setTypes(SizeEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("radius").setTypes(SizeEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("color").setTypes(ColorEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("style").setTypes(BorderStyle, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("width").setTypes(SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("radius").setTypes(SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("color").setTypes(ColorEntity, VariableType.UNDEFINED) )
 );
 
 export const isBorderDTO = BorderEntityFactory.createTestFunctionOfDTO();

@@ -1,6 +1,5 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { find } from "../../functions/find";
 import { map } from "../../functions/map";
 import { uniq } from "../../functions/uniq";
 import { upperFirst } from "../../functions/upperFirst";
@@ -17,20 +16,17 @@ import {
 } from "../../types/Number";
 import { isString } from "../../types/String";
 import { isUndefined } from "../../types/undefined";
-import { DTO } from "./DTO";
 import {
     isEntity,
 } from "./Entity";
 import {
     EntityProperty,
-    EntityPropertyType,
-    EntityPropertyValue,
-
 } from "./EntityProperty";
+import { EntityTypeCheckFactory } from "./EntityTypeCheckFactory";
 import {
-    EntityType,
-    isEntityType,
-} from "./EntityType";
+    EntityVariableType,
+    EntityVariableValue,
+} from "./EntityVariableType";
 import { VariableType } from "./VariableType";
 
 const LOG = LogService.createLogger('EntityPropertyImpl');
@@ -47,10 +43,12 @@ export class EntityPropertyImpl
     /**
      * Create an entity property.
      *
+     * @param entityTypeCheckFactory Type check function factory
      * @param name The name of the property
      * @param aliases The method aliases of the property
      */
     public static create (
+        entityTypeCheckFactory: EntityTypeCheckFactory,
         name : string,
         ...aliases : readonly string[]
     ) : EntityPropertyImpl {
@@ -61,6 +59,7 @@ export class EntityPropertyImpl
             undefined,
             false,
             true,
+            entityTypeCheckFactory,
         );
     }
 
@@ -73,10 +72,12 @@ export class EntityPropertyImpl
     /**
      * Create an array property.
      *
+     * @param entityTypeCheckFactory
      * @param name The name of the property
      * @param aliases The method aliases of the property
      */
     public static createArray (
+        entityTypeCheckFactory: EntityTypeCheckFactory,
         name : string,
         ...aliases : readonly string[]
     ) : EntityPropertyImpl {
@@ -87,6 +88,7 @@ export class EntityPropertyImpl
             [],
             true,
             false,
+            entityTypeCheckFactory,
         );
     }
 
@@ -94,10 +96,12 @@ export class EntityPropertyImpl
     /**
      * Create an array property which may be undefined.
      *
+     * @param entityTypeCheckFactory
      * @param name The name of the property
      * @param aliases The method aliases of the property
      */
     public static createOptionalArray (
+        entityTypeCheckFactory: EntityTypeCheckFactory,
         name : string,
         ...aliases : readonly string[]
     ) : EntityPropertyImpl {
@@ -108,36 +112,11 @@ export class EntityPropertyImpl
             undefined,
             true,
             true,
+            entityTypeCheckFactory,
         );
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    ///////////////////////  #createDefaultValueFromTypes  /////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-
-
-    public static createDefaultValueFromTypes (
-        types: readonly EntityPropertyType[],
-    ) : EntityPropertyValue {
-        if ( types.length === 0 || types.includes(VariableType.UNDEFINED) ) return undefined;
-        if ( types.includes(VariableType.NULL) ) return null;
-        if ( types.includes(VariableType.STRING) ) return "";
-        if ( types.includes(VariableType.NUMBER) ) return 0;
-        if ( types.includes(VariableType.INTEGER) ) return 0;
-        if ( types.includes(VariableType.BOOLEAN) ) return false;
-
-        const Type : EntityPropertyType | undefined = find(
-            types,
-            (item : EntityPropertyType) => isEntityType(item)
-        ) as EntityType<DTO, any>;
-
-        if ( Type !== undefined ) {
-            return Type.create();
-        }
-
-        return undefined;
-    }
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -146,8 +125,8 @@ export class EntityPropertyImpl
 
 
     public static getEntityPropertyTypeFromVariable (
-        value: EntityPropertyValue
-    ) : EntityPropertyType {
+        value: EntityVariableValue
+    ) : EntityVariableType {
         if (isString(value)) return VariableType.STRING;
         if (isInteger(value)) return VariableType.INTEGER;
         if (isNumber(value)) return VariableType.NUMBER;
@@ -186,14 +165,14 @@ export class EntityPropertyImpl
      *
      * @private
      */
-    private _types : readonly EntityPropertyType[];
+    private _types : readonly EntityVariableType[];
 
     /**
      * The default value of the property.
      *
      * @private
      */
-    private _defaultValue : EntityPropertyValue;
+    private _defaultValue : EntityVariableValue;
 
     /**
      * `true` if this property is an array type.
@@ -209,6 +188,13 @@ export class EntityPropertyImpl
      */
     private readonly _isOptional : boolean;
 
+    /**
+     * Type check function factory
+     *
+     * @private
+     */
+    private readonly _entityTypeCheckFactory : EntityTypeCheckFactory;
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////  protected constructor  ///////////////////////////
     ////////////////////////////////////////////////////////////////////////////
@@ -218,19 +204,22 @@ export class EntityPropertyImpl
      * Construct the property entity.
      *
      * @param name The name of the property
+     * @param methodAliases Alias names for the property
      * @param types Types of the property
      * @param defaultValue Default value
      * @param isArray True if this property is an array.
      * @param isOptional True if this property may be undefined.
+     * @param entityTypeCheckFactory Type check factory
      * @protected
      */
     protected constructor (
         name : string,
         methodAliases : readonly string[],
-        types : readonly EntityPropertyType[],
-        defaultValue : EntityPropertyValue,
+        types : readonly EntityVariableType[],
+        defaultValue : EntityVariableValue,
         isArray : boolean,
         isOptional : boolean,
+        entityTypeCheckFactory : EntityTypeCheckFactory,
     ) {
         this._name = name;
         this._methodAliases = methodAliases;
@@ -238,6 +227,7 @@ export class EntityPropertyImpl
         this._defaultValue = defaultValue;
         this._isArray = isArray;
         this._isOptional = isOptional;
+        this._entityTypeCheckFactory = entityTypeCheckFactory;
     }
 
 
@@ -278,7 +268,7 @@ export class EntityPropertyImpl
     /**
      * @inheritDoc
      */
-    public getTypes () : readonly EntityPropertyType[] {
+    public getTypes () : readonly EntityVariableType[] {
         return this._types;
     }
 
@@ -286,13 +276,13 @@ export class EntityPropertyImpl
      * @inheritDoc
      */
     public setTypes (
-        ...types : readonly EntityPropertyType[]
+        ...types : readonly EntityVariableType[]
     ): this {
         this._types = types;
         if (this._isArray) {
             this._defaultValue = this._isOptional ? undefined : [];
         } else {
-            this._defaultValue = EntityPropertyImpl.createDefaultValueFromTypes(types);
+            this._defaultValue = this._entityTypeCheckFactory.createDefaultValueFromTypes(types);
         }
         return this;
     }
@@ -301,7 +291,7 @@ export class EntityPropertyImpl
      * @inheritDoc
      */
     public types (
-        ...types : readonly EntityPropertyType[]
+        ...types : readonly EntityVariableType[]
     ) : this {
         return this.setTypes(...types);
     }
@@ -309,14 +299,14 @@ export class EntityPropertyImpl
     /**
      * @inheritDoc
      */
-    public getDefaultValue () : EntityPropertyValue {
+    public getDefaultValue () : EntityVariableValue {
         return this._defaultValue;
     }
 
     /**
      * @inheritDoc
      */
-    public setDefaultValue (value: EntityPropertyValue) : this {
+    public setDefaultValue (value: EntityVariableValue) : this {
 
         if (this._isArray) {
             if (this._isOptional) {
@@ -353,7 +343,7 @@ export class EntityPropertyImpl
     /**
      * @inheritDoc
      */
-    public defaultValue (value: EntityPropertyValue) : this {
+    public defaultValue (value: EntityVariableValue) : this {
         return this.setDefaultValue(value);
     }
 

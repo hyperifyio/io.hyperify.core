@@ -1,6 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { createComponentDTO, ComponentDTO } from "../../entities/component/ComponentDTO";
+import { ComponentDTO } from "../../entities/component/ComponentDTO";
+import { ComponentEntity } from "../../entities/component/ComponentEntity";
 import { HyperComponent } from "../../entities/types/HyperComponent";
 import { ComponentFactory } from "../../services/ComponentFactory";
 
@@ -10,12 +11,10 @@ export type HeadingComponent = ComponentDTO;
 
 export function createHeadingComponent (
 ) : HeadingComponent {
-    return createComponentDTO(
-        HEADING_COMPONENT_NAME,
-        HyperComponent.H3,
-        [],
-        undefined,
-        undefined,
+    return (
+        ComponentEntity.create(HEADING_COMPONENT_NAME)
+                       .extend(HyperComponent.H3)
+                       .getDTO()
     );
 }
 

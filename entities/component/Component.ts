@@ -176,6 +176,13 @@ export interface Component
     setStyle (style : Style | StyleEntity | StyleDTO | undefined) : this;
 
     /**
+     * Alias for setStyle().
+     *
+     * @param style
+     */
+    style (style : Style | StyleEntity | StyleDTO | undefined) : this;
+
+    /**
      * Merges more styles.
      *
      * @param style

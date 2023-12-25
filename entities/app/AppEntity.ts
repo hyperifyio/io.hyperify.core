@@ -8,7 +8,7 @@ import { App } from "./App";
 
 export const AppEntityFactory = (
     EntityFactoryImpl.create<AppDTO, App>('App')
-                     .add( EntityPropertyImpl.create("value").setTypes(VariableType.STRING) )
+                     .add( EntityFactoryImpl.createProperty("value").setTypes(VariableType.STRING) )
 );
 
 export const isAppDTO = AppEntityFactory.createTestFunctionOfDTO();

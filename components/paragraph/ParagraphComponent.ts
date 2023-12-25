@@ -1,6 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { createComponentDTO, ComponentDTO } from "../../entities/component/ComponentDTO";
+import { ComponentDTO } from "../../entities/component/ComponentDTO";
+import { ComponentEntity } from "../../entities/component/ComponentEntity";
 import { HyperComponent } from "../../entities/types/HyperComponent";
 import { ComponentFactory } from "../../services/ComponentFactory";
 
@@ -10,12 +11,10 @@ export type ParagraphComponent = ComponentDTO;
 
 export function createParagraphComponent (
 ) : ParagraphComponent {
-    return createComponentDTO(
-        PARAGRAPH_COMPONENT_NAME,
-        HyperComponent.Paragraph,
-        [],
-        undefined,
-        undefined,
+    return (
+        ComponentEntity.create(PARAGRAPH_COMPONENT_NAME)
+                       .extend(HyperComponent.Paragraph)
+                       .getDTO()
     );
 }
 

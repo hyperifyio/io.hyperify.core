@@ -12,12 +12,12 @@ import { isString } from "../../types/String";
 
 export const RouteEntityFactory = (
     EntityFactoryImpl.create<RouteDTO, Route>('Route')
-        .add( EntityPropertyImpl.create("name").setTypes(VariableType.STRING) )
-        .add( EntityPropertyImpl.create("path").setTypes(VariableType.STRING) )
-        .add( EntityPropertyImpl.create("publicUrl").setTypes(VariableType.UNDEFINED) )
-        .add( EntityPropertyImpl.create("language").setTypes(VariableType.UNDEFINED) )
-        .add( EntityPropertyImpl.create("view").setTypes(VariableType.UNDEFINED) )
-        .add( EntityPropertyImpl.create("redirect").setTypes(VariableType.UNDEFINED) )
+        .add( EntityFactoryImpl.createProperty("name").setTypes(VariableType.STRING) )
+        .add( EntityFactoryImpl.createProperty("path").setTypes(VariableType.STRING) )
+        .add( EntityFactoryImpl.createProperty("publicUrl").setTypes(VariableType.UNDEFINED) )
+        .add( EntityFactoryImpl.createProperty("language").setTypes(VariableType.UNDEFINED) )
+        .add( EntityFactoryImpl.createProperty("view").setTypes(VariableType.UNDEFINED) )
+        .add( EntityFactoryImpl.createProperty("redirect").setTypes(VariableType.UNDEFINED) )
 );
 
 export const isRoute = RouteEntityFactory.createTestFunctionOfInterface();

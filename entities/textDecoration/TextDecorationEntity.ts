@@ -27,10 +27,10 @@ import { TextDecorationStyle } from "../types/TextDecorationStyle";
 
 export const TextDecorationEntityFactory = (
     EntityFactoryImpl.create<TextDecorationDTO, TextDecoration>('TextDecoration')
-                     .add( EntityPropertyImpl.create("lineType").setTypes(TextDecorationLineType, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("color").setTypes(ColorEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("style").setTypes(TextDecorationStyle, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("thickness").setTypes(SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("lineType").setTypes(TextDecorationLineType, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("color").setTypes(ColorEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("style").setTypes(TextDecorationStyle, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("thickness").setTypes(SizeEntity, VariableType.UNDEFINED) )
 );
 
 export const BaseTextDecorationEntity = TextDecorationEntityFactory.createEntityType();

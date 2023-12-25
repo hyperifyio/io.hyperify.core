@@ -1,6 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { ComponentDTO, createComponentDTO } from "../../entities/component/ComponentDTO";
+import { ComponentDTO } from "../../entities/component/ComponentDTO";
+import { ComponentEntity } from "../../entities/component/ComponentEntity";
 import { BorderStyle } from "../../entities/types/BorderStyle";
 import { HyperComponent } from "../../entities/types/HyperComponent";
 import { BorderEntity } from "../../entities/border/BorderEntity";
@@ -13,18 +14,18 @@ export type LinkButtonComponent = ComponentDTO;
 
 export function createLinkButtonComponent (
 ) : LinkButtonComponent {
-    return createComponentDTO(
-        LINK_BUTTON_COMPONENT_NAME,
-        HyperComponent.LinkButton,
-        [],
-        {},
-        StyleEntity.create()
-                   .setBorder(
-                       BorderEntity.create()
-                       .setWidth(1)
-                       .setStyle(BorderStyle.SOLID)
-                   )
-                   .getDTO(),
+    return (
+        ComponentEntity.create(LINK_BUTTON_COMPONENT_NAME)
+            .extend(HyperComponent.LinkButton)
+            .style(
+                StyleEntity.create()
+                           .setBorder(
+                               BorderEntity.create()
+                                           .setWidth(1)
+                                           .setStyle(BorderStyle.SOLID)
+                           )
+            )
+            .getDTO()
     );
 }
 

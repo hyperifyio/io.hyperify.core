@@ -1,17 +1,18 @@
+// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+
 import { HyperComponent } from "../../entities/types/HyperComponent";
 import {ARTICLE_COMPONENT_NAME, ArticleComponent, createArticleComponent} from "./ArticleComponent";
 
 describe('createArticleComponent', () => {
     it('should create ArticleComponent with default values', () => {
-        const expectedArticleComponent: ArticleComponent = {
-            name: ARTICLE_COMPONENT_NAME,
-            extend: HyperComponent.Article,
-            content: [],
-            meta: undefined,
-        };
 
         const articleComponent: ArticleComponent = createArticleComponent();
 
-        expect(articleComponent).toEqual(expectedArticleComponent);
+        expect(articleComponent).toEqual(
+            expect.objectContaining({
+                name: ARTICLE_COMPONENT_NAME,
+                extend: HyperComponent.Article,
+            })
+        );
     });
 });

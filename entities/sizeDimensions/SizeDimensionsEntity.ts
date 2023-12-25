@@ -21,8 +21,8 @@ import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const SizeDimensionsEntityFactory = (
     EntityFactoryImpl.create<SizeDimensionsDTO, SizeDimensions>('SizeDimensions')
-                     .add( EntityPropertyImpl.create("width").setTypes(SizeEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("height").setTypes(SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("width").setTypes(SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("height").setTypes(SizeEntity, VariableType.UNDEFINED) )
 );
 
 export const BaseSizeDimensionsEntity = SizeDimensionsEntityFactory.createEntityType();

@@ -21,10 +21,10 @@ import { EntityPropertyImpl } from "../types/EntityPropertyImpl";
 
 export const SizeBoxEntityFactory = (
     EntityFactoryImpl.create<SizeBoxDTO, SizeBox>('SizeBox')
-                     .add( EntityPropertyImpl.create("top").setTypes(SizeEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("right").setTypes(SizeEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("bottom").setTypes(SizeEntity, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("left").setTypes(SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("top").setTypes(SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("right").setTypes(SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("bottom").setTypes(SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("left").setTypes(SizeEntity, VariableType.UNDEFINED) )
 );
 
 export const BaseSizeBoxEntity = SizeBoxEntityFactory.createEntityType();

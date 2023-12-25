@@ -10,11 +10,11 @@ import { ComponentDTO } from "./ComponentDTO";
 
 export const ComponentEntityFactory = (
     EntityFactoryImpl.create<ComponentDTO, Component>('Component')
-                     .add( EntityPropertyImpl.create("value").setTypes(VariableType.STRING) )
-                     .add( EntityPropertyImpl.createOptionalArray("content").setTypes('Component', VariableType.STRING) )
-                     .add( EntityPropertyImpl.create("extend").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("meta").setTypes(VariableType.JSON, VariableType.UNDEFINED) )
-                     .add( EntityPropertyImpl.create("style").setTypes(StyleEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("name").setTypes(VariableType.STRING) )
+                     .add( EntityFactoryImpl.createOptionalArrayProperty("content").setTypes('Component', VariableType.STRING) )
+                     .add( EntityFactoryImpl.createProperty("extend").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("meta").setTypes(VariableType.JSON, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("style").setTypes(StyleEntity, VariableType.UNDEFINED) )
 );
 
 export const BaseComponentEntity = ComponentEntityFactory.createEntityType();
