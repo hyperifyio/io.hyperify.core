@@ -1,6 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { createRouteDTO, RouteDTO } from "../../../entities/route/RouteDTO";
+import { RouteDTO } from "../../../entities/route/RouteDTO";
+import { RouteEntity } from "../../../entities/route/RouteEntity";
 import { LOADING_VIEW_NAME } from "../views/LoadingView";
 
 export type LoadingRoute = RouteDTO;
@@ -8,13 +9,9 @@ export type LoadingRoute = RouteDTO;
 export function createLoadingRoute (
     name: string,
 ) : LoadingRoute {
-    return createRouteDTO(
-        name,
-        '/',
-        undefined,
-        undefined,
-        undefined,
-        LOADING_VIEW_NAME,
-        undefined
+    return (
+        RouteEntity.create(name, '/')
+                   .setView(LOADING_VIEW_NAME)
+                   .getDTO()
     );
 }

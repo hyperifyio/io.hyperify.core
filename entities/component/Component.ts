@@ -1,8 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ReadonlyJsonAny, ReadonlyJsonArray, ReadonlyJsonArrayOf, ReadonlyJsonObject } from "../../Json";
-import { isFunction } from "../../types/Function";
-import { isObject } from "../../types/Object";
 import { TestCallbackNonStandard } from "../../types/TestCallback";
 import { ComponentContent } from "./ComponentContent";
 import { ComponentDTO } from "./ComponentDTO";
@@ -18,24 +16,10 @@ export interface Component
     extends ExtendableEntity<ComponentDTO>
 {
 
-    /**
-     * @inheritDoc
-     */
-    getName () : string;
+    ////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////  standard methods  //////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
-    setName (name : string) : this;
-
-    name (name : string) : this;
-
-    /**
-     * @inheritDoc
-     */
-    extend (name : string) : this;
-
-    /**
-     * @inheritDoc
-     */
-    getExtend () : string | undefined;
 
     /**
      * Get component DTO
@@ -52,25 +36,127 @@ export interface Component
      */
     toJSON () : ReadonlyJsonObject;
 
-    /**
-     * Returns true if the meta property exists.
-     *
-     * @param name
-     */
-    hasMeta (name : string) : boolean;
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////  name methods  ////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
 
     /**
-     * Returns the value of a meta property.
-     * @param name
+     * @inheritDoc
      */
-    getMeta (name : string) : any | undefined;
+    getName () : string;
+
+    setName (name : string) : this;
+
+    name (name : string) : this;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////  content methods  ///////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Get inner content.
+     */
+    getContent () : ComponentContent;
+
+    /**
+     * Get inner content.
+     */
+    getContentDTO () : ComponentContent;
+
+    /**
+     * Get inner content.
+     */
+    setContent (value : ComponentContent) : this;
+
+    /**
+     * Get inner content.
+     */
+    content (value : ComponentContent) : this;
+
+    /**
+     * Add inner content.
+     *
+     * @param value
+     */
+    add (value : ComponentContent | string | ComponentDTO) : this;
+
+    /**
+     * Add inner content.
+     *
+     * @param value
+     */
+    addContent (value : ComponentContent | string | ComponentDTO) : this;
+
+    /**
+     * Add inner content as a string.
+     *
+     * @param value
+     */
+    addText (value : string) : this;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////  extend methods  ///////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * @inheritDoc
+     */
+    getExtend () : string | undefined;
+
+    /**
+     * @inheritDoc
+     */
+    setExtend (name : string | undefined) : this;
+
+    /**
+     * @inheritDoc
+     */
+    extend (name : string | undefined) : this;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////  meta methods  /////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Get internal meta object.
+     */
+    getMeta () : ReadonlyJsonObject | undefined;
 
     /**
      * Set internal meta object.
      *
      * @param value
      */
-    setMeta (value: ReadonlyJsonObject) : this;
+    setMeta ( value: ReadonlyJsonObject | undefined ) : this;
+
+    /**
+     * Set internal meta object.
+     *
+     * @param value
+     */
+    meta ( value: ReadonlyJsonObject | undefined ) : this;
+
+
+    /**
+     * Returns true if the meta property exists.
+     *
+     * @param name
+     */
+    hasMetaProperty ( name : string) : boolean;
+
+    /**
+     * Returns the value of a meta property.
+     * @param name
+     */
+    getMetaProperty ( name : string) : any | undefined;
 
     /**
      * Get a value of internal string meta property.
@@ -154,19 +240,21 @@ export interface Component
      */
     setMetaArray (name : string, value: ReadonlyJsonArray) : this;
 
-    /**
-     * Add inner content.
-     *
-     * @param value
-     */
-    addContent (value : ComponentContent) : this;
+
+    ////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////  style methods  ////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
 
     /**
-     * Add inner content as a string.
-     *
-     * @param value
+     * Get internal style entity.
      */
-    addText (value : string) : this;
+    getStyle () : Style;
+
+    /**
+     * Get internal style DTO.
+     */
+    getStyleDTO () : StyleDTO;
 
     /**
      * Set internal style entity.
@@ -189,42 +277,5 @@ export interface Component
      */
     addStyles (style : Style | StyleEntity | StyleDTO | undefined) : this;
 
-    /**
-     * Get internal style entity.
-     */
-    getStyle () : Style;
 
-}
-
-/**
- * Tries to detect if this value is an interface for Component.
- *
- * This function cannot really detect if the value has the correct interface.
- * It can only detect that the object has a create function.
- *
- * @param value
- */
-export function isComponent (value: unknown): value is Component {
-    return (
-        isObject(value)
-        && isFunction(value?.getName)
-        && isFunction(value?.getDTO)
-        && isFunction(value?.valueOf)
-        && isFunction(value?.toJSON)
-        && isFunction(value?.hasMeta)
-        && isFunction(value?.getMeta)
-        && isFunction(value?.setMeta)
-        && isFunction(value?.getMetaString)
-        && isFunction(value?.setMetaString)
-        && isFunction(value?.getMetaNumber)
-        && isFunction(value?.setMetaNumber)
-        && isFunction(value?.getMetaBoolean)
-        && isFunction(value?.setMetaBoolean)
-        && isFunction(value?.getMetaObject)
-        && isFunction(value?.setMetaObject)
-        && isFunction(value?.extend)
-        && isFunction(value?.getExtend)
-        && isFunction(value?.add)
-        && isFunction(value?.addText)
-    );
 }

@@ -3,6 +3,7 @@
 import { ReadonlyJsonObject } from "../../Json";
 import { Component } from "../component/Component";
 import { ComponentDTO } from "../component/ComponentDTO";
+import { Seo } from "../seo/Seo";
 import { SeoDTO } from "../seo/SeoDTO";
 import { SeoEntity } from "../seo/SeoEntity";
 import { StyleDTO } from "../style/StyleDTO";
@@ -128,8 +129,8 @@ export interface View
 
     getSeo () : SeoEntity | undefined;
     getSeoDTO () : SeoDTO | undefined;
-    setSeo (value: SeoDTO | undefined) : this;
-    seo (value: SeoDTO | undefined) : this;
+    setSeo (value: SeoEntity | Seo | SeoDTO | undefined) : this;
+    seo (value: SeoEntity | Seo | SeoDTO | undefined) : this;
 
 
     ////////////////////////////////////////////////////////////////////////////

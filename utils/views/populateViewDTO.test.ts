@@ -2,6 +2,7 @@
 
 import { ViewEntity } from "../../entities/view/ViewEntity";
 import { LogLevel } from "../../types/LogLevel";
+import { findViewDTO } from "./findViewDTO";
 import { populateViewDTO } from "./populateViewDTO";
 import { isArrayOf } from "../../types/Array";
 
@@ -9,7 +10,8 @@ describe('populateViewDTO', () => {
 
     beforeAll( () => {
         populateViewDTO.setLogger(LogLevel.NONE);
-    })
+        findViewDTO.setLogger(LogLevel.NONE);
+    });
 
     const viewWithoutExtension = (
         ViewEntity.create('View1')
@@ -46,6 +48,7 @@ describe('populateViewDTO', () => {
     });
   
     it('should populate the view with properties from the extended view', () => {
+
       const result = populateViewDTO(viewWithExtension, components, '');
   
       // Verify that properties from the extended view are merged correctly
@@ -57,7 +60,8 @@ describe('populateViewDTO', () => {
       // Make sure the original view is not modified
       expect(viewWithExtension.name).toEqual('View2');
       expect(viewWithExtension.language).toEqual('fr'); // Original view language should not be modified
-      expect(viewWithExtension.content).toEqual("Content 3"); // Original content
+      expect(viewWithExtension.content).toEqual(["Content 3"]); // Original content
+
     });
   
     it('should throw an error when the extended view is not found', () => {

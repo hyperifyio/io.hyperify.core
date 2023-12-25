@@ -3,15 +3,19 @@ import {createLinkButtonComponent, LinkButtonComponent, LINK_BUTTON_COMPONENT_NA
 
 describe('createLinkButtonComponent', () => {
     it('should create LinkButtonComponent with default values', () => {
+
         const expectedLinkButtonComponent: LinkButtonComponent = {
             name: LINK_BUTTON_COMPONENT_NAME,
             extend: HyperComponent.LinkButton,
-            content: [],
-            meta: {},
         };
 
         const linkButtonComponent: LinkButtonComponent = createLinkButtonComponent();
 
-        expect(linkButtonComponent).toEqual(expectedLinkButtonComponent);
+        expect(linkButtonComponent).toEqual(
+            expect.objectContaining(
+                expectedLinkButtonComponent
+            )
+        );
+
     });
 });

@@ -9,6 +9,7 @@ import { some } from "../../functions/some";
 import { uniq } from "../../functions/uniq";
 import { upperFirst } from "../../functions/upperFirst";
 import { ReadonlyJsonObject } from "../../Json";
+import { LogUtils } from "../../LogUtils";
 import { isArray } from "../../types/Array";
 import {
     Enum,
@@ -51,6 +52,7 @@ import {
     MethodTypeCheckFn,
     PropertyTypeCheckFn,
     SetterMethod,
+    TypeCheckFn,
 } from "./EntityFactory";
 import {
     EntityMethod,
@@ -77,6 +79,7 @@ import {
     IsDTOTestFunction,
     IsInterfaceTestFunction,
 } from "./IsDTOTestFunction";
+import { TypeCheckFunctionUtils } from "./TypeCheckFunctionUtils";
 import {
     isVariableType,
     VariableType,
@@ -557,6 +560,14 @@ export class EntityFactoryImpl<
             ) as IsOurEntityCallback
         ) : undefined;
 
+        const isOurDTO : TypeCheckFn | undefined = entityTypesOnly?.length ? TypeCheckFunctionUtils.createChainedFunction(
+            ChainOperation.OR,
+            map(
+                entityTypesOnly,
+                (Type: EntityType<DTO, Entity<DTO>>) : TypeCheckFn => Type.isDTO.bind(Type)
+            )
+        ) : undefined;
+
         const isOtherTypes = otherTypes.length ? this._typeCheckFactory.createChainedTypeCheckFunction(
             ChainOperation.OR,
             ...otherTypes
@@ -641,7 +652,7 @@ export class EntityFactoryImpl<
                         );
                     }
 
-                    throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
+                    throw new TypeError(`${Type.getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
                 };
 
 
@@ -649,7 +660,7 @@ export class EntityFactoryImpl<
             undefined
         ) : undefined;
 
-        if ( isOurEntity && isOtherTypes ) {
+        if ( isOurEntity && isOtherTypes && isOurDTO ) {
 
             if ( isDeliverableEntity && deliverableEntityCallback ) {
                 return function entitySetterMethodWithTypesWithDeliverableEntitiesWithDeliverableEntities (
@@ -658,12 +669,14 @@ export class EntityFactoryImpl<
                 ) : T {
                     if ( isOurEntity(value) ) {
                         return this._setPropertyValue( propertyName, value.getDTO() );
-                    } else if (isDeliverableEntity(value)) {
+                    } else if ( isOurDTO(value) ) {
+                        return this._setPropertyValue( propertyName, value );
+                    } else if ( isDeliverableEntity(value) ) {
                         return deliverableEntityCallback.call(this, value);
                     } else if ( isOtherTypes(value) ) {
                         return this._setPropertyValue( propertyName, value );
                     } else {
-                        throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
+                        throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
                     }
                 };
             }
@@ -674,10 +687,12 @@ export class EntityFactoryImpl<
             ) : T {
                 if ( isOurEntity(value) ) {
                     return this._setPropertyValue( propertyName, value.getDTO() );
+                } else if ( isOurDTO(value) ) {
+                    return this._setPropertyValue( propertyName, value );
                 } else if ( isOtherTypes(value) ) {
                     return this._setPropertyValue( propertyName, value );
                 } else {
-                    throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
+                    throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
                 }
             };
         }
@@ -690,12 +705,12 @@ export class EntityFactoryImpl<
                 if ( isOtherTypes(value) ) {
                     return this._setPropertyValue( propertyName, value );
                 } else {
-                    throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
+                    throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
                 }
             };
         }
 
-        if ( isOurEntity ) {
+        if ( isOurEntity && isOurDTO ) {
 
             if ( isDeliverableEntity && deliverableEntityCallback ) {
                 return function entitySetterMethod (
@@ -704,10 +719,12 @@ export class EntityFactoryImpl<
                 ) : T {
                     if ( isOurEntity(value) ) {
                         return this._setPropertyValue( propertyName, value.getDTO() );
+                    } else if ( isOurDTO(value) ) {
+                        return this._setPropertyValue( propertyName, value );
                     } else if (isDeliverableEntity(value)) {
                         return deliverableEntityCallback.call(this, value);
                     } else {
-                        throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
+                        throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
                     }
                 };
             }
@@ -718,17 +735,20 @@ export class EntityFactoryImpl<
             ) : T {
                 if ( isOurEntity(value) ) {
                     return this._setPropertyValue( propertyName, value.getDTO() );
+                } else if ( isOurDTO(value) ) {
+                    return this._setPropertyValue( propertyName, value );
                 } else {
-                    throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
+                    throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
                 }
             };
+
         }
 
         return function setterMethod (
             this: T,
             value: unknown
         ) : T {
-            throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
+            throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
         };
 
     }

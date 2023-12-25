@@ -61,7 +61,7 @@ export interface Style
      *
      * @param value
      */
-    setTextColor (value: ColorEntity | undefined) : this;
+    setTextColor (value: ColorEntity | ColorDTO | string | undefined) : this;
 
     /**
      * Get text alignment.
@@ -102,7 +102,7 @@ export interface Style
      *
      * @param value
      */
-    setBackgroundColor (value: ColorEntity | undefined) : this;
+    setBackgroundColor (value: ColorEntity | ColorDTO | string | undefined) : this;
 
     /**
      * Returns CSS styles.

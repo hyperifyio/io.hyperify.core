@@ -1,8 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ReadonlyJsonObject } from "../../Json";
-import { isFunction } from "../../types/Function";
-import { isObject } from "../../types/Object";
 import { ColorDTO } from "./ColorDTO";
 import { Entity } from "../types/Entity";
 
@@ -52,16 +50,4 @@ export interface Color extends Entity<ColorDTO> {
      */
     getCssStyles () : string;
 
-}
-
-export function isColor (value : unknown) : value is Color {
-    return (
-        isObject(value)
-        && isFunction(value?.valueOf)
-        && isFunction(value?.getDTO)
-        && isFunction(value?.toJSON)
-        && isFunction(value?.getValue)
-        && isFunction(value?.setValue)
-        && isFunction(value?.getCssStyles)
-    );
 }

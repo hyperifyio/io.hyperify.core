@@ -1,6 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { createRouteDTO, RouteDTO } from "../../../entities/route/RouteDTO";
+import { RouteDTO } from "../../../entities/route/RouteDTO";
+import { RouteEntity } from "../../../entities/route/RouteEntity";
 import { LOGIN_VIEW_NAME } from "../views/LoginView";
 
 export type LoginRoute = RouteDTO;
@@ -8,13 +9,9 @@ export type LoginRoute = RouteDTO;
 export function createLoginRoute (
     name: string,
 ) : LoginRoute {
-    return createRouteDTO(
-        name,
-        '/',
-        undefined,
-        undefined,
-        undefined,
-        LOGIN_VIEW_NAME,
-        undefined
+    return (
+        RouteEntity.create(name, '/')
+                   .setView(LOGIN_VIEW_NAME)
+                   .getDTO()
     );
 }

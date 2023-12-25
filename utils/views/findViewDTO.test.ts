@@ -1,10 +1,23 @@
+// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+
+import { ViewEntity } from "../../entities/view/ViewEntity";
+import { LogLevel } from "../../types/LogLevel";
 import { findViewDTO } from "./findViewDTO";
-import { createViewDTO } from '../../entities/view/ViewDTO';
+import { populateViewDTO } from "./populateViewDTO";
 
 describe('findViewDTO', () => {
-  const hyperView1 = createViewDTO('View1', undefined, undefined, undefined, undefined, undefined, undefined, undefined);
-  const hyperView2 = createViewDTO('View2', undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+
+  const hyperView1 = ViewEntity.create('View1').getDTO();
+
+  const hyperView2 = ViewEntity.create('View2').getDTO();
+
   const allViews = [hyperView1, hyperView2];
+
+
+  beforeAll( () => {
+    populateViewDTO.setLogger(LogLevel.NONE);
+    findViewDTO.setLogger(LogLevel.NONE);
+  });
 
   it('should find a hyper view by name', () => {
     const result = findViewDTO('View1', allViews);
@@ -16,4 +29,5 @@ describe('findViewDTO', () => {
       new TypeError('Could not find app by name: NonexistentView')
     );
   });
+
 });

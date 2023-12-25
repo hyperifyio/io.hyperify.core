@@ -1,23 +1,26 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { EntityMethodImpl } from "../types/EntityMethodImpl";
 import { VariableType } from "../types/VariableType";
-import {
-    ColorDTO,
-} from "./ColorDTO";
+import { ColorDTO } from "./ColorDTO";
 import { reduce } from "../../functions/reduce";
 import { isString } from "../../types/String";
-import {
-    Color,
-    isColor,
-} from "./Color";
+import { Color } from "./Color";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 
 export const ColorEntityFactory = (
     EntityFactoryImpl.create<ColorDTO, Color>('Color')
+                     .addStaticMethod(
+                         EntityMethodImpl.create('create')
+                                         .addArgument(VariableType.STRING)
+                                         .returnType('Color')
+                     )
                      .add( EntityFactoryImpl.createProperty("value").setTypes(VariableType.STRING) )
 );
 
 export const isColorDTO = ColorEntityFactory.createTestFunctionOfDTO();
+
+export const isColor = ColorEntityFactory.createTestFunctionOfInterface();
 
 export const explainColorDTO = ColorEntityFactory.createExplainFunctionOfDTO();
 

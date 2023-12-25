@@ -6,8 +6,6 @@ describe('createButtonComponent', () => {
         const expectedButtonComponent: ButtonComponent = {
             name: BUTTON_COMPONENT_NAME,
             extend: HyperComponent.Button,
-            content: [],
-            meta: undefined,
         };
 
         const buttonComponent: ButtonComponent = createButtonComponent();

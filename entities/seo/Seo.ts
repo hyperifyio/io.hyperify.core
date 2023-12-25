@@ -99,22 +99,3 @@ export interface Seo extends Entity<SeoDTO> {
 
 
 }
-
-export function isSeo (value: unknown): value is Seo {
-    return (
-        isObject(value)
-        && isFunction(value?.valueOf)
-        && isFunction(value?.getDTO)
-        && isFunction(value?.toJSON)
-        && isFunction(value?.getCssStyles)
-        && isFunction(value?.getTitle)
-        && isFunction(value?.setTitle)
-        && isFunction(value?.title)
-        && isFunction(value?.getDescription)
-        && isFunction(value?.setDescription)
-        && isFunction(value?.description)
-        && isFunction(value?.getSiteName)
-        && isFunction(value?.setSiteName)
-        && isFunction(value?.siteName)
-    );
-}

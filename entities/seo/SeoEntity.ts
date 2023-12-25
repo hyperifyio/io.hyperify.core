@@ -3,10 +3,7 @@
 import { reduce } from "../../functions/reduce";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { VariableType } from "../types/VariableType";
-import {
-    isSeo,
-    Seo,
-} from "./Seo";
+import { Seo } from "./Seo";
 import { SeoDTO } from "./SeoDTO";
 
 export const SeoEntityFactory = (
@@ -17,6 +14,8 @@ export const SeoEntityFactory = (
 );
 
 export const isSeoDTO = SeoEntityFactory.createTestFunctionOfDTO();
+
+export const isSeo = SeoEntityFactory.createTestFunctionOfInterface();
 
 export const explainSeoDTO = SeoEntityFactory.createExplainFunctionOfDTO();
 

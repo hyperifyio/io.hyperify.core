@@ -1,6 +1,11 @@
+// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+
 import { ViewEntity } from "../../entities/view/ViewEntity";
+import { LogLevel } from "../../types/LogLevel";
 import { findAndPopulateViewDTO } from "./findAndPopulateViewDTO";
 import { isArrayOf } from "../../types/Array";
+import { findViewDTO } from "./findViewDTO";
+import { populateViewDTO } from "./populateViewDTO";
 
 describe('findAndPopulateViewDTO', () => {
 
@@ -29,7 +34,12 @@ describe('findAndPopulateViewDTO', () => {
     );
 
     const views = [viewWithoutExtension, viewWithExtension, viewNotFound];
-  
+
+    beforeAll( () => {
+        populateViewDTO.setLogger(LogLevel.NONE);
+        findViewDTO.setLogger(LogLevel.NONE);
+    });
+
     it('should find and return the original view when extend is undefined', () => {
         const result = findAndPopulateViewDTO("View1", views, '');
         expect(result).toEqual(viewWithoutExtension);
@@ -61,4 +71,5 @@ describe('findAndPopulateViewDTO', () => {
             new TypeError('Could not find view by name NonexistentView to extend for View3')
         );
     });
+
 });

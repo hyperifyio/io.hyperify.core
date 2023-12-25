@@ -1,13 +1,12 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { ViewEntity } from "../../entities/view/ViewEntity";
 import { find } from "../../functions/find";
 import { LogService } from "../../LogService";
-import {
-    createViewDTO,
-    ViewDTO,
-} from "../../entities/view/ViewDTO";
+import { ViewDTO } from "../../entities/view/ViewDTO";
+import { LogLevel } from "../../types/LogLevel";
 
-const LOG = LogService.createLogger( 'findHyperViewDTO' );
+const LOG = LogService.createLogger( 'findViewDTO' );
 
 export function findViewDTO (
     viewName : string,
@@ -19,16 +18,11 @@ export function findViewDTO (
     );
     if (!view) {
         LOG.warn(`Warning! Could not find view by name: ${viewName}`);
-        return createViewDTO(
-            viewName,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-        );
+        return ViewEntity.create(viewName).getDTO();
     }
     return view;
 }
+
+findViewDTO.setLogger = (level: LogLevel) : void => {
+    LOG.setLogLevel(level);
+};

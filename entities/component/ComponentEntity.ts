@@ -5,6 +5,7 @@ import { StyleEntity } from "../style/StyleEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { VariableType } from "../types/VariableType";
 import { Component } from "./Component";
+import { ComponentContent } from "./ComponentContent";
 import { ComponentDTO } from "./ComponentDTO";
 
 export const ComponentEntityFactory = (
@@ -70,6 +71,29 @@ export class ComponentEntity
         } else {
             throw new TypeError(`ComponentEntity: Incorrect arguments`);
         }
+    }
+
+    public addContent ( value : ComponentContent | string | ComponentDTO ) : this {
+
+        if ( isString(value) || isComponentDTO(value) ) {
+            return this.setContent( [
+                ...this.getContent(),
+                ...[value],
+            ]);
+        }
+
+        return this.setContent( [
+            ...this.getContent(),
+            ...value,
+        ]);
+    }
+
+    public add ( value : ComponentContent | string | ComponentDTO ) : this {
+        return this.addContent(value);
+    }
+
+    public addText ( value : string ) : this {
+        return this.add(value);
     }
 
 }
