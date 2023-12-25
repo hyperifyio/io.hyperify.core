@@ -13,6 +13,18 @@ describe('StyleEntity', () => {
         });
     });
 
+    describe('.getDTO', () => {
+        it('can get DTO', () => {
+            let obj = StyleEntity.create().setWidth(100);
+            expect(obj.getDTO()).toEqual({
+                width: {
+                    value: 100,
+                    unit: UnitType.PX
+                }
+            });
+        });
+    });
+
     describe('.setWidth', () => {
         it('can set width by number', () => {
             let obj = StyleEntity.create().setWidth(100);

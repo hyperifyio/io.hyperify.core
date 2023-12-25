@@ -5,12 +5,8 @@ import { BorderDTO } from "../border/BorderDTO";
 import { ColorDTO } from "../color/ColorDTO";
 import { FontDTO } from "../font/FontDTO";
 import { SizeBoxDTO } from "../sizeBox/SizeBoxDTO";
-import {
-    SizeDTO
-} from "../size/SizeDTO";
-import {
-    TextDecorationDTO,
-} from "../textDecoration/TextDecorationDTO";
+import { SizeDTO } from "../size/SizeDTO";
+import { TextDecorationDTO } from "../textDecoration/TextDecorationDTO";
 import { BoxSizing} from "../types/BoxSizing";
 import { DTO } from "../types/DTO";
 import { TextAlign } from "../types/TextAlign";

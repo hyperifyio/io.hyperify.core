@@ -4,6 +4,7 @@ import { ReadonlyJsonObject } from "../../Json";
 import { DTO } from "./DTO";
 import { BaseEntity } from "./BaseEntity";
 import { Entity } from "./Entity";
+import { EntityMethod } from "./EntityMethod";
 import {
     EntityProperty,
 
@@ -126,5 +127,11 @@ export interface EntityFactory<
     createEntityType (
         opts: CreateEntityTypeOpts,
     ) : EntityType<D, T>;
+
+    getStaticMethods () : readonly EntityMethod[];
+
+    createMethod (name : string) : EntityMethod;
+
+    addStaticMethod ( name  : EntityMethod ) : this;
 
 }

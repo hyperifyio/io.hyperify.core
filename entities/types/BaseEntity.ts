@@ -3,6 +3,7 @@
 import { has } from "../../functions/has";
 import {
     isReadonlyJsonAny,
+    isReadonlyJsonObject,
     ReadonlyJsonObject,
 } from "../../Json";
 import { DTO } from "./DTO";
@@ -15,11 +16,14 @@ export abstract class BaseEntity<
 >
     implements Entity<D> {
 
-    protected _dto : D;
+    private _dto : D;
 
     public constructor (
         dto : D,
     ) {
+        if (!isReadonlyJsonObject(dto)) {
+            throw new TypeError(`BaseEntity.constructor: The DTO must be JSON serializable object: ${dto}`);
+        }
         this._dto = dto;
     }
 
@@ -33,7 +37,7 @@ export abstract class BaseEntity<
                 [propertyName]: value,
             };
         } else {
-            throw new TypeError(`The type of value not supported: ${value}`);
+            throw new TypeError(`${this.getEntityType().getEntityName()}.${propertyName}: The type of value not supported: ${value}`);
         }
         return this;
     }

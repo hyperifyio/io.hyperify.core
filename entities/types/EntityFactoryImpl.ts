@@ -7,9 +7,11 @@ import { map } from "../../functions/map";
 import { reduce } from "../../functions/reduce";
 import { some } from "../../functions/some";
 import { uniq } from "../../functions/uniq";
+import { upperFirst } from "../../functions/upperFirst";
 import { ReadonlyJsonObject } from "../../Json";
 import { isArray } from "../../types/Array";
 import {
+    Enum,
     EnumType,
     isEnumType,
 } from "../../types/Enum";
@@ -50,7 +52,10 @@ import {
     PropertyTypeCheckFn,
     SetterMethod,
 } from "./EntityFactory";
-import { EntityMethod } from "./EntityMethod";
+import {
+    EntityMethod,
+    EntityMethodType,
+} from "./EntityMethod";
 import { EntityMethodImpl } from "./EntityMethodImpl";
 import { EntityProperty } from "./EntityProperty";
 import { EntityPropertyImpl } from "./EntityPropertyImpl";
@@ -477,30 +482,244 @@ export class EntityFactoryImpl<
         types : readonly EntityVariableType[]
     ) : SetterMethod<D, T, unknown> {
 
-        const entityTypes : EntityType<DTO, Entity<DTO>>[] = filter(types, isEntityType);
+        const methodName = `set${upperFirst(propertyName)}`;
+
+        const entityTypes : (EntityType<DTO, Entity<DTO>> | string)[] = filter(
+            types,
+            (item: EntityVariableType) : boolean => isEntityType(item) || (isString(item) && !isVariableType(item))
+        ) as (EntityType<DTO, Entity<DTO>> | string)[];
+
+        const entityTypesOnly : EntityType<DTO, Entity<DTO>>[] = uniq(map(
+            entityTypes,
+            ( item: string | EntityType<DTO, Entity<DTO>> ) : EntityType<DTO, Entity<DTO>> => {
+                if (isString(item)) {
+                    const Type : EntityType<any, Entity<any>> | undefined = this._entities.findType(item);
+                    if (Type === undefined) {
+                        throw new TypeError(`EntityFactoryImpl.createPropertySetter(${propertyName}): Could not find entity type for: ${item}`);
+                    }
+                    return Type;
+                }
+                return item;
+            }
+        ));
+
+        const deliverableEntityTypes: EntityVariableType[] = uniq(reduce(
+            entityTypesOnly,
+            (prev : EntityVariableType[], item : EntityType<DTO, Entity<DTO>>) : EntityVariableType[] => {
+
+                const staticMethods = item.getStaticMethods();
+
+                const simpleCreateMethods : EntityMethod[] = filter(
+                    staticMethods,
+                    (item: EntityMethod) : boolean => {
+                        return item.getMethodName() === 'create' && item.getArguments().length === 1;
+                    }
+                );
+
+                if (simpleCreateMethods.length) {
+
+                    const deliverableTypes : EntityMethodType[] = uniq(reduce(
+                        simpleCreateMethods,
+                        (prev : EntityMethodType[], item: EntityMethod) : EntityMethodType[] => {
+                            const types = item.getArguments()[0];
+                            return [
+                                ...prev,
+                                ...types,
+                            ];
+                        },
+                        []
+                    ));
+
+                    return [
+                        ...prev,
+                        ...deliverableTypes,
+                    ];
+
+                }
+
+                return prev;
+
+            },
+            []
+        ));
+
+        const otherTypes : readonly (Enum<any> | VariableType)[] = filter(
+            types,
+            (item) => !(isEntityType(item) || (isString(item) && !isVariableType(item)))
+        ) as (Enum<any> | VariableType)[];
 
         type IsOurEntityCallback = (value: unknown) => value is Entity<DTO>;
 
-        const isOurEntity : IsOurEntityCallback | undefined = entityTypes.length ? reduce(
-            entityTypes,
-            (prev: IsOurEntityCallback | undefined, Type: EntityType<DTO, Entity<DTO>>) : IsOurEntityCallback => {
-                if (prev === undefined) {
-                    return (value: unknown) : value is Entity<DTO> => Type.isEntity(value);
-                }
-                return (value: unknown) : value is Entity<DTO> => prev(value) || Type.isEntity(value);
-            },
-            undefined,
+        const isOurEntity : IsOurEntityCallback | undefined = entityTypesOnly.length ? (
+            this._typeCheckFactory.createChainedTypeCheckFunction(
+                ChainOperation.OR,
+                ...entityTypesOnly
+            ) as IsOurEntityCallback
         ) : undefined;
 
-        if ( isOurEntity) {
+        const isOtherTypes = otherTypes.length ? this._typeCheckFactory.createChainedTypeCheckFunction(
+            ChainOperation.OR,
+            ...otherTypes
+        ) : undefined;
+
+        const isDeliverableEntity : IsOurEntityCallback | undefined = isOurEntity && deliverableEntityTypes.length ? (
+            this._typeCheckFactory.createChainedTypeCheckFunction(
+                ChainOperation.OR,
+                ...deliverableEntityTypes
+            ) as IsOurEntityCallback
+        ) : undefined;
+
+        const deliverableEntityCallback : SetterMethod<D, T, unknown> | undefined = isDeliverableEntity && entityTypesOnly?.length ? reduce(
+            entityTypesOnly,
+            (prev: SetterMethod<D, T, unknown> | undefined, item: EntityType<DTO, Entity<DTO>>) : SetterMethod<D, T, unknown> | undefined => {
+
+                const staticMethods = item.getStaticMethods();
+                const simpleCreateMethods : EntityMethod[] = filter(
+                    staticMethods,
+                    (item: EntityMethod) : boolean => {
+                        return item.getMethodName() === 'create' && item.getArguments().length === 1;
+                    }
+                );
+
+                if (!simpleCreateMethods.length) {
+                    return prev;
+                }
+
+                const deliverableTypes : EntityMethodType[] = uniq(reduce(
+                    simpleCreateMethods,
+                    (prev : EntityMethodType[], item: EntityMethod) : EntityMethodType[] => {
+                        const types = item.getArguments()[0];
+                        return [
+                            ...prev,
+                            ...types,
+                        ];
+                    },
+                    []
+                ));
+
+                const isDeliverableEntity = deliverableTypes.length ? (
+                    this._typeCheckFactory.createChainedTypeCheckFunction(
+                        ChainOperation.OR,
+                        ...deliverableTypes
+                    )
+                ) : undefined;
+
+                if (!isDeliverableEntity) {
+                    return prev;
+                }
+
+                const Type = item;
+
+                if (prev) {
+                    return function deliverableEntitySetterMethod (
+                        this: T,
+                        value: unknown
+                    ) : T {
+
+                        if (isDeliverableEntity(value)) {
+                            return this._setPropertyValue(
+                                propertyName,
+                                // @ts-ignore
+                                Type.create(value).getDTO()
+                            );
+                        }
+
+                        return prev.call(this, value);
+                    };
+                }
+
+                return function deliverableEntitySetterMethod (
+                    this: T,
+                    value: unknown
+                ) : T {
+
+                    if (isDeliverableEntity(value)) {
+                        return this._setPropertyValue(
+                            propertyName,
+                            // @ts-ignore
+                            Type.create(value).getDTO()
+                        );
+                    }
+
+                    throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
+                };
+
+
+            },
+            undefined
+        ) : undefined;
+
+        if ( isOurEntity && isOtherTypes ) {
+
+            if ( isDeliverableEntity && deliverableEntityCallback ) {
+                return function entitySetterMethodWithTypesWithDeliverableEntitiesWithDeliverableEntities (
+                    this: T,
+                    value: unknown
+                ) : T {
+                    if ( isOurEntity(value) ) {
+                        return this._setPropertyValue( propertyName, value.getDTO() );
+                    } else if (isDeliverableEntity(value)) {
+                        return deliverableEntityCallback.call(this, value);
+                    } else if ( isOtherTypes(value) ) {
+                        return this._setPropertyValue( propertyName, value );
+                    } else {
+                        throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
+                    }
+                };
+            }
+
+            return function entitySetterMethodWithTypes (
+                this: T,
+                value: unknown
+            ) : T {
+                if ( isOurEntity(value) ) {
+                    return this._setPropertyValue( propertyName, value.getDTO() );
+                } else if ( isOtherTypes(value) ) {
+                    return this._setPropertyValue( propertyName, value );
+                } else {
+                    throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
+                }
+            };
+        }
+
+        if ( isOtherTypes ) {
+            return function setterMethodWithTypes (
+                this: T,
+                value: unknown
+            ) : T {
+                if ( isOtherTypes(value) ) {
+                    return this._setPropertyValue( propertyName, value );
+                } else {
+                    throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
+                }
+            };
+        }
+
+        if ( isOurEntity ) {
+
+            if ( isDeliverableEntity && deliverableEntityCallback ) {
+                return function entitySetterMethod (
+                    this: T,
+                    value: unknown
+                ) : T {
+                    if ( isOurEntity(value) ) {
+                        return this._setPropertyValue( propertyName, value.getDTO() );
+                    } else if (isDeliverableEntity(value)) {
+                        return deliverableEntityCallback.call(this, value);
+                    } else {
+                        throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
+                    }
+                };
+            }
+
             return function entitySetterMethod (
                 this: T,
                 value: unknown
             ) : T {
                 if ( isOurEntity(value) ) {
-                    return this._setPropertyValue(propertyName, value.getDTO());
+                    return this._setPropertyValue( propertyName, value.getDTO() );
                 } else {
-                    return this._setPropertyValue(propertyName, value);
+                    throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
                 }
             };
         }
@@ -509,7 +728,7 @@ export class EntityFactoryImpl<
             this: T,
             value: unknown
         ) : T {
-            return this._setPropertyValue(propertyName, value);
+            throw new TypeError(`${methodName}: Invalid argument provided: ${value}`);
         };
 
     }
@@ -677,15 +896,8 @@ export class EntityFactoryImpl<
     /**
      * @inheritDoc
      */
-    public addStaticMethod (
-        name  : EntityMethod | string,
-        ...types : EntityVariableType[]
-    ) : this {
-        if ( isString(name) ) {
-            this._staticMethods.push( this.createMethod(name).returnType(...types) );
-        } else {
-            this._staticMethods.push( name );
-        }
+    public addStaticMethod ( name  : EntityMethod ) : this {
+        this._staticMethods.push( name );
         return this;
     }
 
@@ -935,6 +1147,7 @@ export class EntityFactoryImpl<
             throw new TypeError(`EntityFactoryImpl.createEntityType(): The entity by this name exists already`);
         }
 
+        const staticMethods : readonly EntityMethod[] = this.getStaticMethods();
         const properties : readonly EntityProperty[] = this.getProperties();
 
         /**
@@ -956,6 +1169,9 @@ export class EntityFactoryImpl<
         const createDefaultDtoInitializer = () : D => {
             return this.createDefaultDTO();
         };
+
+        const isOk = explainOk();
+        const notMyEntity = explainNot(name);
 
         /**
          * @see EntityType as well, which describes the static API.
@@ -983,6 +1199,10 @@ export class EntityFactoryImpl<
                 return map(properties, (item: EntityProperty) : EntityProperty => item);
             }
 
+            public static getStaticMethods () : EntityMethod[] {
+                return map(staticMethods, (item: EntityMethod) : EntityMethod => item);
+            }
+
             public static getEntityName () : string {
                 return name;
             }
@@ -992,9 +1212,7 @@ export class EntityFactoryImpl<
             }
 
             public static explainEntity (value: unknown) : string {
-                return value instanceof FinalType ? explainOk() : (
-                    explainNot('EntityType')
-                );
+                return this.isEntity(value) ? isOk : notMyEntity;
             }
 
             public static isDTO (value: unknown) : value is D {

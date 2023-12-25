@@ -3,8 +3,6 @@
 import { BorderBoxDTO } from "../borderBox/BorderBoxDTO";
 import { SizeBoxDTO } from "../sizeBox/SizeBoxDTO";
 import { ReadonlyJsonObject } from "../../Json";
-import { isFunction } from "../../types/Function";
-import { isObject } from "../../types/Object";
 import { BackgroundDTO } from "../background/BackgroundDTO";
 import { BorderDTO } from "../border/BorderDTO";
 import { ColorDTO } from "../color/ColorDTO";
@@ -202,64 +200,4 @@ export interface Style
     getBackgroundDTO () : BackgroundDTO | undefined;
     setBackground (value: Background | BackgroundEntity | number | undefined) : this;
 
-}
-
-export function isStyle (value : unknown) : value is Style {
-    return (
-        isObject(value)
-        && isFunction(value?.getDTO)
-        && isFunction(value?.valueOf)
-        && isFunction(value?.toJSON)
-        && isFunction(value?.getTextColor)
-        && isFunction(value?.setTextColor)
-        && isFunction(value?.getBackgroundColor)
-        && isFunction(value?.setBackgroundColor)
-        && isFunction(value?.getCssStyles)
-        && isFunction(value?.getMargin)
-        && isFunction(value?.getTopMargin)
-        && isFunction(value?.getBottomMargin)
-        && isFunction(value?.getRightMargin)
-        && isFunction(value?.getLeftMargin)
-        && isFunction(value?.setMargin)
-        && isFunction(value?.setTopMargin)
-        && isFunction(value?.setBottomMargin)
-        && isFunction(value?.setRightMargin)
-        && isFunction(value?.setLeftMargin)
-        && isFunction(value?.getPadding)
-        && isFunction(value?.setPadding)
-        && isFunction(value?.getTopPadding)
-        && isFunction(value?.getBottomPadding)
-        && isFunction(value?.getRightPadding)
-        && isFunction(value?.getLeftPadding)
-        && isFunction(value?.setTopPadding)
-        && isFunction(value?.setBottomPadding)
-        && isFunction(value?.setRightPadding)
-        && isFunction(value?.setLeftPadding)
-        && isFunction(value?.getBorder)
-        && isFunction(value?.setBorder)
-        && isFunction(value?.getTopBorder)
-        && isFunction(value?.getBottomBorder)
-        && isFunction(value?.getRightBorder)
-        && isFunction(value?.getLeftBorder)
-        && isFunction(value?.setTopBorder)
-        && isFunction(value?.setBottomBorder)
-        && isFunction(value?.setRightBorder)
-        && isFunction(value?.setLeftBorder)
-        && isFunction(value?.getFont)
-        && isFunction(value?.getFontDTO)
-        && isFunction(value?.setFont)
-        && isFunction(value?.getTextDecoration)
-        && isFunction(value?.getTextDecorationDTO)
-        && isFunction(value?.setTextDecoration)
-        && isFunction(value?.getWidth)
-        && isFunction(value?.getWidthDTO)
-        && isFunction(value?.setWidth)
-        && isFunction(value?.getHeight)
-        && isFunction(value?.getHeightDTO)
-        && isFunction(value?.setHeight)
-        && isFunction(value?.getBackground)
-        && isFunction(value?.getBackgroundDTO)
-        && isFunction(value?.setBackground)
-        && isFunction(value?.merge)
-    );
 }

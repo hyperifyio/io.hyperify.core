@@ -1,17 +1,19 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import {
-    beforeEach,
     afterEach,
+    beforeEach,
     describe,
-    it,
     expect,
+    it,
 } from "@jest/globals";
 import "../../../testing/jest/matchers/index";
+import { factory } from "ts-jest/dist/transformers/hoist-jest";
 import { BaseEntity } from "./BaseEntity";
 import { DTO } from "./DTO";
 import { Entity } from "./Entity";
 import { EntityFactoryImpl } from "./EntityFactoryImpl";
+import { EntityMethodImpl } from "./EntityMethodImpl";
 import { EntityProperty } from "./EntityProperty";
 import { EntityType } from "./EntityType";
 import { VariableType } from "./VariableType";
@@ -1031,6 +1033,23 @@ describe('EntityFactoryImpl', () => {
 
         });
 
+        describe('.getDTO', () => {
+
+            it('can create inner DTO with .getDTO', () => {
+                const entity = DriverType.create();
+                expect( entity.getDTO() ).toStrictEqual({
+                    age: 30,
+                    name: 'Smith',
+                    car: {
+                        gear: 'MANUAL',
+                        model: 'Ford'
+                    }
+                });
+            });
+
+        });
+
+
     });
 
     describe('with inner array entities', () => {
@@ -1496,6 +1515,42 @@ describe('EntityFactoryImpl', () => {
                 expect( entity.getDTO().fourthCar ).toBe(undefined);
                 expect( fn.call(entity, CarEntity.create().setModel('Tesla')) ).toBe(entity);
                 expect( entity.getDTO().fourthCar ).toStrictEqual({'model': 'Tesla'});
+            });
+
+        });
+
+    });
+
+    describe('Static method definitions', () => {
+
+        let entity : EntityFactoryImpl<any, any>;
+        let method : EntityMethodImpl;
+
+        beforeEach(() => {
+            entity = EntityFactoryImpl.create('Entity');
+            method = EntityMethodImpl.create('create').addArgument(VariableType.STRING, VariableType.NUMBER).returnType(VariableType.STRING);
+        });
+
+        describe('.addStaticMethod', () => {
+
+            it('can add static method', () => {
+                expect( () => entity.addStaticMethod(method) ).not.toThrow();
+            });
+
+        });
+
+        describe('.getStaticMethods', () => {
+
+            beforeEach(() => {
+                entity.addStaticMethod(method);
+            });
+
+            it('can read static method added', () => {
+                expect( entity.getStaticMethods() ).toEqual(
+                    expect.arrayContaining([
+                        method
+                    ])
+                );
             });
 
         });

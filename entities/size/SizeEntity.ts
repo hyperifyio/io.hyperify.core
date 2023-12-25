@@ -253,6 +253,7 @@ export class SizeEntity
         );
     }
 
+
     /**
      * Construct empty entity
      *

@@ -11,7 +11,6 @@ import {
     FontDTO,
 } from "../font/FontDTO";
 import {
-    createSizeDTO,
     SizeDTO,
 } from "../size/SizeDTO";
 import { VariableType } from "../types/VariableType";
@@ -71,7 +70,6 @@ import {
     Size,
 } from "../size/Size";
 import {
-    isStyle,
     Style,
 } from "./Style";
 import { UnitType } from "../types/UnitType";
@@ -102,7 +100,18 @@ export const StyleEntityFactory = (
                      .add( EntityFactoryImpl.createProperty("boxSizing").setTypes(BoxSizing, VariableType.UNDEFINED) )
 );
 
+export const isStyleDTO = StyleEntityFactory.createTestFunctionOfDTO();
+
+export const isStyle = StyleEntityFactory.createTestFunctionOfInterface();
+
+export const explainStyleDTO = StyleEntityFactory.createExplainFunctionOfDTO();
+
+export const isStyleDTOOrUndefined = StyleEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const explainStyleDTOOrUndefined = StyleEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
 export const BaseStyleEntity = StyleEntityFactory.createEntityType();
+
 
 
 /**
@@ -130,17 +139,6 @@ export class StyleEntity
         return new this( style );
     }
 
-    /**
-     * Construct a style entity.
-     */
-    public constructor (
-        style ?: StyleDTO | StyleEntity | Style,
-    ) {
-        super(
-            isStyleEntity(style) ? style.getDTO() : style
-        );
-    }
-
     public static prepareBackgroundDTO (
         value : BackgroundEntity | BackgroundDTO | undefined
     ) : BackgroundDTO | undefined {
@@ -163,7 +161,7 @@ export class StyleEntity
         value : SizeEntity | Size | SizeDTO | number | undefined
     ) : SizeDTO | undefined {
         if (value === undefined) return undefined;
-        if (isNumber(value)) return createSizeDTO(value, UnitType.PX);
+        if (isNumber(value)) return {value, unit: UnitType.PX};
         if (isSizeEntity(value)) return value.getDTO();
         if (isSize(value)) return value.getDTO();
         return value;
@@ -215,7 +213,7 @@ export class StyleEntity
             )
     ) : SizeDTO | [SizeDTO, SizeDTO, SizeDTO, SizeDTO] | undefined {
         if (value === undefined) return undefined;
-        if (isNumber(value)) return createSizeDTO(value, UnitType.PX);
+        if (isNumber(value)) return {value, unit: UnitType.PX};
         if (isSizeEntity(value)) return value.getDTO();
         if (isArray(value)) {
 
@@ -419,6 +417,18 @@ export class StyleEntity
         }
     }
 
+
+
+    /**
+     * Construct a style entity.
+     */
+    public constructor (
+        style ?: StyleDTO | StyleEntity | Style,
+    ) {
+        super(
+            isStyleEntity(style) || isStyle(style) ? style.getDTO() : style
+        );
+    }
 
     public getCssStyles () : ReadonlyJsonObject {
 

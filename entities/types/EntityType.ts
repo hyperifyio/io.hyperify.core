@@ -4,6 +4,7 @@ import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
 import { DTO } from "./DTO";
 import { Entity } from "./Entity";
+import { EntityMethod } from "./EntityMethod";
 import { EntityProperty } from "./EntityProperty";
 
 /**
@@ -43,6 +44,11 @@ export interface EntityType<
      * Return DTO property configurations.
      */
     getProperties () : readonly EntityProperty[];
+
+    /**
+     * Returns declared static methods for the type.
+     */
+    getStaticMethods () : EntityMethod[];
 
     /**
      * Returns `true` if value is type of the entity.

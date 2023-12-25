@@ -1,21 +1,14 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { VariableType } from "../types/VariableType";
-import {
-    SizeBoxDTO,
-    createSizeBoxDTO,
-    isSizeBoxDTO,
-} from "./SizeBoxDTO";
+import { SizeBoxDTO } from "./SizeBoxDTO";
+import { SizeDTO } from "../size/SizeDTO";
+import { reduce } from "../../functions/reduce";
 import {
     isSizeDTO,
-    SizeDTO,
-} from "../size/SizeDTO";
-import { reduce } from "../../functions/reduce";
-import { SizeEntity } from "../size/SizeEntity";
-import {
-    SizeBox,
-    isSizeBox,
-} from "./SizeBox";
+    SizeEntity,
+} from "../size/SizeEntity";
+import { SizeBox } from "./SizeBox";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 
 export const SizeBoxEntityFactory = (
@@ -26,7 +19,19 @@ export const SizeBoxEntityFactory = (
                      .add( EntityFactoryImpl.createProperty("left").setTypes(SizeEntity, VariableType.UNDEFINED) )
 );
 
+export const isSizeBoxDTO = SizeBoxEntityFactory.createTestFunctionOfDTO();
+
+export const isSizeBox = SizeBoxEntityFactory.createTestFunctionOfInterface();
+
+export const explainSizeBoxDTO = SizeBoxEntityFactory.createExplainFunctionOfDTO();
+
+export const isSizeBoxDTOOrUndefined = SizeBoxEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const explainSizeBoxDTOOrUndefined = SizeBoxEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
 export const BaseSizeBoxEntity = SizeBoxEntityFactory.createEntityType();
+
+
 
 /**
  * SizeBox entity.
@@ -87,9 +92,9 @@ export class SizeBoxEntity
         } else if ( isSizeBox(top) ) {
             return new SizeBoxEntity(top.getDTO());
         } else if ( isSizeDTO(top) && isSizeDTO(right) && bottom === undefined && left === undefined  ) {
-            return new SizeBoxEntity( createSizeBoxDTO(top, right, top, right) );
+            return new SizeBoxEntity( {top, right, bottom: top, left: right} );
         } else if ( isSizeDTO(top) && isSizeDTO(right) && isSizeDTO(bottom) && isSizeDTO(left) ) {
-            return new SizeBoxEntity( createSizeBoxDTO(top, right, bottom, left) );
+            return new SizeBoxEntity( {top, right, bottom, left} );
         } else {
             throw new TypeError(`Invalid arguments for create: ${top}, ${right}, ${bottom}, ${left}`);
         }
@@ -122,12 +127,7 @@ export class SizeBoxEntity
                         ...dto,
                     };
                 },
-                createSizeBoxDTO(
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                ),
+                {},
             )
         );
     }

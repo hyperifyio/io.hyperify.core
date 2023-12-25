@@ -28,7 +28,7 @@ export class TypeCheckFunctionUtils {
         list : readonly TypeCheckFn[],
     ) : TypeCheckFn {
         const operation = getChainOperationFunction(op);
-        const func = reduce(
+        const func = list.length ? reduce(
             list,
             (prev: TypeCheckFn | undefined, item: TypeCheckFn) : TypeCheckFn => {
                 if (prev === undefined) {
@@ -38,7 +38,7 @@ export class TypeCheckFunctionUtils {
                 }
             },
             undefined,
-        );
+        ) : undefined;
         if (func === undefined) {
             throw new TypeError(`TypeCheckFunctionUtils.createChainedFunction: At least one test function must be defined`);
         }

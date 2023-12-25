@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { BackgroundPositionEntity } from "../backgroundPosition/BackgroundPositionEntity";
 import { BackgroundSize } from "../types/BackgroundSize";
 import { ReadonlyJsonObject } from "../../Json";
 import { VariableType } from "../types/VariableType";
@@ -16,7 +17,6 @@ import { BackgroundSizeOptions, getCssStylesForBackgroundSizeOptions } from "../
 import { BackgroundImageEntity } from "../backgroundImage/BackgroundImageEntity";
 import { BackgroundRepeatEntity } from "../backgroundRepeat/BackgroundRepeatEntity";
 import { ColorEntity } from "../color/ColorEntity";
-import { SizeBoxEntity } from "../sizeBox/SizeBoxEntity";
 import { SizeDimensionsEntity } from "../sizeDimensions/SizeDimensionsEntity";
 import { SizeEntity } from "../size/SizeEntity";
 import { Background } from "./Background";
@@ -31,7 +31,7 @@ export const BackgroundEntityFactory = (
                      .add( EntityFactoryImpl.createProperty("color").setTypes(ColorEntity, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("image").setTypes(BackgroundImageEntity, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("origin").setTypes(BackgroundOrigin, VariableType.UNDEFINED) )
-                     .add( EntityFactoryImpl.createProperty("position").setTypes(SizeBoxEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("position").setTypes(BackgroundPositionEntity, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("repeat").setTypes(BackgroundRepeatEntity, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("size").setTypes(BackgroundSize, SizeEntity, SizeDimensionsEntity, VariableType.UNDEFINED) )
 );
