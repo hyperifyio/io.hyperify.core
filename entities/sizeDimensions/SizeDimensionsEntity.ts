@@ -2,19 +2,19 @@
 
 import { VariableType } from "../types/VariableType";
 import {
-    SizeDimensionsDTO,
     createSizeDimensionsDTO,
-    isSizeDimensionsDTO,
+    SizeDimensionsDTO,
 } from "./SizeDimensionsDTO";
 import {
-    isSizeDTO,
     SizeDTO,
 } from "../size/SizeDTO";
 import { reduce } from "../../functions/reduce";
-import { SizeEntity } from "../size/SizeEntity";
+import {
+    isSizeDTO,
+    SizeEntity,
+} from "../size/SizeEntity";
 import {
     SizeDimensions,
-    isSizeDimensions,
 } from "./SizeDimensions";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 
@@ -25,6 +25,16 @@ export const SizeDimensionsEntityFactory = (
 );
 
 export const BaseSizeDimensionsEntity = SizeDimensionsEntityFactory.createEntityType();
+
+export const isSizeDimensionsDTO = SizeDimensionsEntityFactory.createTestFunctionOfDTO();
+
+export const isSizeDimensions = SizeDimensionsEntityFactory.createTestFunctionOfInterface();
+
+export const explainSizeDimensionsDTO = SizeDimensionsEntityFactory.createExplainFunctionOfDTO();
+
+export const isSizeDimensionsDTOOrUndefined = SizeDimensionsEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const explainSizeDimensionsDTOOrUndefined = SizeDimensionsEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
 
 /**
  * SizeDimensions entity.
@@ -45,7 +55,7 @@ export class SizeDimensionsEntity
      * @param left
      */
     public static create (
-        width    : SizeDTO,
+        width   : SizeDTO,
         height  : SizeDTO,
     ) : SizeDimensionsEntity;
 
@@ -68,7 +78,7 @@ export class SizeDimensionsEntity
         } else if ( isSizeDimensions(width) ) {
             return new SizeDimensionsEntity(width.getDTO());
         } else if ( isSizeDTO(width) && isSizeDTO(height) ) {
-            return new SizeDimensionsEntity( createSizeDimensionsDTO(width, height) );
+            return new SizeDimensionsEntity( { width, height } );
         } else {
             throw new TypeError(`Invalid arguments for create: ${width}, ${height}`);
         }

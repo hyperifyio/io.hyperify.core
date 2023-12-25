@@ -2,11 +2,12 @@
 
 import {
     SizeDTO,
-    SpecialSize,
+
 } from "../size/SizeDTO";
 import { ReadonlyJsonObject } from "../../Json";
 import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
+import { SpecialSize } from "../size/SpecialSize";
 import {
     SizeBoxDTO,
 } from "./SizeBoxDTO";

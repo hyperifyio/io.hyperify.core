@@ -12,7 +12,6 @@ import {
 } from "../font/FontDTO";
 import {
     createSizeDTO,
-    isSizeDTO,
     SizeDTO,
 } from "../size/SizeDTO";
 import { VariableType } from "../types/VariableType";
@@ -48,6 +47,7 @@ import {
 } from "../font/FontEntity";
 import { SizeBoxEntity } from "../sizeBox/SizeBoxEntity";
 import {
+    isSizeDTO,
     isSizeEntity,
     SizeEntity,
 } from "../size/SizeEntity";

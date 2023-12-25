@@ -1,12 +1,12 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { Size } from "../size/Size";
 import {
     SizeDTO,
-    SpecialSize,
+
 } from "../size/SizeDTO";
 import { ReadonlyJsonObject } from "../../Json";
-import { isFunction } from "../../types/Function";
-import { isObject } from "../../types/Object";
+import { SpecialSize } from "../size/SpecialSize";
 import {
     SizeDimensionsDTO,
 } from "./SizeDimensionsDTO";
@@ -42,22 +42,26 @@ export interface SizeDimensions
 
 
     /**
-     * Get a top size.
      */
     getWidth () : SizeEntity | undefined;
 
     /**
-     * Get top size as a DTO.
      */
     getWidthDTO () : SizeDTO | undefined;
 
     /**
-     * Set a top value as auto
-     *
      * @param value
      */
     setWidth (
         value : SpecialSize.AUTO,
+    ) : this;
+
+
+    /**
+     * @param value
+     */
+    setWidth (
+        value : SizeDTO | Size | SizeEntity,
     ) : this;
 
     /**
@@ -71,19 +75,41 @@ export interface SizeDimensions
         unit  ?: UnitType | undefined,
     ) : this;
 
+    /**
+     * @param value
+     */
+    width (
+        value : SizeDTO | Size | SizeEntity,
+    ) : this;
 
     /**
-     * Get a right size.
+     * @param value
+     */
+    width (
+        value : SpecialSize.AUTO,
+    ) : this;
+
+    /**
+     * @param value
+     * @param unit
+     */
+    width (
+        value ?: number | undefined,
+        unit  ?: UnitType | undefined,
+    ) : this;
+
+
+    /**
      */
     getHeight () : SizeEntity | undefined;
 
     /**
-     * Get right size as a DTO.
+     * Get height as a DTO.
      */
     getHeightDTO () : SizeDTO | undefined;
 
     /**
-     * Set a right value as auto
+     * Set a height value as auto
      *
      * @param value
      */
@@ -92,7 +118,7 @@ export interface SizeDimensions
     ) : this;
 
     /**
-     * Set a right as a unit.
+     * Set a height as a unit.
      *
      * @param value
      * @param unit
@@ -102,21 +128,24 @@ export interface SizeDimensions
         unit  ?: UnitType | undefined,
     ) : this;
 
-}
+    /**
+     * Set a height value as auto
+     *
+     * @param value
+     */
+    height (
+        value : SpecialSize.AUTO,
+    ) : this;
 
-export function isSizeDimensions (value : unknown) : value is SizeDimensions {
-    return (
-        isObject(value)
-        && isFunction(value?.getDTO)
-        && isFunction(value?.valueOf)
-        && isFunction(value?.toJSON)
-        && isFunction(value?.getCssStyles)
-        && isFunction(value?.getWidth)
-        && isFunction(value?.getWidthDTO)
-        && isFunction(value?.setWidth)
-        && isFunction(value?.getHeight)
-        && isFunction(value?.getHeightDTO)
-        && isFunction(value?.setHeight)
-    );
-}
+    /**
+     * Set a height as a unit.
+     *
+     * @param value
+     * @param unit
+     */
+    height (
+        value ?: number | undefined,
+        unit  ?: UnitType | undefined,
+    ) : this;
 
+}

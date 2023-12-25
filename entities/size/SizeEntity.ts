@@ -1,24 +1,19 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { EntityMethodImpl } from "../types/EntityMethodImpl";
-import { VariableType } from "../types/VariableType";
-import {
-    createSizeDTO,
-    isAutoSizeType,
-    isSizeDTO,
-    SizeDTO,
-    SpecialSize,
-} from "./SizeDTO";
 import { isNumber } from "../../types/Number";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
-import {
-    isSize,
-    Size,
-} from "./Size";
+import { EntityMethodImpl } from "../types/EntityMethodImpl";
 import {
     isUnitTypeOrUndefined,
     UnitType,
 } from "../types/UnitType";
+import { VariableType } from "../types/VariableType";
+import { Size } from "./Size";
+import { SizeDTO } from "./SizeDTO";
+import {
+    isAutoSpecialSize,
+    SpecialSize,
+} from "./SpecialSize";
 
 export const SizeEntityFactory = (
     EntityFactoryImpl.create<SizeDTO, Size>('Size')
@@ -36,13 +31,25 @@ export const SizeEntityFactory = (
                      .add( EntityFactoryImpl.createProperty("unit", "unitType").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
 );
 
+export const isSizeDTO = SizeEntityFactory.createTestFunctionOfDTO();
+
+export const isSize = SizeEntityFactory.createTestFunctionOfInterface();
+
+export const explainSizeDTO = SizeEntityFactory.createExplainFunctionOfDTO();
+
+export const isSizeDTOOrUndefined = SizeEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
+export const explainSizeDTOOrUndefined = SizeEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+
 export const BaseSizeEntity = SizeEntityFactory.createEntityType();
 
 /**
  * Size entity.
  */
 export class SizeEntity
-    extends BaseSizeEntity {
+    extends BaseSizeEntity
+    implements Size
+{
 
     public static createAuto () : SizeEntity {
         return new SizeEntity(SpecialSize.AUTO);
@@ -106,7 +113,7 @@ export class SizeEntity
             return new SizeEntity(SpecialSize.AUTO)
         }
 
-        if (isAutoSizeType(value)) {
+        if (isAutoSpecialSize(value)) {
             return new SizeEntity(SpecialSize.AUTO);
         }
 
@@ -236,7 +243,7 @@ export class SizeEntity
         dto : SizeDTO,
     ) : SizeEntity {
 
-        if (isAutoSizeType(dto.value)) {
+        if (isAutoSpecialSize(dto.value)) {
             return SizeEntity.createAuto();
         }
 
@@ -296,19 +303,13 @@ export class SizeEntity
         if (value === undefined && unit === undefined) {
             super();
         } else if ( isNumber(value) && isUnitTypeOrUndefined(unit) ) {
-            super(createSizeDTO(
-                value,
-                unit,
-            ));
-        } else if ( isAutoSizeType(value) ) {
-            super( createSizeDTO(SpecialSize.AUTO, undefined) );
-        } else if (isSizeDTO(value)) {
-            super(value);
-        } else if (isSizeEntity(value)) {
-            super(createSizeDTO(
-                value.getValue(),
-                value.getUnitType(),
-            ));
+            super( { value, unit } );
+        } else if ( isAutoSpecialSize(value) ) {
+            super( { value: SpecialSize.AUTO } );
+        } else if ( isSizeDTO(value) ) {
+            super( value );
+        } else if ( isSizeEntity(value) ) {
+            super( value.getDTO() );
         } else {
             throw new TypeError(`new SizeEntity(): Invalid arguments: ${value}, ${unit}`);
         }

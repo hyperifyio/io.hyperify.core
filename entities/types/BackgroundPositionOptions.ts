@@ -3,8 +3,11 @@
 import { isPairArrayOf, isTetradArrayOf, isTripletArrayOf } from "../../types/Array";
 import { explainNot, explainOk, explainOr } from "../../types/explain";
 import { isUndefined } from "../../types/undefined";
-import { SizeEntity } from "../size/SizeEntity";
-import { isSizeDTO, SizeDTO } from "../size/SizeDTO";
+import {
+    isSizeDTO,
+    SizeEntity,
+} from "../size/SizeEntity";
+import { SizeDTO } from "../size/SizeDTO";
 import { BackgroundPosition, isBackgroundPosition } from "./BackgroundPosition";
 
 export type BackgroundPositionOptions = (

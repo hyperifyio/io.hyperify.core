@@ -5,10 +5,11 @@ import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
 import {
     SizeDTO,
-    SpecialSize,
+
 } from "./SizeDTO";
 import { Entity } from "../types/Entity";
 import { UnitType } from "../types/UnitType";
+import { SpecialSize } from "./SpecialSize";
 
 /**
  * Presents a color value
