@@ -27,7 +27,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
     describe('.createTypeCheckFn', () => {
 
         it('can create a test function for null values', () => {
-            const fn = factory.createTypeCheckFunction(VariableType.NULL);
+            const fn = factory.createTypeCheckFunction(VariableType.NULL, false);
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
             expect( fn({name : 123, age: 30}) ).toBe(false);
@@ -44,7 +44,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create a test function for undefined values', () => {
-            const fn = factory.createTypeCheckFunction(VariableType.UNDEFINED);
+            const fn = factory.createTypeCheckFunction(VariableType.UNDEFINED, false);
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
             expect( fn({name : 123, age: 30}) ).toBe(false);
@@ -62,7 +62,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create a test function for boolean values', () => {
-            const fn = factory.createTypeCheckFunction(VariableType.BOOLEAN);
+            const fn = factory.createTypeCheckFunction(VariableType.BOOLEAN, false);
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
             expect( fn({name : 123, age: 30}) ).toBe(false);
@@ -80,7 +80,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create a test function for number values', () => {
-            const fn = factory.createTypeCheckFunction(VariableType.NUMBER);
+            const fn = factory.createTypeCheckFunction(VariableType.NUMBER, false);
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
             expect( fn({name : 123, age: 30}) ).toBe(false);
@@ -98,7 +98,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create a test function for integer values', () => {
-            const fn = factory.createTypeCheckFunction(VariableType.INTEGER);
+            const fn = factory.createTypeCheckFunction(VariableType.INTEGER, false);
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
             expect( fn({name : 123, age: 30}) ).toBe(false);
@@ -122,7 +122,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
                 BAR = "bar"
             }
 
-            const fn = factory.createTypeCheckFunction( FooOrBarType );
+            const fn = factory.createTypeCheckFunction( FooOrBarType , false);
 
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
@@ -170,7 +170,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
 
             const CarEntity = carFactory.createEntityType('CarEntity');
 
-            const fn = factory.createTypeCheckFunction( CarEntity );
+            const fn = factory.createTypeCheckFunction( CarEntity , false);
 
             expect( fn( CarEntity.create() ) ) .toBe(true);
 
@@ -197,7 +197,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
     describe('.createChainedTypeCheckFunction', () => {
 
         it('can create a test function for null values', () => {
-            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, VariableType.NULL);
+            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, [VariableType.NULL], false);
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
             expect( fn({name : 123, age: 30}) ).toBe(false);
@@ -214,7 +214,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create a test function for undefined values', () => {
-            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, VariableType.UNDEFINED);
+            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, [VariableType.UNDEFINED], false);
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
             expect( fn({name : 123, age: 30}) ).toBe(false);
@@ -232,7 +232,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create a test function for boolean values', () => {
-            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, VariableType.BOOLEAN);
+            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, [VariableType.BOOLEAN], false);
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
             expect( fn({name : 123, age: 30}) ).toBe(false);
@@ -250,7 +250,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create a test function for number values', () => {
-            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, VariableType.NUMBER);
+            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, [VariableType.NUMBER], false);
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
             expect( fn({name : 123, age: 30}) ).toBe(false);
@@ -268,7 +268,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create a test function for integer values', () => {
-            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, VariableType.INTEGER);
+            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, [VariableType.INTEGER], false);
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
             expect( fn({name : 123, age: 30}) ).toBe(false);
@@ -286,7 +286,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create a test function for integer or string values', () => {
-            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, VariableType.INTEGER, VariableType.STRING);
+            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, [VariableType.INTEGER, VariableType.STRING], false);
 
             expect( fn(123) ).toBe(true);
             expect( fn("hello world") ).toBe(true);
@@ -306,7 +306,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create a test function for integer or undefined values', () => {
-            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, VariableType.INTEGER, VariableType.UNDEFINED);
+            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, [VariableType.INTEGER, VariableType.UNDEFINED], false);
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
             expect( fn({name : 123, age: 30}) ).toBe(false);
@@ -330,7 +330,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
                 BAR = "bar"
             }
 
-            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, FooOrBarType );
+            const fn = factory.createChainedTypeCheckFunction(ChainOperation.OR, [FooOrBarType], false );
 
             expect( fn({name : 'John', age: 20}) ).toBe(false);
             expect( fn({name : 'John', age: null}) ).toBe(false);
@@ -356,7 +356,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
     describe('#createChainedTypeExplainFunction', () => {
 
         it('can create an explain function for null values', () => {
-            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, VariableType.NULL);
+            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, [VariableType.NULL], false);
             expect( fn({name : 'John', age: 20}) ).toBe('not null');
             expect( fn({name : 'John', age: null}) ).toBe('not null');
             expect( fn({name : 123, age: 30}) ).toBe('not null');
@@ -373,7 +373,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create an explain function for undefined values', () => {
-            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, VariableType.UNDEFINED);
+            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, [VariableType.UNDEFINED], false);
             expect( fn({name : 'John', age: 20}) ).toBe('not undefined');
             expect( fn({name : 'John', age: null}) ).toBe('not undefined');
             expect( fn({name : 123, age: 30}) ).toBe('not undefined');
@@ -391,7 +391,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create an explain function for boolean values', () => {
-            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, VariableType.BOOLEAN);
+            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, [VariableType.BOOLEAN], false);
             expect( fn({name : 'John', age: 20}) ).toBe('not boolean');
             expect( fn({name : 'John', age: null}) ).toBe('not boolean');
             expect( fn({name : 123, age: 30}) ).toBe('not boolean');
@@ -409,7 +409,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create an explain function for number values', () => {
-            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, VariableType.NUMBER);
+            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, [VariableType.NUMBER], false);
             expect( fn({name : 'John', age: 20}) ).toBe('not number');
             expect( fn({name : 'John', age: null}) ).toBe('not number');
             expect( fn({name : 123, age: 30}) ).toBe('not number');
@@ -427,7 +427,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create an explain function for integer values', () => {
-            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, VariableType.INTEGER);
+            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, [VariableType.INTEGER], false);
             expect( fn({name : 'John', age: 20}) ).toBe('not integer');
             expect( fn({name : 'John', age: null}) ).toBe('not integer');
             expect( fn({name : 123, age: 30}) ).toBe('not integer');
@@ -445,7 +445,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create an explain function for integer or string values', () => {
-            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, VariableType.INTEGER, VariableType.STRING);
+            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, [VariableType.INTEGER, VariableType.STRING], false);
             expect( fn({name : 'John', age: 20}) ).toBe(`not one of:\n - integer\n - string`);
             expect( fn({name : 'John', age: null}) ).toBe(`not one of:\n - integer\n - string`);
             expect( fn({name : 123, age: 30}) ).toBe(`not one of:\n - integer\n - string`);
@@ -463,7 +463,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
         });
 
         it('can create an explain function for integer or undefined values', () => {
-            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, VariableType.INTEGER, VariableType.UNDEFINED);
+            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR, [VariableType.INTEGER, VariableType.UNDEFINED], false);
             expect( fn({name : 'John', age: 20}) ).toBe(`not one of:\n - integer\n - undefined`);
             expect( fn({name : 'John', age: null}) ).toBe(`not one of:\n - integer\n - undefined`);
             expect( fn({name : 123, age: 30}) ).toBe(`not one of:\n - integer\n - undefined`);
@@ -487,7 +487,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
                 BAR = "bar"
             }
 
-            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR,  FooOrBarType );
+            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR,  [FooOrBarType], false );
 
             expect( fn({name : 'John', age: 20}) ).toBe('not enum (foo | bar)');
             expect( fn({name : 'John', age: null}) ).toBe('not enum (foo | bar)');
@@ -535,7 +535,7 @@ describe('EntityTypeCheckFactoryImpl', () => {
 
             const CarEntity = carFactory.createEntityType('CarEntity');
 
-            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR,  CarEntity );
+            const fn = factory.createChainedTypeExplainFunction(ChainOperation.OR,  [CarEntity], false );
 
             const car = CarEntity.create();
             const dto = car.getDTO();

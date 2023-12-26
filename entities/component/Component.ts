@@ -60,22 +60,22 @@ export interface Component
     /**
      * Get inner content.
      */
-    getContent () : ComponentContent;
+    getContent () : ComponentContent | undefined;
 
     /**
      * Get inner content.
      */
-    getContentDTO () : ComponentContent;
+    getContentDTO () : ComponentContent | undefined;
 
     /**
      * Get inner content.
      */
-    setContent (value : ComponentContent) : this;
+    setContent (value : ComponentContent | undefined) : this;
 
     /**
      * Get inner content.
      */
-    content (value : ComponentContent) : this;
+    content (value : ComponentContent | undefined) : this;
 
     /**
      * Add inner content.

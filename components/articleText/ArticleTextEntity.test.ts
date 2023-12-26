@@ -11,12 +11,11 @@ describe('ArticleTextEntity', () => {
                 name: name,
                 extend: ARTICLE_COMPONENT_NAME,
                 content: [text],
-                meta: undefined,
             };
 
             const articleText: ArticleTextEntity = ArticleTextEntity.createText(name, text);
 
-            expect(articleText).toEqual(expectedArticleText);
+            expect(articleText.getDTO()).toEqual(expectedArticleText);
         });
     });
 });

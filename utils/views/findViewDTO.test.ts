@@ -7,12 +7,11 @@ import { populateViewDTO } from "./populateViewDTO";
 
 describe('findViewDTO', () => {
 
-  const hyperView1 = ViewEntity.create('View1').getDTO();
+  let hyperView1 = ViewEntity.create('View1').getDTO();
 
-  const hyperView2 = ViewEntity.create('View2').getDTO();
+  let hyperView2 = ViewEntity.create('View2').getDTO();
 
-  const allViews = [hyperView1, hyperView2];
-
+  let allViews = [hyperView1, hyperView2];
 
   beforeAll( () => {
     populateViewDTO.setLogger(LogLevel.NONE);
@@ -24,9 +23,12 @@ describe('findViewDTO', () => {
     expect(result).toEqual(hyperView1);
   });
 
-  it('should throw an error when the view is not found', () => {
-    expect(() => findViewDTO('NonexistentView', allViews)).toThrowError(
-      new TypeError('Could not find app by name: NonexistentView')
+  it('should create an empty view when the view is not found', () => {
+    const result = findViewDTO('NonexistentView', allViews);
+    expect(result).toEqual(
+        expect.objectContaining({
+          name: 'NonexistentView'
+        })
     );
   });
 

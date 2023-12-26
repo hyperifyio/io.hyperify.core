@@ -31,19 +31,24 @@ describe('EntityPropertyImpl', () => {
 
             createChainedTypeCheckFunction: jest.fn<(
                 op: ChainOperation,
-                ...types: readonly EntityVariableType[]
+                types: readonly EntityVariableType[],
+                useDTO: boolean | "both",
             ) => TypeCheckFn>().mockImplementation( () => {
                 return () : boolean => false;
             } ),
 
             createChainedTypeExplainFunction: jest.fn<(
                 op: ChainOperation,
-                ...types: readonly EntityVariableType[]
+                types: readonly EntityVariableType[],
+                useDTO: boolean | "both",
             ) => TypeExplainFn>().mockImplementation( () => {
                 return () : string => '';
             } ),
 
-            createTypeCheckFunction: jest.fn<( item: EntityVariableType ) => TypeCheckFn>().mockImplementation(
+            createTypeCheckFunction: jest.fn<(
+                item: EntityVariableType,
+                useDTO: boolean | "both",
+            ) => TypeCheckFn>().mockImplementation(
                 () => {
                     return () : boolean => false;
                 }

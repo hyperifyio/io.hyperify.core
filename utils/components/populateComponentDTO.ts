@@ -1,7 +1,9 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { ComponentContent } from "../../entities/component/ComponentContent";
+import { ComponentEntity } from "../../entities/component/ComponentEntity";
 import { find } from "../../functions/find";
-import { createComponentDTO, ComponentContent, ComponentDTO } from "../../entities/component/ComponentDTO";
+import { ComponentDTO } from "../../entities/component/ComponentDTO";
 import { isHyperComponent } from "../../entities/types/HyperComponent";
 import { mergeComponentContent } from "./mergeComponentContent";
 
@@ -20,37 +22,40 @@ export function populateComponentDTO (
         (c: ComponentDTO): boolean => c.name === extend
     );
 
-    const componentContent: ComponentContent = component.content;
+    const componentContent: ComponentContent | undefined = component.content;
 
     if ( !extendComponent ) {
         // Is built in component
         if ( isHyperComponent( extend ) ) {
-            return createComponentDTO(
-                extend,
-                undefined,
-                componentContent,
-                component.meta,
-                component.style,
+            return (
+                ComponentEntity.create(extend)
+                               .content(componentContent)
+                               .meta(component.meta)
+                               .style(component.style)
+                               .getDTO()
             );
         }
         throw new TypeError( `Could not find component by name ${extend} to extend for ${component.name}` );
     }
 
-    const extendContent: ComponentContent = extendComponent.content;
+    const extendContent: ComponentContent | undefined = extendComponent.content;
 
     return populateComponentDTO(
-        createComponentDTO(
-            extendComponent.name,
-            extendComponent.extend,
-            mergeComponentContent(extendContent, componentContent),
-            {
-                ...(extendComponent.meta ? extendComponent.meta : {}),
-                ...(component.meta ? component.meta : {}),
-            },
-            {
-                ...(extendComponent.style ? extendComponent.style : {}),
-                ...(component.style ? component.style : {}),
-            }
+        (
+            ComponentEntity.create(extendComponent.name)
+                           .extend(extendComponent.extend)
+                           .content( extendContent ? mergeComponentContent(extendContent, componentContent) : componentContent )
+                           .meta(
+                               {
+                                   ...(extendComponent.meta ? extendComponent.meta : {}),
+                                   ...(component.meta ? component.meta : {}),
+                               }
+                           )
+                           .style( {
+                               ...(extendComponent.style ? extendComponent.style : {}),
+                               ...(component.style ? component.style : {}),
+                           } )
+                           .getDTO()
         ),
         components
     );
