@@ -3,10 +3,7 @@
 import { reduce } from "../../functions/reduce";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { VariableType } from "../types/VariableType";
-import {
-    Action,
-    isAction,
-} from "./Action";
+import { Action } from "./Action";
 import { ActionDTO } from "./ActionDTO";
 
 export const ActionEntityFactory = (
@@ -19,7 +16,11 @@ export const ActionEntityFactory = (
                      .add( EntityFactoryImpl.createProperty("errorRedirect").setTypes(VariableType.STRING, "Action", VariableType.UNDEFINED) )
 );
 
+export const BaseActionEntity = ActionEntityFactory.createEntityType();
+
 export const isActionDTO = ActionEntityFactory.createTestFunctionOfDTO();
+
+export const isAction = ActionEntityFactory.createTestFunctionOfInterface();
 
 export const explainActionDTO = ActionEntityFactory.createExplainFunctionOfDTO();
 
@@ -30,8 +31,6 @@ export const explainActionDTOOrUndefined = ActionEntityFactory.createExplainFunc
 export const isActionDTOOrStringOrUndefined = ActionEntityFactory.createTestFunctionOfDTOorOneOf<ActionDTO|string|undefined>(VariableType.STRING, VariableType.UNDEFINED);
 
 export const explainActionDTOOrStringOrUndefined = ActionEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.STRING, VariableType.UNDEFINED);
-
-export const BaseActionEntity = ActionEntityFactory.createEntityType();
 
 /**
  * Action entity.

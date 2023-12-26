@@ -9,6 +9,7 @@ import { some } from "../../functions/some";
 import { uniq } from "../../functions/uniq";
 import { upperFirst } from "../../functions/upperFirst";
 import { ReadonlyJsonObject } from "../../Json";
+import { LogService } from "../../LogService";
 import { LogUtils } from "../../LogUtils";
 import { isArray } from "../../types/Array";
 import {
@@ -84,6 +85,8 @@ import {
     isVariableType,
     VariableType,
 } from "./VariableType";
+
+const LOG = LogService.createLogger( 'EntityFactoryImpl' );
 
 export interface PropertyGetterOptions {
     readonly entityAsDTO ?: boolean;
@@ -487,39 +490,119 @@ export class EntityFactoryImpl<
 
         const methodName = `set${upperFirst(propertyName)}`;
 
-        const entityTypes : (EntityType<DTO, Entity<DTO>> | string)[] = filter(
-            types,
-            (item: EntityVariableType) : boolean => isEntityType(item) || (isString(item) && !isVariableType(item))
-        ) as (EntityType<DTO, Entity<DTO>> | string)[];
+        try {
 
-        const entityTypesOnly : EntityType<DTO, Entity<DTO>>[] = uniq(map(
-            entityTypes,
-            ( item: string | EntityType<DTO, Entity<DTO>> ) : EntityType<DTO, Entity<DTO>> => {
-                if (isString(item)) {
-                    const Type : EntityType<any, Entity<any>> | undefined = this._entities.findType(item);
-                    if (Type === undefined) {
-                        throw new TypeError(`EntityFactoryImpl.createPropertySetter(${propertyName}): Could not find entity type for: ${item}`);
+            const entityTypes : (EntityType<DTO, Entity<DTO>> | string)[] = filter(
+                types,
+                (item: EntityVariableType) : boolean => isEntityType(item) || (isString(item) && !isVariableType(item))
+            ) as (EntityType<DTO, Entity<DTO>> | string)[];
+
+            const entityTypesOnly : EntityType<DTO, Entity<DTO>>[] = uniq(map(
+                entityTypes,
+                ( item: string | EntityType<DTO, Entity<DTO>> ) : EntityType<DTO, Entity<DTO>> => {
+                    if (isString(item)) {
+                        const Type : EntityType<any, Entity<any>> | undefined = this._entities.findType(item);
+                        if (Type === undefined) {
+                            throw new TypeError(`EntityFactoryImpl.createPropertySetter(${propertyName}): Could not find entity type for: ${item}`);
+                        }
+                        return Type;
                     }
-                    return Type;
+                    return item;
                 }
-                return item;
-            }
-        ));
+            ));
 
-        const deliverableEntityTypes: EntityVariableType[] = uniq(reduce(
-            entityTypesOnly,
-            (prev : EntityVariableType[], item : EntityType<DTO, Entity<DTO>>) : EntityVariableType[] => {
+            const deliverableEntityTypes: EntityVariableType[] = uniq(reduce(
+                entityTypesOnly,
+                (prev : EntityVariableType[], item : EntityType<DTO, Entity<DTO>>) : EntityVariableType[] => {
 
-                const staticMethods = item.getStaticMethods();
+                    const staticMethods = item.getStaticMethods();
 
-                const simpleCreateMethods : EntityMethod[] = filter(
-                    staticMethods,
-                    (item: EntityMethod) : boolean => {
-                        return item.getMethodName() === 'create' && item.getArguments().length === 1;
+                    const simpleCreateMethods : EntityMethod[] = filter(
+                        staticMethods,
+                        (item: EntityMethod) : boolean => {
+                            return item.getMethodName() === 'create' && item.getArguments().length === 1;
+                        }
+                    );
+
+                    if (simpleCreateMethods.length) {
+
+                        const deliverableTypes : EntityMethodType[] = uniq(reduce(
+                            simpleCreateMethods,
+                            (prev : EntityMethodType[], item: EntityMethod) : EntityMethodType[] => {
+                                const types = item.getArguments()[0];
+                                return [
+                                    ...prev,
+                                    ...types,
+                                ];
+                            },
+                            []
+                        ));
+
+                        return [
+                            ...prev,
+                            ...deliverableTypes,
+                        ];
+
                     }
-                );
 
-                if (simpleCreateMethods.length) {
+                    return prev;
+
+                },
+                []
+            ));
+
+            const otherTypes : readonly (Enum<any> | VariableType)[] = filter(
+                types,
+                (item) => !(isEntityType(item) || (isString(item) && !isVariableType(item)))
+            ) as (Enum<any> | VariableType)[];
+
+            type IsOurEntityCallback = (value: unknown) => value is Entity<DTO>;
+
+            const isOurEntity : IsOurEntityCallback | undefined = entityTypesOnly.length ? (
+                this._typeCheckFactory.createChainedTypeCheckFunction(
+                    ChainOperation.OR,
+                    entityTypesOnly,
+                    false,
+                ) as IsOurEntityCallback
+            ) : undefined;
+
+            const isOurDTO : IsOurEntityCallback | undefined = entityTypesOnly.length ? (
+                this._typeCheckFactory.createChainedTypeCheckFunction(
+                    ChainOperation.OR,
+                    entityTypesOnly,
+                    true,
+                ) as IsOurEntityCallback
+            ) : undefined;
+
+            const isOtherTypes = otherTypes.length ? this._typeCheckFactory.createChainedTypeCheckFunction(
+                ChainOperation.OR,
+                otherTypes,
+                false,
+            ) : undefined;
+
+            const isDeliverableEntity : IsOurEntityCallback | undefined = isOurEntity && deliverableEntityTypes.length ? (
+                this._typeCheckFactory.createChainedTypeCheckFunction(
+                    ChainOperation.OR,
+                    deliverableEntityTypes,
+                    false,
+                ) as IsOurEntityCallback
+            ) : undefined;
+
+            const deliverableEntityCallback : SetterMethod<D, T, unknown> | undefined = isDeliverableEntity && entityTypesOnly?.length ? reduce(
+                entityTypesOnly,
+                (prev: SetterMethod<D, T, unknown> | undefined, item: EntityType<DTO, Entity<DTO>>) : SetterMethod<D, T, unknown> | undefined => {
+
+                    const staticMethods = item.getStaticMethods();
+                    const simpleCreateMethods : EntityMethod[] = filter(
+                        staticMethods,
+                        (item: EntityMethod) : boolean => {
+                            return item.getMethodName() === 'create' && item.getArguments().length === 1;
+                        }
+                    );
+
+                    if (!simpleCreateMethods.length) {
+                        return prev;
+                    }
 
                     const deliverableTypes : EntityMethodType[] = uniq(reduce(
                         simpleCreateMethods,
@@ -533,95 +616,38 @@ export class EntityFactoryImpl<
                         []
                     ));
 
-                    return [
-                        ...prev,
-                        ...deliverableTypes,
-                    ];
+                    const isDeliverableEntity = deliverableTypes.length ? (
+                        this._typeCheckFactory.createChainedTypeCheckFunction(
+                            ChainOperation.OR,
+                            deliverableTypes,
+                            false,
+                        )
+                    ) : undefined;
 
-                }
-
-                return prev;
-
-            },
-            []
-        ));
-
-        const otherTypes : readonly (Enum<any> | VariableType)[] = filter(
-            types,
-            (item) => !(isEntityType(item) || (isString(item) && !isVariableType(item)))
-        ) as (Enum<any> | VariableType)[];
-
-        type IsOurEntityCallback = (value: unknown) => value is Entity<DTO>;
-
-        const isOurEntity : IsOurEntityCallback | undefined = entityTypesOnly.length ? (
-            this._typeCheckFactory.createChainedTypeCheckFunction(
-                ChainOperation.OR,
-                ...entityTypesOnly
-            ) as IsOurEntityCallback
-        ) : undefined;
-
-        const isOurDTO : TypeCheckFn | undefined = entityTypesOnly?.length ? TypeCheckFunctionUtils.createChainedFunction(
-            ChainOperation.OR,
-            map(
-                entityTypesOnly,
-                (Type: EntityType<DTO, Entity<DTO>>) : TypeCheckFn => Type.isDTO.bind(Type)
-            )
-        ) : undefined;
-
-        const isOtherTypes = otherTypes.length ? this._typeCheckFactory.createChainedTypeCheckFunction(
-            ChainOperation.OR,
-            ...otherTypes
-        ) : undefined;
-
-        const isDeliverableEntity : IsOurEntityCallback | undefined = isOurEntity && deliverableEntityTypes.length ? (
-            this._typeCheckFactory.createChainedTypeCheckFunction(
-                ChainOperation.OR,
-                ...deliverableEntityTypes
-            ) as IsOurEntityCallback
-        ) : undefined;
-
-        const deliverableEntityCallback : SetterMethod<D, T, unknown> | undefined = isDeliverableEntity && entityTypesOnly?.length ? reduce(
-            entityTypesOnly,
-            (prev: SetterMethod<D, T, unknown> | undefined, item: EntityType<DTO, Entity<DTO>>) : SetterMethod<D, T, unknown> | undefined => {
-
-                const staticMethods = item.getStaticMethods();
-                const simpleCreateMethods : EntityMethod[] = filter(
-                    staticMethods,
-                    (item: EntityMethod) : boolean => {
-                        return item.getMethodName() === 'create' && item.getArguments().length === 1;
+                    if (!isDeliverableEntity) {
+                        return prev;
                     }
-                );
 
-                if (!simpleCreateMethods.length) {
-                    return prev;
-                }
+                    const Type = item;
 
-                const deliverableTypes : EntityMethodType[] = uniq(reduce(
-                    simpleCreateMethods,
-                    (prev : EntityMethodType[], item: EntityMethod) : EntityMethodType[] => {
-                        const types = item.getArguments()[0];
-                        return [
-                            ...prev,
-                            ...types,
-                        ];
-                    },
-                    []
-                ));
+                    if (prev) {
+                        return function deliverableEntitySetterMethod (
+                            this: T,
+                            value: unknown
+                        ) : T {
 
-                const isDeliverableEntity = deliverableTypes.length ? (
-                    this._typeCheckFactory.createChainedTypeCheckFunction(
-                        ChainOperation.OR,
-                        ...deliverableTypes
-                    )
-                ) : undefined;
+                            if (isDeliverableEntity(value)) {
+                                return this._setPropertyValue(
+                                    propertyName,
+                                    // @ts-ignore
+                                    Type.create(value).getDTO()
+                                );
+                            }
 
-                if (!isDeliverableEntity) {
-                    return prev;
-                }
+                            return prev.call(this, value);
+                        };
+                    }
 
-                const Type = item;
-
-                if (prev) {
                     return function deliverableEntitySetterMethod (
                         this: T,
                         value: unknown
@@ -635,35 +661,36 @@ export class EntityFactoryImpl<
                             );
                         }
 
-                        return prev.call(this, value);
+                        throw new TypeError(`${Type.getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
+                    };
+
+
+                },
+                undefined
+            ) : undefined;
+
+            if ( isOurEntity && isOtherTypes && isOurDTO ) {
+
+                if ( isDeliverableEntity && deliverableEntityCallback ) {
+                    return function entitySetterMethodWithTypesWithDeliverableEntitiesWithDeliverableEntities (
+                        this: T,
+                        value: unknown
+                    ) : T {
+                        if ( isOurEntity(value) ) {
+                            return this._setPropertyValue( propertyName, value.getDTO() );
+                        } else if ( isOurDTO(value) ) {
+                            return this._setPropertyValue( propertyName, value );
+                        } else if ( isDeliverableEntity(value) ) {
+                            return deliverableEntityCallback.call(this, value);
+                        } else if ( isOtherTypes(value) ) {
+                            return this._setPropertyValue( propertyName, value );
+                        } else {
+                            throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
+                        }
                     };
                 }
 
-                return function deliverableEntitySetterMethod (
-                    this: T,
-                    value: unknown
-                ) : T {
-
-                    if (isDeliverableEntity(value)) {
-                        return this._setPropertyValue(
-                            propertyName,
-                            // @ts-ignore
-                            Type.create(value).getDTO()
-                        );
-                    }
-
-                    throw new TypeError(`${Type.getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
-                };
-
-
-            },
-            undefined
-        ) : undefined;
-
-        if ( isOurEntity && isOtherTypes && isOurDTO ) {
-
-            if ( isDeliverableEntity && deliverableEntityCallback ) {
-                return function entitySetterMethodWithTypesWithDeliverableEntitiesWithDeliverableEntities (
+                return function entitySetterMethodWithTypes (
                     this: T,
                     value: unknown
                 ) : T {
@@ -671,8 +698,6 @@ export class EntityFactoryImpl<
                         return this._setPropertyValue( propertyName, value.getDTO() );
                     } else if ( isOurDTO(value) ) {
                         return this._setPropertyValue( propertyName, value );
-                    } else if ( isDeliverableEntity(value) ) {
-                        return deliverableEntityCallback.call(this, value);
                     } else if ( isOtherTypes(value) ) {
                         return this._setPropertyValue( propertyName, value );
                     } else {
@@ -681,38 +706,38 @@ export class EntityFactoryImpl<
                 };
             }
 
-            return function entitySetterMethodWithTypes (
-                this: T,
-                value: unknown
-            ) : T {
-                if ( isOurEntity(value) ) {
-                    return this._setPropertyValue( propertyName, value.getDTO() );
-                } else if ( isOurDTO(value) ) {
-                    return this._setPropertyValue( propertyName, value );
-                } else if ( isOtherTypes(value) ) {
-                    return this._setPropertyValue( propertyName, value );
-                } else {
-                    throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
+            if ( isOtherTypes ) {
+                return function setterMethodWithTypes (
+                    this: T,
+                    value: unknown
+                ) : T {
+                    if ( isOtherTypes(value) ) {
+                        return this._setPropertyValue( propertyName, value );
+                    } else {
+                        throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
+                    }
+                };
+            }
+
+            if ( isOurEntity && isOurDTO ) {
+
+                if ( isDeliverableEntity && deliverableEntityCallback ) {
+                    return function entitySetterMethod (
+                        this: T,
+                        value: unknown
+                    ) : T {
+                        if ( isOurEntity(value) ) {
+                            return this._setPropertyValue( propertyName, value.getDTO() );
+                        } else if ( isOurDTO(value) ) {
+                            return this._setPropertyValue( propertyName, value );
+                        } else if (isDeliverableEntity(value)) {
+                            return deliverableEntityCallback.call(this, value);
+                        } else {
+                            throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
+                        }
+                    };
                 }
-            };
-        }
 
-        if ( isOtherTypes ) {
-            return function setterMethodWithTypes (
-                this: T,
-                value: unknown
-            ) : T {
-                if ( isOtherTypes(value) ) {
-                    return this._setPropertyValue( propertyName, value );
-                } else {
-                    throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
-                }
-            };
-        }
-
-        if ( isOurEntity && isOurDTO ) {
-
-            if ( isDeliverableEntity && deliverableEntityCallback ) {
                 return function entitySetterMethod (
                     this: T,
                     value: unknown
@@ -721,36 +746,24 @@ export class EntityFactoryImpl<
                         return this._setPropertyValue( propertyName, value.getDTO() );
                     } else if ( isOurDTO(value) ) {
                         return this._setPropertyValue( propertyName, value );
-                    } else if (isDeliverableEntity(value)) {
-                        return deliverableEntityCallback.call(this, value);
                     } else {
                         throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
                     }
                 };
+
             }
 
-            return function entitySetterMethod (
+            return function setterMethod (
                 this: T,
                 value: unknown
             ) : T {
-                if ( isOurEntity(value) ) {
-                    return this._setPropertyValue( propertyName, value.getDTO() );
-                } else if ( isOurDTO(value) ) {
-                    return this._setPropertyValue( propertyName, value );
-                } else {
-                    throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
-                }
+                throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
             };
 
+        } catch (err) {
+            LOG.debug(`Error in createPropertySetter(): `, err);
+            throw new TypeError(`${methodName}: ${err}`);
         }
-
-        return function setterMethod (
-            this: T,
-            value: unknown
-        ) : T {
-            throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
-        };
-
     }
 
 
@@ -941,34 +954,43 @@ export class EntityFactoryImpl<
      * @fixme Cache the value and use it so that multiple calls do not generate new ones unless state changes
      */
     public createTestFunctionOfDTO () : IsDTOTestFunction<D> {
+        try {
 
-        const properties : readonly EntityProperty[] = this.getProperties();
+            const properties : readonly EntityProperty[] = this.getProperties();
 
-        const propertyNames : readonly string[] = map(
-            properties,
-            (item : EntityProperty) : string => item.getPropertyName()
-        );
-
-        const checkProperties = reduce(
-            properties,
-            (prev: PropertyTypeCheckFn, item: EntityProperty): PropertyTypeCheckFn => {
-                const propertyName = item.getPropertyName();
-                const isType = EntityFactoryImpl._typeCheckFactory.createChainedTypeCheckFunction(
-                    ChainOperation.OR,
-                    ...item.getTypes()
-                );
-                return (value: ReadonlyJsonObject) : boolean => prev(value) && isType(value[propertyName]);
-            },
-            (): boolean => true,
-        );
-
-        return (value : unknown) : value is D => {
-            return (
-                isRegularObject(value)
-                && hasNoOtherKeysInDevelopment(value, propertyNames)
-                && checkProperties(value)
+            const propertyNames : readonly string[] = map(
+                properties,
+                (item : EntityProperty) : string => item.getPropertyName()
             );
-        };
+
+            const checkProperties : PropertyTypeCheckFn = TypeCheckFunctionUtils.createChainedFunction(
+                ChainOperation.AND,
+                map(
+                    properties,
+                    (item : EntityProperty): TypeCheckFn => {
+                        const propertyName = item.getPropertyName();
+                        const isType = EntityFactoryImpl._typeCheckFactory.createChainedTypeCheckFunction(
+                            ChainOperation.OR,
+                            item.getTypes(),
+                            true,
+                        );
+                        return (value: unknown) : boolean => isType((value as ReadonlyJsonObject)[propertyName]);
+                    }
+                )
+            ) as PropertyTypeCheckFn;
+
+            return (value : unknown) : value is D => {
+                return (
+                    isRegularObject(value)
+                    && hasNoOtherKeysInDevelopment(value, propertyNames)
+                    && checkProperties(value)
+                );
+            };
+
+        } catch (err) {
+            LOG.debug(`Error in createTestFunctionOfDTO(): `, err);
+            throw new Error(`createTestFunctionOfDTO: ${this.getName()}: ${err}`);
+        }
     }
 
     /**
@@ -976,49 +998,54 @@ export class EntityFactoryImpl<
      * @fixme Cache the value and use it so that multiple calls do not generate new ones unless state changes
      */
     public createExplainFunctionOfDTO () : IsDTOExplainFunction {
-
         const typeName = this.getName();
+        try {
 
-        const properties : readonly EntityProperty[] = this.getProperties();
+            const properties : readonly EntityProperty[] = this.getProperties();
 
-        const propertyNames : readonly string[] = map(
-            properties,
-            (item : EntityProperty) : string => item.getPropertyName()
-        );
-
-        const explainProperties = map(
-            properties,
-            (item: EntityProperty): IsDTOExplainFunction => {
-                const propertyName = item.getPropertyName();
-                const explainFunction = EntityFactoryImpl._typeCheckFactory.createChainedTypeExplainFunction(
-                    ChainOperation.OR,
-                    ...item.getTypes()
-                );
-                return (value : unknown) : string => {
-                    if (!isRegularObject(value)) return 'parent not object';
-                    return explainProperty(propertyName, explainFunction((value as any)[propertyName]))
-                };
-            }
-        )
-
-        const ok = explainOk();
-
-        return (value : unknown) : string => {
-            const regularResult = explainRegularObject(value);
-            if (regularResult !== ok) {
-                return explainNot(typeName + ' DTO: ' + regularResult);
-            }
-            const result = explain(
-                [
-                    explainNoOtherKeysInDevelopment(value, propertyNames),
-                    ...map(
-                        explainProperties,
-                        (item) => item(value)
-                    ),
-                ]
+            const propertyNames : readonly string[] = map(
+                properties,
+                (item : EntityProperty) : string => item.getPropertyName()
             );
-            return result === ok ? explainOk() : explainNot(typeName + ' DTO: ' + result);
-        };
+
+            const explainProperties = map(
+                properties,
+                (item: EntityProperty): IsDTOExplainFunction => {
+                    const propertyName = item.getPropertyName();
+                    const explainFunction = EntityFactoryImpl._typeCheckFactory.createChainedTypeExplainFunction(
+                        ChainOperation.OR,
+                        item.getTypes(),
+                        true,
+                    );
+                    return (value : unknown) : string => {
+                        if (!isRegularObject(value)) return 'parent not object';
+                        return explainProperty(propertyName, explainFunction((value as any)[propertyName]))
+                    };
+                }
+            )
+
+            const ok = explainOk();
+
+            return (value : unknown) : string => {
+                const regularResult = explainRegularObject(value);
+                if (regularResult !== ok) {
+                    return explainNot(typeName + ' DTO: ' + regularResult);
+                }
+                const result = explain(
+                    [
+                        explainNoOtherKeysInDevelopment(value, propertyNames),
+                        ...map(
+                            explainProperties,
+                            (item) => item(value)
+                        ),
+                    ]
+                );
+                return result === ok ? explainOk() : explainNot(typeName + ' DTO: ' + result);
+            };
+        } catch (err) {
+            LOG.debug(`Error in createExplainFunctionOfDTO(): `, err);
+            throw new Error(`createExplainFunctionOfDTO: ${typeName}: ${err}`);
+        }
     }
 
     /**
@@ -1029,7 +1056,8 @@ export class EntityFactoryImpl<
         const isDTO = this.createTestFunctionOfDTO();
         const anotherFn = EntityFactoryImpl._typeCheckFactory.createChainedTypeCheckFunction(
             ChainOperation.OR,
-            ...types,
+            types,
+            true,
         ) as unknown as IsDTOOrTestFunction<D, T>;
         return (value: unknown) : value is D | T => isDTO( value ) || anotherFn( value );
     }
@@ -1040,24 +1068,30 @@ export class EntityFactoryImpl<
      */
     public createExplainFunctionOfDTOorOneOf ( ...types : EntityVariableType[] ) : IsDTOExplainFunction {
         const name = this.getName();
-        const testDTO = this.createTestFunctionOfDTO();
-        const testOtherTypes = EntityFactoryImpl._typeCheckFactory.createChainedTypeCheckFunction(
-            ChainOperation.OR,
-            ...types,
-        );
-        const ok = explainOk();
-        const typeNames : string[] = EntityFactoryImpl._typeCheckFactory.getTypeNameList(...types);
-        const notOk = explainNot(
-            explainOneOf(
-                [
-                    `DTO of ${name}`,
-                    ...typeNames,
-                ]
-            )
-        );
-        return (value: unknown) : string => (
-            testDTO( value ) || testOtherTypes( value ) ? ok : notOk
-        );
+        try {
+            const testDTO = this.createTestFunctionOfDTO();
+            const testOtherTypes = EntityFactoryImpl._typeCheckFactory.createChainedTypeCheckFunction(
+                ChainOperation.OR,
+                types,
+                true,
+            );
+            const ok = explainOk();
+            const typeNames : string[] = EntityFactoryImpl._typeCheckFactory.getTypeNameList(types);
+            const notOk = explainNot(
+                explainOneOf(
+                    [
+                        `DTO of ${name}`,
+                        ...typeNames,
+                    ]
+                )
+            );
+            return (value: unknown) : string => (
+                testDTO( value ) || testOtherTypes( value ) ? ok : notOk
+            );
+        } catch (err) {
+            LOG.debug(`Passed on error: `, err);
+            throw new Error(`createExplainFunctionOfDTOorOneOf() for ${name}: ${err}`);
+        }
     }
 
     /**

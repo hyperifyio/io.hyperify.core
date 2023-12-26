@@ -1,8 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ReadonlyJsonObject } from "../../Json";
-import { isFunction } from "../../types/Function";
-import { isObject } from "../../types/Object";
 import { Entity } from "../types/Entity";
 import { ActionDTO } from "./ActionDTO";
 
@@ -164,43 +162,4 @@ export interface Action extends Entity<ActionDTO> {
     errorRedirect (errorRedirect : string | Action | undefined) : this;
 
 
-}
-
-export function isAction (value: unknown): value is Action {
-    return (
-        isObject(value)
-        && isFunction(value?.valueOf)
-        && isFunction(value?.getDTO)
-        && isFunction(value?.toJSON)
-
-        && isFunction(value?.getLabel)
-        && isFunction(value?.setLabel)
-        && isFunction(value?.label)
-
-
-        && isFunction(value?.getTarget)
-        && isFunction(value?.setTarget)
-        && isFunction(value?.target)
-
-
-        && isFunction(value?.getMethod)
-        && isFunction(value?.setMethod)
-        && isFunction(value?.method)
-
-
-        && isFunction(value?.getBody)
-        && isFunction(value?.setBody)
-        && isFunction(value?.body)
-
-
-        && isFunction(value?.getSuccessRedirect)
-        && isFunction(value?.setSuccessRedirect)
-        && isFunction(value?.successRedirect)
-
-
-        && isFunction(value?.getErrorRedirect)
-        && isFunction(value?.setErrorRedirect)
-        && isFunction(value?.errorRedirect)
-
-    );
 }

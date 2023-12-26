@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { t } from "i18next";
 import { BackgroundDTO } from "../background/BackgroundDTO";
 import {
     BorderDTO,
@@ -145,15 +146,6 @@ export class StyleEntity
         if (value === undefined) return undefined;
         if (isBackgroundEntity(value)) return value.getDTO();
         if (isBackground(value)) return value.getDTO();
-        return value;
-    }
-
-    public static prepareColorDTO (
-        value : ColorEntity | ColorDTO | string | undefined
-    ) : ColorDTO | undefined {
-        if (value === undefined) return undefined;
-        if (isString(value)) return ColorEntity.create(value).getDTO();
-        if (isColorEntity(value)) return value.getDTO();
         return value;
     }
 
@@ -465,6 +457,12 @@ export class StyleEntity
             ...(font ? font.getCssStyles() : {}),
             ...(textDecoration ? textDecoration.getCssStyles() : {}),
         };
+    }
+
+    public setBackgroundColor ( value : ColorEntity | ColorDTO | string | undefined ) : this {
+        const color = value ? ColorEntity.toDTO(value) : undefined;
+        const bg = (this.getBackground() ?? BackgroundEntity.create()).setColor(color);
+        return this.setBackground( bg );
     }
 
 }

@@ -13,10 +13,11 @@ export const RouteEntityFactory = (
     EntityFactoryImpl.create<RouteDTO, Route>('Route')
         .add( EntityFactoryImpl.createProperty("name").setTypes(VariableType.STRING) )
         .add( EntityFactoryImpl.createProperty("path").setTypes(VariableType.STRING) )
-        .add( EntityFactoryImpl.createProperty("publicUrl").setTypes(VariableType.UNDEFINED) )
-        .add( EntityFactoryImpl.createProperty("language").setTypes(VariableType.UNDEFINED) )
-        .add( EntityFactoryImpl.createProperty("view").setTypes(VariableType.UNDEFINED) )
-        .add( EntityFactoryImpl.createProperty("redirect").setTypes(VariableType.UNDEFINED) )
+        .add( EntityFactoryImpl.createProperty("extend").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
+        .add( EntityFactoryImpl.createProperty("publicUrl").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
+        .add( EntityFactoryImpl.createProperty("language").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
+        .add( EntityFactoryImpl.createProperty("view").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
+        .add( EntityFactoryImpl.createProperty("redirect").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
 );
 
 export const isRoute = RouteEntityFactory.createTestFunctionOfInterface();

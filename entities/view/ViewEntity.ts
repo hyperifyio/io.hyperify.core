@@ -22,6 +22,8 @@ export const ViewEntityFactory = (
                      .add( EntityFactoryImpl.createProperty("meta").setTypes(VariableType.JSON, VariableType.UNDEFINED) )
 );
 
+export const BaseViewEntity = ViewEntityFactory.createEntityType();
+
 export const isViewDTO = ViewEntityFactory.createTestFunctionOfDTO();
 
 export const isView = ViewEntityFactory.createTestFunctionOfInterface();
@@ -31,8 +33,6 @@ export const explainViewDTO = ViewEntityFactory.createExplainFunctionOfDTO();
 export const isViewDTOOrUndefined = ViewEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
 
 export const explainViewDTOOrUndefined = ViewEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
-
-export const BaseViewEntity = ViewEntityFactory.createEntityType();
 
 
 /**

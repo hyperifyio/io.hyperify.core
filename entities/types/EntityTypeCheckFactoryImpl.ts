@@ -5,6 +5,7 @@ import { find } from "../../functions/find";
 import { map } from "../../functions/map";
 import { uniq } from "../../functions/uniq";
 import { isReadonlyJsonAny } from "../../Json";
+import { LogService } from "../../LogService";
 import { isBoolean } from "../../types/Boolean";
 import {
     isEnum,
@@ -43,6 +44,8 @@ import {
     isVariableType,
     VariableType,
 } from "./VariableType";
+
+const LOG = LogService.createLogger( 'EntityTypeCheckFactoryImpl' );
 
 /**
  *
@@ -124,11 +127,12 @@ export class EntityTypeCheckFactoryImpl
      */
     public createChainedTypeCheckFunction (
         op: ChainOperation,
-        ...types: readonly EntityVariableType[]
+        types: readonly EntityVariableType[],
+        useDtoCheck : boolean | "both",
     ) : TypeCheckFn {
         const functions= map(
             uniq(types),
-            (item: EntityVariableType) : TypeCheckFn => this.createTypeCheckFunction(item)
+            (item: EntityVariableType) : TypeCheckFn => this.createTypeCheckFunction(item, useDtoCheck)
         );
         return TypeCheckFunctionUtils.createChainedFunction(op, functions);
     }
@@ -142,7 +146,10 @@ export class EntityTypeCheckFactoryImpl
     /**
      * @inheritDoc
      */
-    public createTypeCheckFunction ( item: EntityVariableType ) : TypeCheckFn {
+    public createTypeCheckFunction (
+        item: EntityVariableType,
+        useDtoCheck : boolean | "both",
+    ) : TypeCheckFn {
 
         if ( isString(item) && !isVariableType(item) ) {
             const Type = this._entities.findType(item);
@@ -153,9 +160,14 @@ export class EntityTypeCheckFactoryImpl
             }
         }
 
-        if (isEntityType(item)) {
-            let isEntity = item.isEntity;
-            return (value: unknown) : boolean => isEntity(value);
+        if ( isEntityType(item) ) {
+            if (useDtoCheck === "both") {
+                const isDTO = item.isDTO.bind(item);
+                const isEntity = item.isEntity.bind(item);
+                return (value: unknown) : boolean => isDTO(value) || isEntity(value);
+            }
+            const isFn = useDtoCheck ? item.isDTO.bind( item ) : item.isEntity.bind( item );
+            return (value: unknown) : boolean => isFn(value);
         } else if (isEnumType<any>(item)) {
             let enumType = item;
             return (value: unknown) : boolean => isEnum<any>(enumType, value);
@@ -185,14 +197,20 @@ export class EntityTypeCheckFactoryImpl
      */
     public createChainedTypeExplainFunction (
         op: ChainOperation,
-        ...types: readonly EntityVariableType[]
+        types: readonly EntityVariableType[],
+        useDtoCheck : boolean | "both",
     ) : TypeExplainFn {
         if (!types.length) throw new TypeError(`createChainedTypeExplainFunction: There must be at least one type`);
-        const isType = this.createChainedTypeCheckFunction(op, ...types);
-        const typeNames : string[] = this.getTypeNameList(...types);
-        const explainNotOneOf : string = explainNot( explainOneOf(typeNames) );
-        const ok = explainOk();
-        return (value : unknown) : string => isType(value) ? ok : explainNotOneOf;
+        try {
+            const isType = this.createChainedTypeCheckFunction(op, types, useDtoCheck);
+            const typeNames : string[] = this.getTypeNameList(types);
+            const explainNotOneOf : string = explainNot( explainOneOf(typeNames) );
+            const ok = explainOk();
+            return (value : unknown) : string => isType(value) ? ok : explainNotOneOf;
+        } catch (err) {
+            LOG.debug(`Error in createChainedTypeExplainFunction(): `, err);
+            throw new Error(`createChainedTypeExplainFunction: Error: ${err}`);
+        }
     }
 
 
@@ -205,7 +223,7 @@ export class EntityTypeCheckFactoryImpl
      * @inheritDoc
      */
     public getTypeNameList (
-        ...types: readonly EntityVariableType[]
+        types: readonly EntityVariableType[]
     ) : string[] {
         return map(
             types,

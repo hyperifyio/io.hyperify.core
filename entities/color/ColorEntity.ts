@@ -103,6 +103,7 @@ export class ColorEntity
         }
     }
 
+
     protected constructor (
         value ?: string | ColorDTO | Color,
     ) {
