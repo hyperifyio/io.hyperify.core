@@ -1,17 +1,21 @@
 // Copyright (c) 2021-2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { LogService } from "../../../../LogService";
-import { Observer, ObserverCallback, ObserverDestructor } from "../../../../Observer";
-import { SimpleRepositoryService } from "../../../../simpleRepository/types/SimpleRepositoryService";
-import { SimpleRepositoryServiceEvent } from "../../../../simpleRepository/types/SimpleRepositoryServiceEvent";
-import { SimpleSharedClientService } from "../../../../simpleRepository/types/SimpleSharedClientService";
-import { SimpleRepository } from "../../../../simpleRepository/types/SimpleRepository";
-import { SimpleRepositoryInitializer } from "../../../../simpleRepository/types/SimpleRepositoryInitializer";
-import { SimpleRepositoryEntry } from "../../../../simpleRepository/types/SimpleRepositoryEntry";
+import { map } from "../../../functions/map";
+import { parseJson } from "../../../Json";
+import { LogService } from "../../../LogService";
+import {
+    Observer,
+    ObserverCallback,
+    ObserverDestructor,
+} from "../../../Observer";
+import { SimpleRepository } from "../../../simpleRepository/types/SimpleRepository";
+import { SimpleRepositoryEntry } from "../../../simpleRepository/types/SimpleRepositoryEntry";
+import { SimpleRepositoryInitializer } from "../../../simpleRepository/types/SimpleRepositoryInitializer";
+import { SimpleRepositoryService } from "../../../simpleRepository/types/SimpleRepositoryService";
+import { SimpleRepositoryServiceEvent } from "../../../simpleRepository/types/SimpleRepositoryServiceEvent";
+import { SimpleSharedClientService } from "../../../simpleRepository/types/SimpleSharedClientService";
 import { StoredDeviceRepositoryItem } from "./repository/device/StoredDeviceRepositoryItem";
 import { createDeviceRepositoryItem, DeviceRepositoryItem, parseDeviceRepositoryItem, toStoredDeviceRepositoryItem } from "./repository/device/DeviceRepositoryItem";
-import { map } from "../../../../functions/map";
-import { parseJson } from "../../../../Json";
 import { isDevice } from "./repository/device/Device";
 
 const LOG = LogService.createLogger('HgHsDeviceRepositoryService');
