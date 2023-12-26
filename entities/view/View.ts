@@ -2,6 +2,7 @@
 
 import { ReadonlyJsonObject } from "../../Json";
 import { Component } from "../component/Component";
+import { UnreparedComponentContent } from "../component/ComponentContent";
 import { ComponentDTO } from "../component/ComponentDTO";
 import { Seo } from "../seo/Seo";
 import { SeoDTO } from "../seo/SeoDTO";
@@ -168,7 +169,7 @@ export interface View
     ////////////////////////////////////////////////////////////////////////////
 
 
-    getContent () : readonly (string|ComponentEntity|Component)[];
+    getContent () : readonly (string|ComponentDTO)[];
 
     getContentDTO () : readonly (string|ComponentDTO)[];
 
@@ -177,14 +178,21 @@ export interface View
      *
      * @param value
      */
-    setContent (value : readonly (string|ComponentDTO|ComponentEntity|Component)[] ) : this;
+    setContent (value : readonly (string|ComponentDTO)[] ) : this;
 
     /**
      * Add inner content.
      *
      * @param value
      */
-    addContent (value : readonly (string|ComponentDTO|ComponentEntity|Component)[] ) : this;
+    add (value : UnreparedComponentContent ) : this;
+
+    /**
+     * Add inner content.
+     *
+     * @param value
+     */
+    addContent (value : UnreparedComponentContent ) : this;
 
     /**
      * Add inner text content.

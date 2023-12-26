@@ -1,6 +1,8 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { ComponentContent } from "../../../entities/component/ComponentContent";
+import {
+    UnreparedComponentContent,
+} from "../../../entities/component/ComponentContent";
 import { ComponentEntity } from "../../../entities/component/ComponentEntity";
 import { TABLE_COLUMN_COMPONENT_NAME } from "./TableColumnComponent";
 
@@ -17,7 +19,7 @@ export class TableColumnEntity extends ComponentEntity {
 
     public static createColumn (
         name: string,
-        data: ComponentContent,
+        data: UnreparedComponentContent,
     ) : TableColumnEntity {
         return this.create(name).addContent(data);
     }

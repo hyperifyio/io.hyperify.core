@@ -3,6 +3,7 @@
 import { ReadonlyJsonObject } from "../../Json";
 import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
+import { SizeEntity } from "../size/SizeEntity";
 import { FontDTO } from "./FontDTO";
 import { SizeDTO } from "../size/SizeDTO";
 import { Entity } from "../types/Entity";
@@ -134,14 +135,14 @@ export interface Font
      *
      * @param value
      */
-    setSize (value : SizeDTO | undefined) : this;
+    setSize (value : SizeEntity | SizeDTO | undefined) : this;
 
     /**
      * Set a font size.
      *
      * @param value
      */
-    setFontSize (value : SizeDTO | undefined) : this;
+    setFontSize (value : SizeEntity | SizeDTO | undefined) : this;
 
     /**
      * Get a font line-height.
@@ -158,7 +159,7 @@ export interface Font
      *
      * @param value
      */
-    setLineHeight (value : SizeDTO | undefined) : this;
+    setLineHeight (value : SizeEntity | SizeDTO | undefined) : this;
 
     /**
      * Get a font family.

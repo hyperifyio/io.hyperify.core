@@ -1,6 +1,7 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { createAppDTO, AppDTO } from "../../entities/app/AppDTO";
+import { AppDTO } from "../../entities/app/AppDTO";
+import { AppEntity } from "../../entities/app/AppEntity";
 import { createAnyRoute } from "./routes/AnyRoute";
 import { createLoginRoute } from "./routes/LoginRoute";
 import { createTextComponent } from "./components/TextComponent";
@@ -16,21 +17,21 @@ export function createOrderAppDefinitions (
     publicUrl: string,
     language: string
 ) : OrderAppDefinition {
-    return createAppDTO(
-        myAppName,
-        undefined,
-        [
-            createLoginRoute(LOGIN_ROUTE_NAME),
-            createAnyRoute(LOGIN_ROUTE_NAME),
-        ],
-        publicUrl,
-        language,
-        [
-            createTextComponent()
-        ],
-        [
-            createDefaultView(),
-            createLoginView()
-        ]
+    return (
+        AppEntity.create(myAppName)
+                 .setRoutes([
+                     createLoginRoute(LOGIN_ROUTE_NAME),
+                     createAnyRoute(LOGIN_ROUTE_NAME),
+                 ])
+                 .setPublicUrl(publicUrl)
+                 .setLanguage(language)
+                 .setComponents([
+                     createTextComponent(),
+                 ])
+                 .setViews([
+                     createDefaultView(),
+                     createLoginView(),
+                 ])
+                 .getDTO()
     );
 }

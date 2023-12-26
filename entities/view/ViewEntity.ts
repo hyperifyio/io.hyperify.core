@@ -1,8 +1,20 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { map } from "../../functions/map";
+import { LogUtils } from "../../LogUtils";
+import { isArray } from "../../types/Array";
 import { isString } from "../../types/String";
-import { ComponentDTO } from "../component/ComponentDTO";
-import { ComponentEntity } from "../component/ComponentEntity";
+import {
+    UnreparedComponentContentItem,
+    UnreparedComponentContent,
+    ComponentContentItem,
+} from "../component/ComponentContent";
+import {
+    ComponentEntity,
+    isComponent,
+    isComponentDTO,
+    isComponentEntity,
+} from "../component/ComponentEntity";
 import { SeoEntity } from "../seo/SeoEntity";
 import { StyleEntity } from "../style/StyleEntity";
 import { VariableType } from "../types/VariableType";
@@ -60,6 +72,55 @@ export class ViewEntity
         } else {
             super(name);
         }
+    }
+
+    public addContent ( value : UnreparedComponentContent ) : this {
+
+        if ( isArray(value) ) {
+            const prevContent = this.getContent();
+            return this.setContent( [
+                ...(prevContent ? prevContent : []),
+                ...map(
+                    value,
+                    (item: UnreparedComponentContentItem) : ComponentContentItem => {
+                        if (isComponentEntity(item)) {
+                            return item.getDTO();
+                        }
+                        if (isComponent(item)) {
+                            return item.getDTO();
+                        }
+                        return item;
+                    }
+                ),
+            ]);
+        }
+
+        if ( isString(value) || isComponentDTO(value) ) {
+            const prevContent = this.getContent();
+            return this.setContent( [
+                ...(prevContent ? prevContent : []),
+                value,
+            ]);
+        }
+
+        if ( isComponentEntity(value) || isComponent(value) ) {
+            const prevContent = this.getContent();
+            return this.setContent( [
+                ...(prevContent ? prevContent : []),
+                value.getDTO(),
+            ]);
+        }
+
+        throw new TypeError(`${this.getEntityType().getEntityName()}.addContent: Invalid argument: ${LogUtils.stringifyValue(value)}`);
+
+    }
+
+    public add ( value : UnreparedComponentContent ) : this {
+        return this.addContent(value);
+    }
+
+    public addText ( value : string ) : this {
+        return this.addContent(value);
     }
 
 }

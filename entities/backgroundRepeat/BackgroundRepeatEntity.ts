@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { EntityMethodImpl } from "../types/EntityMethodImpl";
 import { VariableType } from "../types/VariableType";
 import {
     BackgroundRepeatDTO,
@@ -13,6 +14,17 @@ import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 
 export const BackgroundRepeatEntityFactory = (
     EntityFactoryImpl.create<BackgroundRepeatDTO, BackgroundRepeat>("BackgroundRepeat")
+                     .addStaticMethod(
+                         EntityMethodImpl.create('create')
+                                         .addArgument(BackgroundRepeatType)
+                                         .returnType('BackgroundRepeat')
+                     )
+                     .addStaticMethod(
+                         EntityMethodImpl.create('create')
+                                         .addArgument(BackgroundRepeatType)
+                                         .addArgument(BackgroundRepeatType)
+                                         .returnType('BackgroundRepeat')
+                     )
                      .add( EntityFactoryImpl.createProperty("x").setTypes(BackgroundRepeatType) )
                      .add( EntityFactoryImpl.createProperty("y").setTypes(BackgroundRepeatType) )
 );

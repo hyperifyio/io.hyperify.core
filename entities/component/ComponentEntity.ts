@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { map } from "../../functions/map";
 import { LogUtils } from "../../LogUtils";
 import { isArray } from "../../types/Array";
 import { isString } from "../../types/String";
@@ -7,7 +8,12 @@ import { StyleEntity } from "../style/StyleEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { VariableType } from "../types/VariableType";
 import { Component } from "./Component";
-import { ComponentContent } from "./ComponentContent";
+import {
+    ComponentContent,
+    ComponentContentItem,
+    UnreparedComponentContent,
+    UnreparedComponentContentItem,
+} from "./ComponentContent";
 import { ComponentDTO } from "./ComponentDTO";
 
 export const ComponentEntityFactory = (
@@ -29,9 +35,6 @@ export const explainComponentDTO = ComponentEntityFactory.createExplainFunctionO
 
 export const isComponentDTOOrUndefined = ComponentEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
 export const explainComponentDTOOrUndefined = ComponentEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
-
-export const isComponentDTOOrString = ComponentEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.STRING);
-export const explainComponentDTOOrString = ComponentEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.STRING);
 
 
 /**
@@ -75,7 +78,26 @@ export class ComponentEntity
         }
     }
 
-    public addContent ( value : ComponentContent | string | ComponentDTO ) : this {
+    public addContent ( value : UnreparedComponentContent ) : this {
+
+        if ( isArray(value) ) {
+            const prevContent : ComponentContent | undefined = this.getContent();
+            return this.setContent( [
+                ...(prevContent ? prevContent : []),
+                ...map(
+                    value,
+                    (item: UnreparedComponentContentItem) : ComponentContentItem => {
+                        if (isComponentEntity(item)) {
+                            return item.getDTO();
+                        }
+                        if (isComponent(item)) {
+                            return item.getDTO();
+                        }
+                        return item;
+                    }
+                ),
+            ]);
+        }
 
         if ( isString(value) || isComponentDTO(value) ) {
             const prevContent = this.getContent();
@@ -85,11 +107,11 @@ export class ComponentEntity
             ]);
         }
 
-        if ( isArray(value) ) {
+        if ( isComponentEntity(value) || isComponent(value) ) {
             const prevContent = this.getContent();
             return this.setContent( [
                 ...(prevContent ? prevContent : []),
-                ...value,
+                value.getDTO(),
             ]);
         }
 
@@ -97,7 +119,7 @@ export class ComponentEntity
 
     }
 
-    public add ( value : ComponentContent | string | ComponentDTO ) : this {
+    public add ( value : UnreparedComponentContent ) : this {
         return this.addContent(value);
     }
 
@@ -115,3 +137,6 @@ export class ComponentEntity
 export function isComponentEntity (value: unknown): value is ComponentEntity {
     return value instanceof ComponentEntity;
 }
+
+export const isComponentDTOOrString = ComponentEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.STRING);
+export const explainComponentDTOOrString = ComponentEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.STRING);

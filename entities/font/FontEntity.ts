@@ -150,7 +150,6 @@ export class FontEntity
         };
     }
 
-
 }
 
 export function isFontEntity (value: unknown): value is FontEntity {

@@ -2,7 +2,10 @@
 
 import { ReadonlyJsonAny, ReadonlyJsonArray, ReadonlyJsonArrayOf, ReadonlyJsonObject } from "../../Json";
 import { TestCallbackNonStandard } from "../../types/TestCallback";
-import { ComponentContent } from "./ComponentContent";
+import {
+    ComponentContent,
+    UnreparedComponentContent,
+} from "./ComponentContent";
 import { ComponentDTO } from "./ComponentDTO";
 import { StyleDTO } from "../style/StyleDTO";
 import { StyleEntity } from "../style/StyleEntity";
@@ -82,14 +85,14 @@ export interface Component
      *
      * @param value
      */
-    add (value : ComponentContent | string | ComponentDTO) : this;
+    add (value : UnreparedComponentContent) : this;
 
     /**
      * Add inner content.
      *
      * @param value
      */
-    addContent (value : ComponentContent | string | ComponentDTO) : this;
+    addContent (value : UnreparedComponentContent) : this;
 
     /**
      * Add inner content as a string.

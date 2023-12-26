@@ -3,6 +3,7 @@
 import { ReadonlyJsonObject } from "../../Json";
 import { Entity } from "../types/Entity";
 import { ActionDTO } from "./ActionDTO";
+import { ActionEntity } from "./ActionEntity";
 
 /**
  * Presents an interface for SeoEntity.
@@ -121,14 +122,14 @@ export interface Action extends Entity<ActionDTO> {
     /**
      * Get a success redirect.
      */
-    getSuccessRedirect () : string | Action | undefined;
+    getSuccessRedirect () : string | ActionEntity | undefined;
 
     /**
      * Set a successRedirect.
      *
      * @param successRedirect
      */
-    setSuccessRedirect (successRedirect : string | Action | undefined) : this;
+    setSuccessRedirect (successRedirect : string | Action | ActionEntity | ActionDTO | undefined) : this;
 
     /**
      * Set a success redirect.
@@ -137,20 +138,20 @@ export interface Action extends Entity<ActionDTO> {
      *
      * @param successRedirect
      */
-    successRedirect (successRedirect : string | Action | undefined) : this;
+    successRedirect (successRedirect : string | Action | ActionEntity | ActionDTO | undefined) : this;
 
 
     /**
      * Get a error redirect.
      */
-    getErrorRedirect () : string | Action | undefined;
+    getErrorRedirect () : string | ActionEntity | undefined;
 
     /**
      * Set a error redirect.
      *
      * @param errorRedirect
      */
-    setErrorRedirect (errorRedirect : string | Action | undefined) : this;
+    setErrorRedirect (errorRedirect : string | Action | ActionEntity | ActionDTO | undefined) : this;
 
     /**
      * Set a error redirect.
@@ -159,7 +160,7 @@ export interface Action extends Entity<ActionDTO> {
      *
      * @param errorRedirect
      */
-    errorRedirect (errorRedirect : string | Action | undefined) : this;
+    errorRedirect (errorRedirect : string | Action | ActionEntity | ActionDTO | undefined) : this;
 
 
 }

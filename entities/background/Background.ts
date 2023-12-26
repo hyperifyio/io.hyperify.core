@@ -4,6 +4,7 @@ import { ReadonlyJsonObject } from "../../Json";
 import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
 import { ColorEntity } from "../color/ColorEntity";
+import { BackgroundRepeatType } from "../types/BackgroundRepeatType";
 import { BackgroundDTO } from "./BackgroundDTO";
 import { BackgroundImageDTO } from "../backgroundImage/BackgroundImageDTO";
 import { BackgroundRepeatDTO } from "../backgroundRepeat/BackgroundRepeatDTO";
@@ -77,7 +78,7 @@ export interface Background extends Entity<BackgroundDTO> {
     attachment (value : BackgroundAttachment | undefined) : this;
     blendMode (value : BackgroundBlendMode | undefined) : this;
     clip (value : BackgroundClip | undefined) : this;
-    color (value : ColorEntity | Color | ColorDTO | undefined) : this;
+    color (value : ColorEntity | Color | ColorDTO | string | undefined) : this;
     transparentColor () : this;
     setTransparentColor () : this;
     image (value : BackgroundImage | BackgroundImageDTO | undefined) : this;
@@ -87,7 +88,7 @@ export interface Background extends Entity<BackgroundDTO> {
         b : BackgroundPositionValue | undefined,
     ) : this;
     position (value : BackgroundPositionOptions | undefined) : this;
-    repeat (value : BackgroundRepeat | BackgroundRepeatDTO | undefined) : this;
+    repeat (value : BackgroundRepeat | BackgroundRepeatDTO | BackgroundRepeatType | undefined) : this;
     size (value : BackgroundSizeOptions | undefined) : this;
 
 }

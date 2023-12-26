@@ -1,6 +1,5 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { t } from "i18next";
 import { BackgroundDTO } from "../background/BackgroundDTO";
 import {
     BorderDTO,

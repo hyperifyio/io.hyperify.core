@@ -11,24 +11,31 @@ import {
 } from "../../types/explain";
 import { prefixLines } from "../../types/String";
 import { isUndefined } from "../../types/undefined";
+import { Component } from "./Component";
 import {
     ComponentDTO,
 } from "./ComponentDTO";
 import {
+    ComponentEntity,
     explainComponentDTOOrString,
     isComponentDTOOrString,
 } from "./ComponentEntity";
 
-export type ComponentContent = readonly (string|ComponentDTO)[];
+export type UnreparedComponentContentItem = string | ComponentDTO | ComponentEntity | Component;
+export type UnreparedComponentContentList = readonly UnreparedComponentContentItem[];
+export type UnreparedComponentContent = UnreparedComponentContentItem | UnreparedComponentContentList;
+
+export type ComponentContentItem = string | ComponentDTO;
+export type ComponentContent = readonly ComponentContentItem[];
 
 export function isComponentContent ( value: unknown) : value is ComponentContent {
-    return isArrayOf<string|ComponentDTO>(value, isComponentDTOOrString);
+    return isArrayOf<ComponentContentItem>(value, isComponentDTOOrString);
 }
 
 export function explainComponentContent (value: any) : string {
     return isComponentContent(value) ? explainOk() : explainNot(
-        `Array<string|ComponentDTO>(\n${prefixLines(explainArrayOf<string|ComponentDTO>(
-            "string|ComponentDTO",
+        `Array<string|ComponentDTO>(\n${prefixLines(explainArrayOf<string|ComponentDTO|Component|ComponentEntity>(
+            "string | ComponentDTO",
             explainComponentDTOOrString,
             value,
             isComponentDTOOrString
