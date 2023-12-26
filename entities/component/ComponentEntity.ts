@@ -1,5 +1,7 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { LogUtils } from "../../LogUtils";
+import { isArray } from "../../types/Array";
 import { isString } from "../../types/String";
 import { StyleEntity } from "../style/StyleEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
@@ -76,16 +78,23 @@ export class ComponentEntity
     public addContent ( value : ComponentContent | string | ComponentDTO ) : this {
 
         if ( isString(value) || isComponentDTO(value) ) {
+            const prevContent = this.getContent();
             return this.setContent( [
-                ...this.getContent(),
-                ...[value],
+                ...(prevContent ? prevContent : []),
+                value,
             ]);
         }
 
-        return this.setContent( [
-            ...this.getContent(),
-            ...value,
-        ]);
+        if ( isArray(value) ) {
+            const prevContent = this.getContent();
+            return this.setContent( [
+                ...(prevContent ? prevContent : []),
+                ...value,
+            ]);
+        }
+
+        throw new TypeError(`${this.getEntityType().getEntityName()}.addContent: Invalid argument: ${LogUtils.stringifyValue(value)}`);
+
     }
 
     public add ( value : ComponentContent | string | ComponentDTO ) : this {
@@ -93,7 +102,7 @@ export class ComponentEntity
     }
 
     public addText ( value : string ) : this {
-        return this.add(value);
+        return this.addContent(value);
     }
 
 }

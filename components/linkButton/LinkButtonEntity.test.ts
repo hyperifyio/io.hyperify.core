@@ -21,7 +21,7 @@ describe('LinkButtonEntity', () => {
 
             const linkButton: LinkButtonEntity = LinkButtonEntity.createButton(name, text, href);
 
-            expect(linkButton).toEqual(expectedLinkButton);
+            expect(linkButton.getDTO()).toEqual(expectedLinkButton);
         });
     });
 });

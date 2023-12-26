@@ -16,12 +16,13 @@ describe('ButtonEntity', () => {
                 extend: BUTTON_COMPONENT_NAME,
                 meta: {
                     eventName: eventName,
-                },
+                }
             };
 
             const button: ButtonEntity = ButtonEntity.createButton(name, text, eventName);
 
-            expect(button).toEqual(expectedButton);
+            expect(button.getDTO()).toEqual(expectedButton);
+
         });
     });
 });

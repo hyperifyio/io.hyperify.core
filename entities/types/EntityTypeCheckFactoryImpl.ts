@@ -240,6 +240,7 @@ export class EntityTypeCheckFactoryImpl
         } else if (isEnumType<any>(item)) {
             return `enum (${EnumUtils.getValues<any>(item).join(' | ')})`;
         }
+
         switch (item) {
             case VariableType.JSON: return 'json';
             case VariableType.BOOLEAN: return 'boolean';
