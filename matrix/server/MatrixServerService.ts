@@ -1,6 +1,6 @@
 // Copyright (c) 2022-2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { JwtDecodeServiceImpl } from "../../backend/JwtDecodeServiceImpl";
+import { JwtDecodeServiceImpl } from "../../../../node/backend/JwtDecodeServiceImpl";
 import { createEventEntity } from "./types/repository/event/entities/EventEntity";
 import { createRoom } from "./types/repository/room/Room";
 import { UserRepositoryItem } from "./types/repository/user/UserRepositoryItem";
