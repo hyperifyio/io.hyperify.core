@@ -1,8 +1,11 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { has } from "../../functions/has";
 import { map } from "../../functions/map";
 import { LogUtils } from "../../LogUtils";
 import { isArray } from "../../types/Array";
+import { isFunction } from "../../types/Function";
+import { isObject } from "../../types/Object";
 import { isString } from "../../types/String";
 import { StyleEntity } from "../style/StyleEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
@@ -15,6 +18,7 @@ import {
     UnreparedComponentContentItem,
 } from "./ComponentContent";
 import { ComponentDTO } from "./ComponentDTO";
+import { ComponentType } from "./ComponentType";
 
 export const ComponentEntityFactory = (
     EntityFactoryImpl.create<ComponentDTO, Component>('Component')
@@ -36,9 +40,23 @@ export const explainComponentDTO = ComponentEntityFactory.createExplainFunctionO
 export const isComponentDTOOrUndefined = ComponentEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
 export const explainComponentDTOOrUndefined = ComponentEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
 
+/**
+ * Tries to detect if this value is an interface for static ComponentEntity.
+ *
+ * This function cannot really detect if the value has the correct interface.
+ * It can only detect that the object has a create function.
+ *
+ * @param value
+ * @todo Create support for this in ComponentEntityFactory
+ */
+export function isComponentType (value: unknown): value is ComponentType {
+    return isObject(value) && isFunction(value?.create);
+}
 
 /**
  * Entity for components.
+ *
+ * @see {@link ComponentType} for the interface of static methods.
  */
 export class ComponentEntity
     extends BaseComponentEntity
@@ -78,6 +96,9 @@ export class ComponentEntity
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     public addContent ( value : UnreparedComponentContent ) : this {
 
         if ( isArray(value) ) {
@@ -119,12 +140,29 @@ export class ComponentEntity
 
     }
 
+    /**
+     * @inheritDoc
+     */
     public add ( value : UnreparedComponentContent ) : this {
         return this.addContent(value);
     }
 
+    /**
+     * @inheritDoc
+     */
     public addText ( value : string ) : this {
         return this.addContent(value);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public getContentDTO () : ComponentContent | undefined {
+        return this.getContent();
+    }
+
+    public hasMetaProperty (key: string) : boolean {
+        return has(this.getMeta(), key);
     }
 
 }

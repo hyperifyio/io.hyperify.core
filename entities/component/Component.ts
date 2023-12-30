@@ -14,6 +14,9 @@ import { Style } from "../style/Style";
 
 /**
  * Interface for Component entities.
+ *
+ * @see {@link ComponentEntity} for the implementation.
+ * @see {@link ComponentType} for the static API.
  */
 export interface Component
     extends ExtendableEntity<ComponentDTO>

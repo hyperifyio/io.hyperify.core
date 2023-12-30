@@ -7,7 +7,7 @@ import { ComponentDTO } from "../entities/component/ComponentDTO";
 import { ComponentFactory } from "../services/ComponentFactory";
 import { ComponentFactoryService } from "../services/ComponentFactoryService";
 import { ComponentEntity } from "../entities/component/ComponentEntity";
-import { ComponentType } from "../entities/types/ComponentType";
+import { ComponentType } from "../entities/component/ComponentType";
 import { registerActionButtonComponent } from "./actionButton/ActionButtonComponent";
 import { registerArticleComponent } from "./article/ArticleComponent";
 import { registerButtonComponent } from "./button/ButtonComponent";
