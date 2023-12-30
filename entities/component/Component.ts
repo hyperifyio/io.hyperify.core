@@ -156,13 +156,13 @@ export interface Component
      *
      * @param name
      */
-    hasMetaProperty ( name : string) : boolean;
+    hasMetaProperty (name : string) : boolean;
 
     /**
      * Returns the value of a meta property.
      * @param name
      */
-    getMetaProperty ( name : string) : any | undefined;
+    getMetaProperty (name : string) : any | undefined;
 
     /**
      * Get a value of internal string meta property.
@@ -184,7 +184,7 @@ export interface Component
      *
      * @param name
      */
-    getMetaNumber (name : string) : number | undefined;
+    getMetaNumber (name : string) : number | null | undefined;
 
     /**
      * Set a value of internal number meta property.
@@ -199,7 +199,7 @@ export interface Component
      *
      * @param name
      */
-    getMetaBoolean (name : string) : boolean | undefined;
+    getMetaBoolean (name : string) : boolean | null | undefined;
 
     /**
      * Set a value of internal boolean meta property.
@@ -236,7 +236,10 @@ export interface Component
      *
      * @param name
      */
-    getMetaArrayOf<T extends ReadonlyJsonAny = ReadonlyJsonAny> (name : string, isItemOf : TestCallbackNonStandard) : ReadonlyJsonArrayOf<T> | undefined;
+    getMetaArrayOf<T extends ReadonlyJsonAny = ReadonlyJsonAny> (
+        name : string,
+        isItemOf : TestCallbackNonStandard,
+    ) : ReadonlyJsonArrayOf<T> | undefined;
 
     /**
      * Set a value of internal array meta property.
@@ -281,7 +284,7 @@ export interface Component
      *
      * @param style
      */
-    addStyles (style : Style | StyleEntity | StyleDTO | undefined) : this;
+    addStyle (style : Style | StyleEntity | StyleDTO | undefined) : this;
 
 
 }

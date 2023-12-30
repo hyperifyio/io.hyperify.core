@@ -1,5 +1,7 @@
 // Copyright (c) 2023. Heusala Group Oy <info@hg.fi>. All rights reserved.
 
+import { isString } from "../../types/String";
+import { ColorEntity } from "../color/ColorEntity";
 import { TextAlign } from "../types/TextAlign";
 import { Component } from "./Component";
 import { ComponentEntity } from "./ComponentEntity";
@@ -560,6 +562,733 @@ describe('ComponentEntity', () => {
 
         it('can check if meta property is defined', () => {
             expect( entity.hasMetaProperty('hello') ).toEqual(true);
+        });
+
+    });
+
+
+    describe('.getMetaProperty', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setMeta({
+                hello : 'World'
+            });
+        });
+
+        it('can get if meta property does not exist', () => {
+            expect( entity.getMetaProperty('foo') ).toStrictEqual(undefined);
+        });
+
+        it('can get if meta property is defined', () => {
+            expect( entity.getMetaProperty('hello') ).toStrictEqual('World');
+        });
+
+    });
+
+
+    describe('.getMetaString', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setMeta({
+                hello : 'World',
+                value : 100,
+            });
+        });
+
+        it('can get undefined if meta property does not exist', () => {
+            expect( entity.getMetaString('foo') ).toStrictEqual(undefined);
+        });
+
+        it('can get a string if meta property is defined', () => {
+            expect( entity.getMetaString('hello') ).toStrictEqual('World');
+        });
+
+        it('can get a string if meta property is a number', () => {
+            expect( entity.getMetaString('value') ).toStrictEqual('100');
+        });
+
+    });
+
+
+    describe('.setMetaString', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setMeta({
+                hello : 'World',
+                value : 100,
+            });
+        });
+
+        it('can set a string if meta property is a string', () => {
+            entity.setMetaString('hello', 'foobar');
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'foobar',
+                    value: 100,
+                })
+            );
+        });
+
+        it('can set a string if meta property is not defined', () => {
+            entity.setMetaString('bar', 'foo');
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    bar: 'foo',
+                })
+            );
+        });
+
+        it('can set a string if meta property is a number', () => {
+            entity.setMetaString('value', '1000');
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: '1000',
+                })
+            );
+        });
+
+    });
+
+
+    describe('.getMetaNumber', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setMeta({
+                hello : 'World',
+                value : 100,
+            });
+        });
+
+        it('can get undefined if meta property does not exist', () => {
+            expect( entity.getMetaNumber('foo') ).toStrictEqual(undefined);
+        });
+
+        it('can get a null if meta property is a string', () => {
+            expect( entity.getMetaNumber('hello') ).toStrictEqual(null);
+        });
+
+        it('can get a number if meta property is a number', () => {
+            expect( entity.getMetaNumber('value') ).toStrictEqual(100);
+        });
+
+    });
+
+    describe('.setMetaNumber', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setMeta({
+                hello : 'World',
+                value : 100,
+            });
+        });
+
+        it('cannot set a string value', () => {
+            expect( () => entity.setMetaNumber('hello', 'foobar' as unknown as number) ).toThrowError(
+                TypeError,
+                expect.stringContaining('Component.setMetaNumber(): The new property value was not a number: foobar')
+            );
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                })
+            );
+        });
+
+        it('cannot set an undefined value', () => {
+            expect( () => entity.setMetaNumber('hello', undefined as unknown as number) ).toThrowError(
+                TypeError,
+                expect.stringContaining('Component.setMetaNumber(): The new property value was not a number: undefined')
+            );
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                })
+            );
+        });
+
+        it('can set a number if meta property is a string', () => {
+            entity.setMetaNumber('hello', 123);
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 123,
+                    value: 100,
+                })
+            );
+        });
+
+        it('can set a number if meta property is not defined', () => {
+            entity.setMetaNumber('bar', 123);
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    bar: 123
+                })
+            );
+        });
+
+        it('can set a number if meta property is a number', () => {
+            entity.setMetaNumber('value', 1000);
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 1000,
+                })
+            );
+        });
+
+    });
+
+
+    describe('.getMetaBoolean', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setMeta({
+                hello : 'World',
+                value : 100,
+                enabled : true,
+                hidden : false,
+            });
+        });
+
+        it('can get undefined if meta property does not exist', () => {
+            expect( entity.getMetaBoolean('foo') ).toStrictEqual(undefined);
+        });
+
+        it('can get a null if meta property is a string', () => {
+            expect( entity.getMetaBoolean('hello') ).toStrictEqual(null);
+        });
+
+        it('can get a boolean if meta property is true', () => {
+            expect( entity.getMetaBoolean('enabled') ).toStrictEqual(true);
+        });
+
+        it('can get a boolean if meta property is false', () => {
+            expect( entity.getMetaBoolean('hidden') ).toStrictEqual(false);
+        });
+
+    });
+
+    describe('.setMetaBoolean', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setMeta({
+                hello : 'World',
+                value : 100,
+                enabled : true,
+            });
+        });
+
+        it('cannot set a string value', () => {
+            expect( () => entity.setMetaBoolean('hello', 'foobar' as unknown as boolean) ).toThrowError(
+                TypeError,
+                expect.stringContaining('Component.setMetaBoolean(): The new property value was not a boolean: foobar')
+            );
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                })
+            );
+        });
+
+        it('cannot set an undefined value', () => {
+            expect( () => entity.setMetaBoolean('hello', undefined as unknown as boolean) ).toThrowError(
+                TypeError,
+                expect.stringContaining('Component.setMetaBoolean(): The new property value was not a boolean: undefined')
+            );
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                })
+            );
+        });
+
+        it('can set a boolean if meta property is a string', () => {
+            entity.setMetaBoolean('hello', true);
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: true,
+                    value: 100,
+                })
+            );
+        });
+
+        it('can set a boolean if meta property is not defined', () => {
+            entity.setMetaBoolean('bar', true);
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    bar: true
+                })
+            );
+        });
+
+        it('can set a boolean if meta property is a boolean', () => {
+            entity.setMetaBoolean('enabled', false);
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    enabled: false,
+                })
+            );
+        });
+
+    });
+
+
+    describe('.getMetaArray', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setMeta({
+                hello : 'World',
+                value : 100,
+                enabled : true,
+                hidden : false,
+                payload : ['foo', 'bar']
+            });
+        });
+
+        it('can get undefined if meta property does not exist', () => {
+            expect( entity.getMetaArray('foo') ).toStrictEqual(undefined);
+        });
+
+        it('can get a null if meta property is a string', () => {
+            expect( entity.getMetaArray('hello') ).toStrictEqual(null);
+        });
+
+        it('can get an array if meta property is array', () => {
+            expect( entity.getMetaArray('payload') ).toStrictEqual(['foo', 'bar']);
+        });
+
+    });
+
+    describe('.getMetaArrayOf', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setMeta({
+                hello : 'World',
+                value : 100,
+                enabled : true,
+                hidden : false,
+                payload : ['foo', 'bar'],
+                ids : [123, 456],
+            });
+        });
+
+        it('cannot get an array if value is number array', () => {
+            expect( entity.getMetaArrayOf<string>('ids', isString) ).toStrictEqual(null);
+        });
+
+        it('can get undefined if meta property does not exist', () => {
+            expect( entity.getMetaArrayOf<string>('foo', isString) ).toStrictEqual(undefined);
+        });
+
+        it('can get a null if meta property is a string', () => {
+            expect( entity.getMetaArrayOf<string>('hello', isString) ).toStrictEqual(null);
+        });
+
+        it('can get an array if meta property is array', () => {
+            expect( entity.getMetaArrayOf<string>('payload', isString) ).toStrictEqual(['foo', 'bar']);
+        });
+
+    });
+
+    describe('.setMetaArray', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setMeta({
+                hello : 'World',
+                value : 100,
+                enabled : true,
+                payload : [],
+            });
+        });
+
+        it('cannot set a string value', () => {
+            expect( () => entity.setMetaArray('payload', 'foobar' as unknown as string[]) ).toThrowError(
+                TypeError,
+                expect.stringContaining('Component.setMetaArray(): The new property value was not an array: foobar')
+            );
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    enabled : true,
+                    payload : [],
+                })
+            );
+        });
+
+        it('cannot set an undefined value', () => {
+            expect( () => entity.setMetaArray('hello', undefined as unknown as string[]) ).toThrowError(
+                TypeError,
+                expect.stringContaining('Component.setMetaArray(): The new property value was not an array: undefined')
+            );
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    enabled : true,
+                    payload : [],
+                })
+            );
+        });
+
+        it('can set an array if meta property is a string', () => {
+            entity.setMetaArray('hello', ['hello', 'world']);
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: ['hello', 'world'],
+                    value: 100,
+                    enabled : true,
+                    payload : [],
+                })
+            );
+        });
+
+        it('can set an array if meta property is an array', () => {
+            entity.setMetaArray('payload', ['hello', 'world']);
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    enabled : true,
+                    payload : ['hello', 'world'],
+                })
+            );
+        });
+
+        it('can set an array if meta property is not defined', () => {
+            entity.setMetaArray('bar', ['hello', 'world']);
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    bar: ['hello', 'world'],
+                    enabled : true,
+                    payload : [],
+                })
+            );
+        });
+
+        it('can set an array if meta property is a boolean', () => {
+            entity.setMetaArray('enabled', ['hello', 'world']);
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    enabled: ['hello', 'world'],
+                    payload : [],
+                })
+            );
+        });
+
+    });
+
+
+    describe('.getMetaObject', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setMeta({
+                hello : 'World',
+                value : 100,
+                enabled : true,
+                hidden : false,
+                payload : ['foo', 'bar']
+            });
+        });
+
+        it('can get undefined if meta property does not exist', () => {
+            expect( entity.getMetaObject('foo') ).toStrictEqual(undefined);
+        });
+
+        it('can get a null if meta property is a string', () => {
+            expect( entity.getMetaObject('hello') ).toStrictEqual(null);
+        });
+
+        it('can get an array if meta property is array', () => {
+            expect( entity.getMetaObject('payload') ).toStrictEqual(['foo', 'bar']);
+        });
+
+    });
+
+    describe('.setMetaObject', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setMeta({
+                hello : 'World',
+                value : 100,
+                enabled : true,
+                payload : [],
+            });
+        });
+
+        it('cannot set a string value', () => {
+            expect( () => entity.setMetaObject('payload', 'foobar' as unknown as {}) ).toThrowError(
+                TypeError,
+                expect.stringContaining('Component.setMetaObject(): The new property value was not an array: foobar')
+            );
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    enabled : true,
+                    payload : [],
+                })
+            );
+        });
+
+        it('cannot set an undefined value', () => {
+            expect( () => entity.setMetaObject('hello', undefined as unknown as {}) ).toThrowError(
+                TypeError,
+                expect.stringContaining('Component.setMetaObject(): The new property value was not an array: undefined')
+            );
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    enabled : true,
+                    payload : [],
+                })
+            );
+        });
+
+        it('can set an array if meta property is a string', () => {
+            entity.setMetaObject('hello', {hello : 'world'});
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: {hello : 'world'},
+                    value: 100,
+                    enabled : true,
+                    payload : [],
+                })
+            );
+        });
+
+        it('can set an object if meta property is an object', () => {
+            entity.setMetaObject('payload', {hello : 'world'});
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    enabled : true,
+                    payload : {hello : 'world'},
+                })
+            );
+        });
+
+        it('can set an object if meta property is not defined', () => {
+            entity.setMetaObject('bar', {hello : 'world'});
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    bar: {hello : 'world'},
+                    enabled : true,
+                    payload : [],
+                })
+            );
+        });
+
+        it('can set an object if meta property is a boolean', () => {
+            entity.setMetaObject('enabled', {hello : 'world'});
+            expect( entity.getMeta() ).toEqual(
+                expect.objectContaining({
+                    hello: 'World',
+                    value: 100,
+                    enabled: {hello : 'world'},
+                    payload : [],
+                })
+            );
+        });
+
+    });
+
+
+    describe('.getStyle', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+        });
+
+        it('cannot get a style when it is empty', () => {
+            expect( entity.getStyle() ).toEqual(undefined);
+        });
+
+        it('can get a style when it is defined', () => {
+            entity.setStyle({
+                textAlign : TextAlign.CENTER
+            });
+            expect( entity.getStyle().getDTO() ).toEqual(
+                expect.objectContaining({
+                    textAlign: TextAlign.CENTER
+                }),
+            );
+        });
+
+    });
+
+    describe('.getStyleDTO', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+        });
+
+        it('cannot get a style when it is empty', () => {
+            expect( entity.getStyleDTO() ).toEqual(undefined);
+        });
+
+        it('can get a style when it is defined', () => {
+            entity.setStyle({
+                textAlign : TextAlign.CENTER
+            });
+            expect( entity.getStyleDTO() ).toEqual(
+                expect.objectContaining({
+                    textAlign: TextAlign.CENTER
+                }),
+            );
+        });
+
+    });
+
+    describe('.setStyle', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+        });
+
+        it('can set a style', () => {
+            entity.setStyle({
+                textAlign : TextAlign.CENTER
+            });
+            expect( entity.getStyleDTO() ).toEqual(
+                expect.objectContaining({
+                    textAlign : TextAlign.CENTER
+                }),
+            );
+        });
+
+        it('can unset a style', () => {
+            entity.setStyle({
+                textAlign : TextAlign.CENTER
+            });
+            expect( entity.getStyleDTO() ).toEqual(
+                expect.objectContaining({
+                    textAlign : TextAlign.CENTER
+                }),
+            );
+
+            entity.setStyle(undefined);
+            expect( entity.getStyleDTO() ).toEqual(undefined);
+        });
+
+    });
+
+    describe('.style', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+        });
+
+        it('can set a style', () => {
+            entity.style({
+                textAlign : TextAlign.CENTER
+            });
+            expect( entity.getStyleDTO() ).toEqual(
+                expect.objectContaining({
+                    textAlign : TextAlign.CENTER
+                }),
+            );
+        });
+
+    });
+
+    describe('.addStyle', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setStyle({
+                textAlign : TextAlign.CENTER
+            });
+        });
+
+        it('can override a style', () => {
+            entity.addStyle({
+                textAlign : TextAlign.LEFT
+            });
+            expect( entity.getStyleDTO() ).toEqual(
+                expect.objectContaining({
+                    textAlign : TextAlign.LEFT
+                }),
+            );
+        });
+
+        it('can add a style', () => {
+            const color = ColorEntity.create('#fff').getDTO();
+            entity.addStyle({
+                textColor : color
+            });
+            expect( entity.getStyleDTO() ).toEqual(
+                expect.objectContaining({
+                    textAlign : TextAlign.CENTER,
+                    textColor: color,
+                }),
+            );
         });
 
     });

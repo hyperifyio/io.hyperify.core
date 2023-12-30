@@ -8,10 +8,22 @@ import { reduce } from "../../functions/reduce";
 import { some } from "../../functions/some";
 import { uniq } from "../../functions/uniq";
 import { upperFirst } from "../../functions/upperFirst";
-import { ReadonlyJsonObject } from "../../Json";
+import {
+    isReadonlyJsonObject,
+    ReadonlyJsonAny,
+    ReadonlyJsonObject,
+} from "../../Json";
 import { LogService } from "../../LogService";
 import { LogUtils } from "../../LogUtils";
-import { isArray } from "../../types/Array";
+import {
+    isArray,
+    isArrayOfOrUndefined,
+    isArrayOrUndefined,
+} from "../../types/Array";
+import {
+    isBoolean,
+    isBooleanOrUndefined,
+} from "../../types/Boolean";
 import {
     Enum,
     EnumType,
@@ -25,7 +37,14 @@ import {
     explainProperty,
 } from "../../types/explain";
 import { isFunction } from "../../types/Function";
-import { isObject } from "../../types/Object";
+import {
+    isNumber,
+    isNumberOrUndefined,
+} from "../../types/Number";
+import {
+    isObject,
+    isObjectOrUndefined,
+} from "../../types/Object";
 import {
     explainNoOtherKeysInDevelopment,
     hasNoOtherKeysInDevelopment,
@@ -33,11 +52,17 @@ import {
 import {
     explainRegularObject,
     isRegularObject,
+    isRegularObjectOrUndefined,
 } from "../../types/RegularObject";
 import {
     isString,
     isStringOrNumber,
+    isStringOrUndefined,
 } from "../../types/String";
+import {
+    TestCallback,
+    TestCallbackNonStandard,
+} from "../../types/TestCallback";
 import { BaseEntity } from "./BaseEntity";
 import { ChainOperation } from "./ChainOperation";
 import { DTO } from "./DTO";
@@ -1198,7 +1223,7 @@ export class EntityFactoryImpl<
         const immutable : boolean = !!(opts?.immutable);
 
         if (EntityFactoryImpl._entities.hasType(name)) {
-            throw new TypeError(`EntityFactoryImpl.createEntityType(): The entity by this name exists already`);
+            throw new TypeError(`EntityFactoryImpl.createEntityType(): The entity by this name exists already: ${name}`);
         }
 
         const staticMethods : readonly EntityMethod[] = this.getStaticMethods();
@@ -1285,17 +1310,120 @@ export class EntityFactoryImpl<
 
         }
 
+        const installMethods = (
+            method : ((this: FinalType, ...args: any) => any),
+            ...methodNames : readonly string[]
+        ) : void => {
+            forEach(
+                methodNames,
+                (methodName: string) : void => {
+                    if ( !has( FinalType.prototype, methodName ) ) {
+                        (FinalType.prototype as any)[methodName] = method;
+                    }
+                }
+            );
+        };
+
         forEach(
             properties,
             (item: EntityProperty) : void => {
                 const propertyName : string = item.getPropertyName();
-                const isArray : boolean = item.isArray();
+                const itemIsArray : boolean = item.isArray();
                 const types : readonly EntityVariableType[] = item.getTypes();
 
+                const hasJsonType : boolean = some(types, (type) => type === VariableType.JSON);
                 const hasEntityType : boolean = some(types, isEntityType);
 
-                const getterMethod = (
-                    isArray
+                const getterMethodNames : readonly string[] = item.getGetterNames();
+                const getterMethodName : string = getterMethodNames[0];
+
+                const dtoGetterMethodNames : readonly string[] = map(getterMethodNames, (item: string) : string => `${item}DTO`);
+                const dtoGetterMethodName : string = dtoGetterMethodNames[0];
+
+                const setterMethodNames : readonly string[] = immutable ? [] : item.getSetterNames();
+                const setterMethodName : string = setterMethodNames[0];
+
+                const hasPropertyMethodNames = hasJsonType ? [
+                    `has${upperFirst(propertyName)}Property`,
+                    `${propertyName}HasProperty`,
+                    `${propertyName}Has`,
+                ] : [];
+
+                const getPropertyMethodNames = hasJsonType ? [
+                    `get${upperFirst(propertyName)}Property`,
+                    `${propertyName}GetProperty`,
+                ] : [];
+
+                const getStringPropertyMethodNames = hasJsonType ? [
+                    `get${upperFirst(propertyName)}String`,
+                    `${propertyName}GetString`,
+                ] : [];
+
+                const setStringPropertyMethodNames = hasJsonType ? [
+                    `set${upperFirst(propertyName)}String`,
+                    `${propertyName}SetString`,
+                ] : [];
+
+
+                const getNumberPropertyMethodNames = hasJsonType ? [
+                    `get${upperFirst(propertyName)}Number`,
+                    `${propertyName}GetNumber`,
+                ] : [];
+
+                const setNumberPropertyMethodNames = hasJsonType ? [
+                    `set${upperFirst(propertyName)}Number`,
+                    `${propertyName}SetNumber`,
+                ] : [];
+                const setNumberPropertyMethodName = setNumberPropertyMethodNames[0];
+
+
+                const getBooleanPropertyMethodNames = hasJsonType ? [
+                    `get${upperFirst(propertyName)}Boolean`,
+                    `${propertyName}GetBoolean`,
+                ] : [];
+
+                const setBooleanPropertyMethodNames = hasJsonType ? [
+                    `set${upperFirst(propertyName)}Boolean`,
+                    `${propertyName}SetBoolean`,
+                ] : [];
+                const setBooleanPropertyMethodName = setBooleanPropertyMethodNames[0];
+
+
+                const getArrayPropertyMethodNames = hasJsonType ? [
+                    `get${upperFirst(propertyName)}Array`,
+                    `${propertyName}GetArray`,
+                ] : [];
+
+                const getArrayOfPropertyMethodNames = hasJsonType ? [
+                    `get${upperFirst(propertyName)}ArrayOf`,
+                    `${propertyName}GetArrayOf`,
+                ] : [];
+
+                const setArrayPropertyMethodNames = hasJsonType ? [
+                    `set${upperFirst(propertyName)}Array`,
+                    `${propertyName}SetArray`,
+                ] : [];
+                const setArrayPropertyMethodName = setArrayPropertyMethodNames[0];
+
+
+                const getObjectPropertyMethodNames = hasJsonType ? [
+                    `get${upperFirst(propertyName)}Object`,
+                    `${propertyName}GetObject`,
+                ] : [];
+
+                const setObjectPropertyMethodNames = hasJsonType ? [
+                    `set${upperFirst(propertyName)}Object`,
+                    `${propertyName}SetObject`,
+                ] : [];
+                const setObjectPropertyMethodName = setObjectPropertyMethodNames[0];
+
+                const addMethodNames = hasEntityType ? [
+                    `add${upperFirst(propertyName)}`,
+                ] : [];
+                const addMethodName : string | undefined = addMethodNames.length ? addMethodNames[0] : undefined;
+
+                const getterMethod = getterMethodNames?.length ? (
+                    itemIsArray
                         ? EntityFactoryImpl.createArrayPropertyGetter<D, any>(
                             propertyName,
                             types,
@@ -1304,12 +1432,202 @@ export class EntityFactoryImpl<
                             propertyName,
                             types,
                         )
-                );
+                ) : undefined;
+
+                const setterMethod = setterMethodNames?.length ? (
+                    itemIsArray
+                        ? EntityFactoryImpl.createArrayPropertySetter<D, any>(
+                            propertyName,
+                            types,
+                        )
+                        : EntityFactoryImpl.createPropertySetter<D, any>(
+                            propertyName,
+                            types,
+                        )
+                ) : undefined;
+
+                const addMethod = dtoGetterMethodName && setterMethodName && addMethodNames.length ? function addMethod (
+                    this: FinalType,
+                    newValues : any,
+                ) : any | undefined {
+                    const value : any = (this as any)[dtoGetterMethodName]();
+
+                    if (isEntity(newValues)) {
+                        return (this as any)[setterMethodName]({
+                            ...(value ? value : {}),
+                            ...newValues.getDTO(),
+                        });
+                    }
+
+                    if (isReadonlyJsonObject(newValues)) {
+                        return (this as any)[setterMethodName]({
+                            ...(value ? value : {}),
+                            ...newValues,
+                        });
+                    }
+
+                    throw new TypeError(`${name}.${addMethodName}(): The argument was not valid: ${LogUtils.stringifyValue(newValues)}`);
+
+                } : undefined;
+
+
+                const hasPropertyByKey = getterMethodName && getterMethod && hasPropertyMethodNames.length ? function hasPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                ) : boolean {
+                    const value : any = (this as any)[getterMethodName]();
+                    return value ? has(value, key) : false;
+                } : undefined;
+
+                const getPropertyByKey = getterMethodName && getterMethod && getPropertyMethodNames.length ? function getPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                ) : any | undefined {
+                    const value : any = (this as any)[getterMethodName]();
+                    return value ? value[key] : undefined;
+                } : undefined;
+
+                const setPropertyByKey = setterMethodName && getterMethodName ? function setPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                    newValue : any,
+                ) : any | undefined {
+                    const item : any = (this as any)[getterMethodName]();
+                    if (!isRegularObjectOrUndefined(item)) {
+                        throw new TypeError(`${name}.${getterMethodName}(): The property value was not regular object or undefined: ${LogUtils.stringifyValue(item)}`);
+                    }
+                    (this as any)[setterMethodName]({
+                        ...(item ? item : {}),
+                        [key]: newValue,
+                    });
+                    return this;
+                } : undefined;
+
+
+                const getStringPropertyByKey = getPropertyByKey && getStringPropertyMethodNames.length ? function getStringPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                ) : string | undefined {
+                    const value = getPropertyByKey.call(this, key);
+                    return isStringOrUndefined(value) ? value : `${value}`;
+                } : undefined;
+
+                const setStringPropertyByKey = setPropertyByKey && setStringPropertyMethodNames.length ? function setStringPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                    value : unknown,
+                ) : string | undefined {
+                    if (!isString(value)) {
+                        throw new TypeError(`${name}.${setterMethodName}(): The new property value was not a string: ${ LogUtils.stringifyValue(value) }`);
+                    }
+                    return setPropertyByKey.call(this, key, value);
+                } : undefined;
+
+
+                const getNumberPropertyByKey = getPropertyByKey && getNumberPropertyMethodNames.length ? function getNumberPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                ) : number | null | undefined {
+                    const value = getPropertyByKey.call(this, key);
+                    return isNumberOrUndefined(value) ? value : null;
+                } : undefined;
+
+                const setNumberPropertyByKey = setPropertyByKey && setNumberPropertyMethodNames.length ? function setNumberPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                    value : unknown,
+                ) : string | undefined {
+                    if (!isNumber(value)) {
+                        throw new TypeError(`${name}.${setNumberPropertyMethodName}(): The new property value was not a number: ${ LogUtils.stringifyValue(value) }`);
+                    }
+                    return setPropertyByKey.call(this, key, value);
+                } : undefined;
+
+
+                const getBooleanPropertyByKey = getPropertyByKey && getBooleanPropertyMethodNames.length ? function getBooleanPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                ) : boolean | null | undefined {
+                    const value = getPropertyByKey.call(this, key);
+                    return isBooleanOrUndefined(value) ? value : null;
+                } : undefined;
+
+                const setBooleanPropertyByKey = setPropertyByKey && setBooleanPropertyMethodNames.length ? function setBooleanPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                    value : unknown,
+                ) : string | undefined {
+                    if (!isBoolean(value)) {
+                        throw new TypeError(`${name}.${setBooleanPropertyMethodName}(): The new property value was not a boolean: ${ LogUtils.stringifyValue(value) }`);
+                    }
+                    return setPropertyByKey.call(this, key, value);
+                } : undefined;
+
+
+                const getArrayPropertyByKey = getPropertyByKey && getArrayPropertyMethodNames.length ? function getArrayPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                ) : readonly any[] | null | undefined {
+                    const value = getPropertyByKey.call(this, key);
+                    return isArrayOrUndefined(value) ? value : null;
+                } : undefined;
+
+                const getArrayOfPropertyByKey = getPropertyByKey && getArrayOfPropertyMethodNames.length ? function getArrayOfPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                    isItemOf : TestCallback,
+                ) : readonly any[] | null | undefined {
+                    const value = getPropertyByKey.call(this, key);
+                    return isArrayOfOrUndefined<any>(value, isItemOf) ? value : null;
+                } : undefined;
+
+                const setArrayPropertyByKey = setPropertyByKey && setArrayPropertyMethodNames.length ? function setArrayPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                    value : unknown,
+                ) : readonly any[] | undefined {
+                    if (!isArray(value)) {
+                        throw new TypeError(`${name}.${setArrayPropertyMethodName}(): The new property value was not an array: ${ LogUtils.stringifyValue(value) }`);
+                    }
+                    return setPropertyByKey.call(this, key, value);
+                } : undefined;
+
+
+                const getObjectPropertyByKey = getPropertyByKey && getObjectPropertyMethodNames.length ? function getObjectPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                ) : ReadonlyJsonObject | null | undefined {
+                    const value = getPropertyByKey.call(this, key);
+                    return isObjectOrUndefined(value) ? value : null;
+                } : undefined;
+
+                const setObjectPropertyByKey = setPropertyByKey && setObjectPropertyMethodNames.length ? function setObjectPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                    value : unknown,
+                ) : ReadonlyJsonObject | undefined {
+                    if (!isObject(value)) {
+                        throw new TypeError(`${name}.${setObjectPropertyMethodName}(): The new property value was not an object: ${ LogUtils.stringifyValue(value) }`);
+                    }
+                    return setPropertyByKey.call(this, key, value);
+                } : undefined;
+
+                const addObjectPropertyByKey = setPropertyByKey && setObjectPropertyMethodNames.length ? function addObjectPropertyByKey (
+                    this: FinalType,
+                    key : string,
+                    value : unknown,
+                ) : ReadonlyJsonObject | undefined {
+                    if (!isObject(value)) {
+                        throw new TypeError(`${name}.${setObjectPropertyMethodName}(): The new property value was not an object: ${ LogUtils.stringifyValue(value) }`);
+                    }
+                    return setPropertyByKey.call(this, key, value);
+                } : undefined;
+
 
                 const dtoGetterMethod = (
                     hasEntityType
                         ? (
-                            isArray
+                            itemIsArray
                                 ? EntityFactoryImpl.createArrayPropertyGetter<D, any>(
                                     propertyName,
                                     types,
@@ -1328,47 +1646,73 @@ export class EntityFactoryImpl<
                         : undefined
                 );
 
-                forEach(
-                    item.getGetterNames(),
-                    (methodName : string): void => {
 
-                        if (!has(FinalType.prototype, methodName)) {
-                            (FinalType.prototype as any)[methodName] = getterMethod;
-                        }
+                if (getterMethod && getterMethodNames.length) {
+                    installMethods(getterMethod, ...getterMethodNames);
+                }
 
-                        if (dtoGetterMethod) {
-                            const dtoMethodName = `${methodName}DTO`;
-                            if (!has(FinalType.prototype, dtoMethodName)) {
-                                (FinalType.prototype as any)[dtoMethodName] = dtoGetterMethod;
-                            }
-                        }
+                if (dtoGetterMethod && dtoGetterMethodNames.length) {
+                    installMethods(dtoGetterMethod, ...dtoGetterMethodNames);
+                }
 
-                    }
-                );
+                if (setterMethod && setterMethodNames.length) {
+                    installMethods(setterMethod, ...setterMethodNames);
+                }
 
-                if (!immutable) {
+                if (hasPropertyByKey && hasPropertyMethodNames.length) {
+                    installMethods(hasPropertyByKey, ...hasPropertyMethodNames );
+                }
 
-                    const setterMethod = (
-                        isArray
-                            ? EntityFactoryImpl.createArrayPropertySetter<D, any>(
-                                propertyName,
-                                types,
-                            )
-                            : EntityFactoryImpl.createPropertySetter<D, any>(
-                                propertyName,
-                                types,
-                            )
-                    );
+                if (getPropertyByKey && getPropertyMethodNames.length) {
+                    installMethods(getPropertyByKey, ...getPropertyMethodNames);
+                }
 
-                    forEach(
-                        item.getSetterNames(),
-                        (methodName : string): void => {
-                            if (!has(FinalType.prototype, methodName)) {
-                                (FinalType.prototype as any)[methodName] = setterMethod;
-                            }
-                        }
-                    );
+                if (getStringPropertyByKey && getStringPropertyMethodNames.length) {
+                    installMethods(getStringPropertyByKey, ...getStringPropertyMethodNames);
+                }
 
+                if (setStringPropertyByKey && setStringPropertyMethodNames.length) {
+                    installMethods(setStringPropertyByKey, ...setStringPropertyMethodNames);
+                }
+
+                if (getNumberPropertyByKey && getNumberPropertyMethodNames.length) {
+                    installMethods(getNumberPropertyByKey, ...getNumberPropertyMethodNames);
+                }
+
+                if (setNumberPropertyByKey && setNumberPropertyMethodNames.length) {
+                    installMethods(setNumberPropertyByKey, ...setNumberPropertyMethodNames);
+                }
+
+                if (getBooleanPropertyByKey && getBooleanPropertyMethodNames.length) {
+                    installMethods(getBooleanPropertyByKey, ...getBooleanPropertyMethodNames);
+                }
+
+                if (setBooleanPropertyByKey && setBooleanPropertyMethodNames.length) {
+                    installMethods(setBooleanPropertyByKey, ...setBooleanPropertyMethodNames);
+                }
+
+                if (getArrayPropertyByKey && getArrayPropertyMethodNames.length) {
+                    installMethods(getArrayPropertyByKey, ...getArrayPropertyMethodNames);
+                }
+
+                if (getArrayOfPropertyByKey && getArrayOfPropertyMethodNames.length) {
+                    installMethods(getArrayOfPropertyByKey, ...getArrayOfPropertyMethodNames);
+                }
+
+                if (setArrayPropertyByKey && setArrayPropertyMethodNames.length) {
+                    installMethods(setArrayPropertyByKey, ...setArrayPropertyMethodNames);
+                }
+
+                if (getObjectPropertyByKey && getObjectPropertyMethodNames.length) {
+                    installMethods(getObjectPropertyByKey, ...getObjectPropertyMethodNames);
+                }
+
+                if (setObjectPropertyByKey && setObjectPropertyMethodNames.length) {
+                    installMethods(setObjectPropertyByKey, ...setObjectPropertyMethodNames);
+                }
+
+                if (addMethod && addMethodNames.length) {
+                    installMethods(addMethod, ...addMethodNames);
                 }
 
             }

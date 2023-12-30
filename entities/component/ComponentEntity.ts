@@ -161,10 +161,6 @@ export class ComponentEntity
         return this.getContent();
     }
 
-    public hasMetaProperty (key: string) : boolean {
-        return has(this.getMeta(), key);
-    }
-
 }
 
 /**
