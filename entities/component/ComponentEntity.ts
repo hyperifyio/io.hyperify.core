@@ -7,6 +7,8 @@ import { isArray } from "../../types/Array";
 import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
 import { isString } from "../../types/String";
+import { Style } from "../style/Style";
+import { StyleDTO } from "../style/StyleDTO";
 import { StyleEntity } from "../style/StyleEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { VariableType } from "../types/VariableType";
@@ -159,6 +161,13 @@ export class ComponentEntity
      */
     public getContentDTO () : ComponentContent | undefined {
         return this.getContent();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public addStyles (style : Style | StyleEntity | StyleDTO | undefined) : this {
+        return this.addStyle(style);
     }
 
 }
