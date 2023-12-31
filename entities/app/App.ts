@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ReadonlyJsonObject } from "../../Json";
 import { Component } from "../component/Component";
@@ -87,11 +87,27 @@ export interface App
     ) : this;
 
     /**
+     * Set components.
+     *
+     * @param components
+     */
+    components (
+        components : readonly (ComponentDTO | ComponentEntity | Component)[]
+    ) : this;
+
+    /**
      * Add a component.
      *
      * @param component
      */
     addComponent (component : ComponentDTO | ComponentEntity | readonly (ComponentDTO | ComponentEntity)[] ) : this;
+
+    /**
+     * Add a component.
+     *
+     * @param component
+     */
+    addComponents (component : ComponentDTO | ComponentEntity | readonly (ComponentDTO | ComponentEntity)[] ) : this;
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -115,6 +131,15 @@ export interface App
      * @param views
      */
     setViews (
+        views : readonly (ViewDTO | ViewEntity | View)[]
+    ) : this;
+
+    /**
+     * Set views. Alias for .setViews().
+     *
+     * @param views
+     */
+    views (
         views : readonly (ViewDTO | ViewEntity | View)[]
     ) : this;
 
@@ -162,11 +187,29 @@ export interface App
     ) : this;
 
     /**
+     * Set routes.
+     *
+     * @param routes
+     */
+    routes (
+        routes : readonly (RouteDTO | RouteEntity | Route)[]
+    ) : this;
+
+    /**
      * Add a route.
      *
      * @param route
      */
     addRoute (
+        route : RouteDTO | RouteEntity | readonly (RouteDTO | RouteEntity)[]
+    ) : this;
+
+    /**
+     * Add a route.
+     *
+     * @param route
+     */
+    addRoutes (
         route : RouteDTO | RouteEntity | readonly (RouteDTO | RouteEntity)[]
     ) : this;
 

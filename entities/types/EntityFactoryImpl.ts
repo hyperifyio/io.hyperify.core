@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { filter } from "../../functions/filter";
 import { forEach } from "../../functions/forEach";
@@ -9,13 +9,17 @@ import { some } from "../../functions/some";
 import { uniq } from "../../functions/uniq";
 import { upperFirst } from "../../functions/upperFirst";
 import {
+    isReadonlyJsonAny,
+    isReadonlyJsonArray,
     isReadonlyJsonObject,
+    ReadonlyJsonAny,
     ReadonlyJsonObject,
 } from "../../Json";
 import { LogService } from "../../LogService";
 import { LogUtils } from "../../LogUtils";
 import {
     isArray,
+    isArrayOf,
     isArrayOfOrUndefined,
     isArrayOrUndefined,
 } from "../../types/Array";
@@ -113,6 +117,7 @@ const LOG = LogService.createLogger( 'EntityFactoryImpl' );
 
 export interface PropertyGetterOptions {
     readonly entityAsDTO ?: boolean;
+    readonly isOptional ?: boolean;
 }
 
 /**
@@ -352,8 +357,13 @@ export class EntityFactoryImpl<
     ) : GetterMethod<any, any, any> {
 
         const entityAsDTO = !!opts?.entityAsDTO;
+        const entityIsOptional = !!opts?.isOptional;
 
-        const iterator: ArrayMapMethod<EntityVariableValue, EntityVariableValue> = reduce(
+        if (!types.length) {
+            throw new TypeError(`EntityFactoryImpl.createArrayPropertyGetter(): There must be at least one type defined`);
+        }
+
+        const iterator: ArrayMapMethod<EntityVariableValue, EntityVariableValue> | undefined = reduce(
             types,
             (
                 prev: ArrayMapMethod<EntityVariableValue, EntityVariableValue> | undefined,
@@ -384,13 +394,34 @@ export class EntityFactoryImpl<
 
             },
             undefined
-        ) ?? ((item : any) : any => item);
+        );
+
+        if (!iterator) {
+            throw new TypeError(`EntityFactoryImpl.createArrayPropertyGetter(): Could not create array iterator`);
+        }
+
+        if ( entityIsOptional ) {
+            return function optionalArrayGetterMethod (
+                this: T,
+            ) : EntityVariableValue | null | undefined {
+                const list = this._getPropertyValue(propertyName);
+                if (isArrayOrUndefined(list)) {
+                    return list ? map(list, (item) => iterator(item)) : undefined;
+                } else {
+                    return null;
+                }
+            };
+        }
 
         return function arrayGetterMethod (
             this: T,
-        ) : any {
+        ) : EntityVariableValue | null | undefined {
             const list = this._getPropertyValue(propertyName);
-            return list ? map(list, (item) => iterator(item)) : undefined;
+            if (isArrayOrUndefined(list)) {
+                return list ? map(list, (item) => iterator(item)) : [];
+            } else {
+                return null;
+            }
         };
 
     }
@@ -492,7 +523,10 @@ export class EntityFactoryImpl<
     ): ArrayMapMethod<EntityVariableValue, EntityVariableValue> {
         const entityAsDTO = !!opts?.entityAsDTO;
         if ( isEntityType(Type) && !entityAsDTO ) {
-            return (item : EntityVariableValue) : EntityVariableValue => Type.isDTO(item) ? Type.createFromDTO(item) : undefined;
+            return (item : EntityVariableValue) : EntityVariableValue => {
+                console.log(`data = `, item);
+                return Type.isDTO(item) ? Type.createFromDTO(item) : null;
+            };
         }
         return (item : EntityVariableValue) : EntityVariableValue => item;
     }
@@ -534,6 +568,9 @@ export class EntityFactoryImpl<
                 }
             ));
 
+            /**
+             * These are entity types that can be delivered from other type using the create method (e.g. string, number, etc.).
+             */
             const deliverableEntityTypes: EntityVariableType[] = uniq(reduce(
                 entityTypesOnly,
                 (prev : EntityVariableType[], item : EntityType<DTO, Entity<DTO>>) : EntityVariableType[] => {
@@ -589,7 +626,9 @@ export class EntityFactoryImpl<
                 ) as IsOurEntityCallback
             ) : undefined;
 
-            const isOurDTO : IsOurEntityCallback | undefined = entityTypesOnly.length ? (
+            type IsOurDTOCallback = (value: unknown) => value is DTO;
+
+            const isOurDTO : IsOurDTOCallback | undefined = entityTypesOnly.length ? (
                 this._typeCheckFactory.createChainedTypeCheckFunction(
                     ChainOperation.OR,
                     entityTypesOnly,
@@ -700,13 +739,13 @@ export class EntityFactoryImpl<
                         value: unknown
                     ) : T {
                         if ( isOurEntity(value) ) {
-                            return this._setPropertyValue( propertyName, value.getDTO() );
+                            return this._setPropertyValue( propertyName, value.getDTO() as unknown as ReadonlyJsonObject );
                         } else if ( isOurDTO(value) ) {
-                            return this._setPropertyValue( propertyName, value );
+                            return this._setPropertyValue( propertyName, value as unknown as ReadonlyJsonObject );
                         } else if ( isDeliverableEntity(value) ) {
                             return deliverableEntityCallback.call(this, value);
                         } else if ( isOtherTypes(value) ) {
-                            return this._setPropertyValue( propertyName, value );
+                            return this._setPropertyValue( propertyName, value as unknown as ReadonlyJsonObject );
                         } else {
                             throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
                         }
@@ -718,11 +757,11 @@ export class EntityFactoryImpl<
                     value: unknown
                 ) : T {
                     if ( isOurEntity(value) ) {
-                        return this._setPropertyValue( propertyName, value.getDTO() );
+                        return this._setPropertyValue( propertyName, value.getDTO() as unknown as ReadonlyJsonObject );
                     } else if ( isOurDTO(value) ) {
-                        return this._setPropertyValue( propertyName, value );
+                        return this._setPropertyValue( propertyName, value as unknown as ReadonlyJsonObject );
                     } else if ( isOtherTypes(value) ) {
-                        return this._setPropertyValue( propertyName, value );
+                        return this._setPropertyValue( propertyName, value as unknown as ReadonlyJsonObject );
                     } else {
                         throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
                     }
@@ -735,7 +774,7 @@ export class EntityFactoryImpl<
                     value: unknown
                 ) : T {
                     if ( isOtherTypes(value) ) {
-                        return this._setPropertyValue( propertyName, value );
+                        return this._setPropertyValue( propertyName, value as unknown as ReadonlyJsonObject );
                     } else {
                         throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
                     }
@@ -750,9 +789,9 @@ export class EntityFactoryImpl<
                         value: unknown
                     ) : T {
                         if ( isOurEntity(value) ) {
-                            return this._setPropertyValue( propertyName, value.getDTO() );
+                            return this._setPropertyValue( propertyName, value.getDTO() as unknown as ReadonlyJsonObject );
                         } else if ( isOurDTO(value) ) {
-                            return this._setPropertyValue( propertyName, value );
+                            return this._setPropertyValue( propertyName, value as unknown as ReadonlyJsonObject );
                         } else if (isDeliverableEntity(value)) {
                             return deliverableEntityCallback.call(this, value);
                         } else {
@@ -766,9 +805,9 @@ export class EntityFactoryImpl<
                     value: unknown
                 ) : T {
                     if ( isOurEntity(value) ) {
-                        return this._setPropertyValue( propertyName, value.getDTO() );
+                        return this._setPropertyValue( propertyName, value.getDTO() as unknown as ReadonlyJsonObject );
                     } else if ( isOurDTO(value) ) {
-                        return this._setPropertyValue( propertyName, value );
+                        return this._setPropertyValue( propertyName, value as unknown as ReadonlyJsonObject );
                     } else {
                         throw new TypeError(`${this.getEntityType().getEntityName()}.${methodName}: Invalid argument provided: ${LogUtils.stringifyValue(value)}`);
                     }
@@ -829,17 +868,19 @@ export class EntityFactoryImpl<
         ) : undefined;
 
         if ( isOurEntity ) {
-            return function entitySetterMethod (
+            return function arrayEntitySetterMethod (
                 this: T,
                 value: unknown
             ) : T {
-                const list : unknown[] = map(
+                const list : ReadonlyJsonAny[] = map(
                     isArray(value) ? value : [ value ],
-                    (item) : any => {
+                    (item : unknown) : ReadonlyJsonAny => {
                         if ( isOurEntity(item) ) {
-                            return item.getDTO();
-                        } else {
+                            return item.getDTO() as unknown as ReadonlyJsonObject;
+                        } else if (isReadonlyJsonAny(item)) {
                             return item;
+                        } else {
+                            throw new TypeError(`${this.getEntityType().getEntityName()}.${propertyName}: Invalid argument provided: ${LogUtils.stringifyValue(item)}`);
                         }
                     }
                 );
@@ -847,7 +888,7 @@ export class EntityFactoryImpl<
             };
         }
 
-        return function setterMethod (
+        return function arraySetterMethod (
             this: T,
             value: unknown
         ) : T {
@@ -855,7 +896,13 @@ export class EntityFactoryImpl<
                 propertyName,
                 map(
                     isArray(value) ? value : [ value ],
-                    (item: unknown) : unknown => item
+                    (item: unknown) : ReadonlyJsonAny => {
+                        if (isReadonlyJsonAny(item)) {
+                            return item;
+                        } else {
+                            throw new TypeError(`${this.getEntityType().getEntityName()}.${propertyName}: Invalid argument provided: ${LogUtils.stringifyValue(item)}`);
+                        }
+                    }
                 )
             );
         };
@@ -992,11 +1039,23 @@ export class EntityFactoryImpl<
                     properties,
                     (item : EntityProperty): TypeCheckFn => {
                         const propertyName = item.getPropertyName();
+                        const itemIsArray = item.isArray();
+                        const itemIsOptional = item.isOptional();
+
                         const isType = EntityFactoryImpl._typeCheckFactory.createChainedTypeCheckFunction(
                             ChainOperation.OR,
                             item.getTypes(),
                             true,
                         );
+
+                        if (itemIsArray && itemIsOptional) {
+                            return (value: unknown) : boolean => isArrayOfOrUndefined<any>((value as ReadonlyJsonObject)[propertyName], isType);
+                        }
+
+                        if (itemIsArray) {
+                            return (value: unknown) : boolean => isArrayOf<any>((value as ReadonlyJsonObject)[propertyName], isType);
+                        }
+
                         return (value: unknown) : boolean => isType((value as ReadonlyJsonObject)[propertyName]);
                     }
                 )
@@ -1327,6 +1386,7 @@ export class EntityFactoryImpl<
             (item: EntityProperty) : void => {
                 const propertyName : string = item.getPropertyName();
                 const itemIsArray : boolean = item.isArray();
+                const itemIsOptional : boolean = item.isOptional();
                 const types : readonly EntityVariableType[] = item.getTypes();
 
                 const hasJsonType : boolean = some(types, (type) => type === VariableType.JSON);
@@ -1425,6 +1485,7 @@ export class EntityFactoryImpl<
                         ? EntityFactoryImpl.createArrayPropertyGetter<D, any>(
                             propertyName,
                             types,
+                            { isOptional : itemIsOptional }
                         )
                         : EntityFactoryImpl.createPropertyGetter<D, any>(
                             propertyName,
@@ -1444,24 +1505,38 @@ export class EntityFactoryImpl<
                         )
                 ) : undefined;
 
-                const addMethod = dtoGetterMethodName && setterMethodName && addMethodNames.length ? function addMethod (
+                const addToEntityMethod = dtoGetterMethodName && setterMethodName && addMethodNames.length && !itemIsArray ? function addToEntityMethod (
                     this: FinalType,
                     newValues : any,
                 ) : any | undefined {
                     const value : any = (this as any)[dtoGetterMethodName]();
-
-                    if (isEntity(newValues)) {
-                        return (this as any)[setterMethodName]({
-                            ...(value ? value : {}),
-                            ...newValues.getDTO(),
-                        });
-                    }
 
                     if (isReadonlyJsonObject(newValues)) {
                         return (this as any)[setterMethodName]({
                             ...(value ? value : {}),
                             ...newValues,
                         });
+                    }
+
+                    throw new TypeError(`${name}.${addMethodName}(): The argument was not valid: ${LogUtils.stringifyValue(newValues)}`);
+
+                } : undefined;
+
+                const addToArrayMethod = dtoGetterMethodName && setterMethodName && addMethodNames.length && itemIsArray ? function addToArrayMethod (
+                    this: FinalType,
+                    newValues : unknown,
+                ) : any | undefined {
+                    const values : any[] = (this as any)[dtoGetterMethodName]();
+
+                    if (!isArray(newValues)) {
+                        newValues = [newValues];
+                    }
+
+                    if (isReadonlyJsonArray(newValues)) {
+                        return (this as any)[setterMethodName]([
+                            ...(isArray(values) ? values : []),
+                            ...newValues,
+                        ]);
                     }
 
                     throw new TypeError(`${name}.${addMethodName}(): The argument was not valid: ${LogUtils.stringifyValue(newValues)}`);
@@ -1630,7 +1705,8 @@ export class EntityFactoryImpl<
                                     propertyName,
                                     types,
                                     {
-                                        entityAsDTO: true
+                                        entityAsDTO: true,
+                                        isOptional: itemIsOptional,
                                     }
                                 )
                                 : EntityFactoryImpl.createPropertyGetter<D, any>(
@@ -1709,8 +1785,12 @@ export class EntityFactoryImpl<
                     installMethods(setObjectPropertyByKey, ...setObjectPropertyMethodNames);
                 }
 
-                if (addMethod && addMethodNames.length) {
-                    installMethods(addMethod, ...addMethodNames);
+                if (addToEntityMethod && addMethodNames.length) {
+                    installMethods(addToEntityMethod, ...addMethodNames);
+                }
+
+                if (addToArrayMethod && addMethodNames.length) {
+                    installMethods(addToArrayMethod, ...addMethodNames);
                 }
 
             }

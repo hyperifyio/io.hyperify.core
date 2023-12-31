@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Heusala Group Oy <info@hg.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { isString } from "../../types/String";
 import { ColorEntity } from "../color/ColorEntity";
@@ -22,6 +22,13 @@ describe('ComponentEntity', () => {
 
     });
 
+    describe('#isDTO', () => {
+
+        it('can test a DTO with name', () => {
+            expect( ComponentEntity.isDTO({name : 'Test'}) ).toBe(true);
+        });
+
+    });
 
     describe('.getDTO', () => {
 

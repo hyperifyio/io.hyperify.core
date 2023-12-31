@@ -1,6 +1,8 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { ComponentDTO } from "../component/ComponentDTO";
 import { ComponentEntity } from "../component/ComponentEntity";
+import { RouteDTO } from "../route/RouteDTO";
 import { RouteEntity } from "../route/RouteEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { VariableType } from "../types/VariableType";
@@ -48,6 +50,14 @@ export class AppEntity
 
     public addView (view : ViewDTO | ViewEntity | readonly (ViewDTO | ViewEntity)[]) : this {
         return this.addViews(view);
+    }
+
+    public addComponent (component : ComponentDTO | ComponentEntity | readonly (ComponentDTO | ComponentEntity)[]) : this {
+        return this.addComponents(component);
+    }
+
+    public addRoute (route : RouteDTO | RouteEntity | readonly (RouteDTO | RouteEntity)[]) : this {
+        return this.addRoutes(route);
     }
 
 }

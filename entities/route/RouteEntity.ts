@@ -39,22 +39,31 @@ export class RouteEntity
 
 
     public static create () : RouteEntity;
-
-    public static create (
-        route : RouteDTO,
-    ) : RouteEntity;
-
-    public static create (
-        name : string,
-        path ?: string,
-    ): RouteEntity
+    public static create ( name : string ): RouteEntity;
+    public static create ( name : string, path : string ): RouteEntity;
+    public static create ( route : RouteDTO ) : RouteEntity;
 
     public static create (
         name ?: RouteDTO | string | undefined,
         path ?: string | undefined,
     ) : RouteEntity {
-        return new RouteEntity(name, path);
+        if (name === undefined && path === undefined) {
+            return new RouteEntity();
+        } else if (isString(name) && path === undefined) {
+            return new RouteEntity(name, '*');
+        } else if (isString(name) && isString(path)) {
+            return new RouteEntity(name, path);
+        } else if( path === undefined && isRouteDTO(name) ) {
+            return new RouteEntity(name);
+        } else {
+            throw new TypeError(`RouteEntity.create(name, path): Incorrect arguments: ${name}, ${path}`);
+        }
     }
+
+    public constructor ();
+    public constructor (route : RouteDTO);
+    public constructor (name : string);
+    public constructor (name : string, path: string);
 
     public constructor (
         name ?: RouteDTO | string | undefined,

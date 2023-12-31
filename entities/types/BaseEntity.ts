@@ -1,9 +1,10 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { has } from "../../functions/has";
 import {
     isReadonlyJsonAny,
     isReadonlyJsonObject,
+    ReadonlyJsonAny,
     ReadonlyJsonObject,
 } from "../../Json";
 import { DTO } from "./DTO";
@@ -29,7 +30,7 @@ export abstract class BaseEntity<
 
     protected _setPropertyValue (
         propertyName : string,
-        value : unknown
+        value : ReadonlyJsonAny | undefined
     ) : this {
         if ( isReadonlyJsonAny(value) || value === undefined ) {
             this._dto = {
@@ -44,7 +45,7 @@ export abstract class BaseEntity<
 
     protected _getPropertyValue (
         propertyName : string,
-    ) : any | undefined {
+    ) : ReadonlyJsonAny | undefined {
         if (has(this._dto, propertyName)) {
             return (this._dto as any)[propertyName];
         } else {
