@@ -23,6 +23,7 @@ export function createLinkButtonComponent (
                                BorderEntity.create()
                                            .setWidth(1)
                                            .setStyle(BorderStyle.SOLID)
+                                           .getDTO()
                            )
             )
             .getDTO()
