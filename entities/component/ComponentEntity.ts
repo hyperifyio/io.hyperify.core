@@ -1,6 +1,5 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { has } from "../../functions/has";
 import { map } from "../../functions/map";
 import { LogUtils } from "../../LogUtils";
 import { isArray } from "../../types/Array";

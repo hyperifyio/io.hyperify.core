@@ -125,6 +125,13 @@ export interface App
      */
     addView (view : ViewDTO | ViewEntity | readonly (ViewDTO | ViewEntity)[]) : this;
 
+    /**
+     * Add a view.
+     *
+     * @param view
+     */
+    addViews (view : ViewDTO | ViewEntity | readonly (ViewDTO | ViewEntity)[]) : this;
+
 
     ////////////////////////////////////////////////////////////////////////////
     //////////////////////////////  route methods  /////////////////////////////

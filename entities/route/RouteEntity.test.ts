@@ -1,9 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { RouteEntity } from "./RouteEntity";
-import { UnitType } from "../types/UnitType";
-import {result} from "lodash";
-import controller from "../../../node/pipeline/pipeline/controllers/types/Controller";
 
 describe('RouteEntity', () => {
 

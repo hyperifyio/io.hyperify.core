@@ -4,6 +4,7 @@ import { ComponentEntity } from "../component/ComponentEntity";
 import { RouteEntity } from "../route/RouteEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { VariableType } from "../types/VariableType";
+import { ViewDTO } from "../view/ViewDTO";
 import { ViewEntity } from "../view/ViewEntity";
 import { App } from "./App";
 import { AppDTO } from "./AppDTO";
@@ -43,6 +44,10 @@ export class AppEntity
         dto ?: AppDTO,
     ) {
         super(dto);
+    }
+
+    public addView (view : ViewDTO | ViewEntity | readonly (ViewDTO | ViewEntity)[]) : this {
+        return this.addViews(view);
     }
 
 }

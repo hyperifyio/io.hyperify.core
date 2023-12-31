@@ -38,7 +38,6 @@ import {
 } from "../border/BorderEntity";
 import {
     ColorEntity,
-    isColorEntity,
 } from "../color/ColorEntity";
 import {
     FontEntity,

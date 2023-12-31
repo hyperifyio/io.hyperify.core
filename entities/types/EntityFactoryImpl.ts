@@ -10,7 +10,6 @@ import { uniq } from "../../functions/uniq";
 import { upperFirst } from "../../functions/upperFirst";
 import {
     isReadonlyJsonObject,
-    ReadonlyJsonAny,
     ReadonlyJsonObject,
 } from "../../Json";
 import { LogService } from "../../LogService";
@@ -61,7 +60,6 @@ import {
 } from "../../types/String";
 import {
     TestCallback,
-    TestCallbackNonStandard,
 } from "../../types/TestCallback";
 import { BaseEntity } from "./BaseEntity";
 import { ChainOperation } from "./ChainOperation";
