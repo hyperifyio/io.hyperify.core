@@ -2,8 +2,8 @@
 
 import { MatrixUserId,  isMatrixUserId } from "../../core/MatrixUserId";
 import { MatrixRoomJoinedMembersRoomMemberDTO,  isMatrixRoomJoinedMembersRoomMemberDTO } from "./types/MatrixRoomJoinedMembersRoomMemberDTO";
-import { isRegularObject, isRegularObjectOf } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isRegularObject, isRegularObjectOf } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 export interface MatrixRoomJoinedMembersDTO {
     readonly joined: {[P in MatrixUserId]: MatrixRoomJoinedMembersRoomMemberDTO}

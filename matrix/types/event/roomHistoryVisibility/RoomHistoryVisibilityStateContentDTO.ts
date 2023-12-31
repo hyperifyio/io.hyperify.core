@@ -1,9 +1,9 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { isMatrixHistoryVisibility, MatrixHistoryVisibility } from "./MatrixHistoryVisibility";
-import { ReadonlyJsonObject } from "../../../../../Json";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { ReadonlyJsonObject } from "../../../../Json";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 export interface RoomHistoryVisibilityStateContentDTO  extends ReadonlyJsonObject {
     readonly history_visibility : MatrixHistoryVisibility;

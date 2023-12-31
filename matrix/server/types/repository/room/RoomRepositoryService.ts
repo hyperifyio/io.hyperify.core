@@ -1,16 +1,16 @@
 // Copyright (c) 2021-2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { LogService } from "../../../../../../LogService";
-import { Observer, ObserverCallback, ObserverDestructor } from "../../../../../../Observer";
-import { SimpleRepositoryService } from "../../../../../../simpleRepository/types/SimpleRepositoryService";
+import { LogService } from "../../../../../LogService";
+import { Observer, ObserverCallback, ObserverDestructor } from "../../../../../Observer";
+import { SimpleRepositoryService } from "../../../../../simpleRepository/types/SimpleRepositoryService";
 import { StoredRoomRepositoryItem } from "./StoredRoomRepositoryItem";
-import { SimpleRepositoryServiceEvent } from "../../../../../../simpleRepository/types/SimpleRepositoryServiceEvent";
-import { SimpleSharedClientService } from "../../../../../../simpleRepository/types/SimpleSharedClientService";
-import { SimpleRepository } from "../../../../../../simpleRepository/types/SimpleRepository";
-import { SimpleRepositoryInitializer } from "../../../../../../simpleRepository/types/SimpleRepositoryInitializer";
+import { SimpleRepositoryServiceEvent } from "../../../../../simpleRepository/types/SimpleRepositoryServiceEvent";
+import { SimpleSharedClientService } from "../../../../../simpleRepository/types/SimpleSharedClientService";
+import { SimpleRepository } from "../../../../../simpleRepository/types/SimpleRepository";
+import { SimpleRepositoryInitializer } from "../../../../../simpleRepository/types/SimpleRepositoryInitializer";
 import { RoomRepositoryItem, parseRoomRepositoryItem, toStoredRoomRepositoryItem } from "./RoomRepositoryItem";
-import { SimpleRepositoryEntry } from "../../../../../../simpleRepository/types/SimpleRepositoryEntry";
-import { map } from "../../../../../../functions/map";
+import { SimpleRepositoryEntry } from "../../../../../simpleRepository/types/SimpleRepositoryEntry";
+import { map } from "../../../../../functions/map";
 
 const LOG = LogService.createLogger('RoomRepositoryService');
 

@@ -1,8 +1,8 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { isString } from "../../../../types/String";
-import { isRegularObject } from "../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
+import { isString } from "../../../types/String";
+import { isRegularObject } from "../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../types/OtherKeys";
 
 /**
  * @see https://github.com/heusalagroup/hghs/issues/1

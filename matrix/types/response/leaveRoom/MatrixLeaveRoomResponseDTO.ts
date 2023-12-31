@@ -1,7 +1,7 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 export interface MatrixLeaveRoomResponseDTO {
 }

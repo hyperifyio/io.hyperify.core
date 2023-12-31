@@ -6,9 +6,9 @@ import {
 } from "./MatrixIdentityServerInformationDTO";
 import { isMatrixHomeServerDTO, MatrixHomeServerDTO } from "./MatrixHomeServerDTO";
 import { MatrixType } from "../../../core/MatrixType";
-import { isUndefined } from "../../../../../../types/undefined";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
+import { isUndefined } from "../../../../../types/undefined";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
 
 export interface MatrixDiscoveryInformationDTO {
     readonly [MatrixType.M_HOMESERVER]: MatrixHomeServerDTO;

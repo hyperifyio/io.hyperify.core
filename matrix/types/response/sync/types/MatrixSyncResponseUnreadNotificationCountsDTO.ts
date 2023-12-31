@@ -1,8 +1,8 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { isInteger } from "../../../../../../types/Number";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
+import { isInteger } from "../../../../../types/Number";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
 
 export interface MatrixSyncResponseUnreadNotificationCountsDTO {
     readonly highlight_count    : number;

@@ -1,12 +1,12 @@
-// Copyright (c) 2021 Sendanor. All rights reserved.
+// Copyright (c) 2021-2023 Sendanor. All rights reserved.
 
-import { concat } from "../../functions/concat";
-import { forEach } from "../../functions/forEach";
-import { Observer,  ObserverCallback, ObserverDestructor } from "../../Observer";
-import { RequestClientImpl } from "../../RequestClientImpl";
-import { LogService } from "../../LogService";
-import { JsonAny } from "../../Json";
-import { JsonAny as Json, isJsonObject, JsonObject } from "../../Json";
+import { concat } from "../functions/concat";
+import { forEach } from "../functions/forEach";
+import { Observer,  ObserverCallback, ObserverDestructor } from "../Observer";
+import { RequestClientImpl } from "../RequestClientImpl";
+import { LogService } from "../LogService";
+import { JsonAny } from "../Json";
+import { JsonAny as Json, isJsonObject, JsonObject } from "../Json";
 import { createMatrixPasswordLoginRequestDTO, MatrixPasswordLoginRequestDTO } from "./types/request/passwordLogin/MatrixPasswordLoginRequestDTO";
 import { createMatrixTextMessageDTO, MatrixTextMessageDTO } from "./types/message/textMessage/MatrixTextMessageDTO";
 import { MatrixType } from "./types/core/MatrixType";
@@ -14,8 +14,8 @@ import { isMatrixLoginResponseDTO } from "./types/response/login/MatrixLoginResp
 import { MatrixCreateRoomDTO } from "./types/request/createRoom/MatrixCreateRoomDTO";
 import { MatrixCreateRoomResponseDTO,  isMatrixCreateRoomResponseDTO } from "./types/response/createRoom/MatrixCreateRoomResponseDTO";
 import { isGetDirectoryRoomAliasResponseDTO } from "./types/response/directoryRoomAlias/GetDirectoryRoomAliasResponseDTO";
-import { RequestError } from "../../request/types/RequestError";
-import { RequestStatus } from "../../request/types/RequestStatus";
+import { RequestError } from "../request/types/RequestError";
+import { RequestStatus } from "../request/types/RequestStatus";
 import { MatrixSyncPresence } from "./types/request/sync/types/MatrixSyncPresence";
 import { MatrixSyncResponseDTO,
     explainMatrixSyncResponseDTO,
@@ -46,8 +46,8 @@ import { isMatrixErrorDTO } from "./types/response/error/MatrixErrorDTO";
 import { MatrixErrorCode } from "./types/response/error/types/MatrixErrorCode";
 import { SynapseRegisterResponseDTO,  isSynapseRegisterResponseDTO } from "./types/synapse/SynapseRegisterResponseDTO";
 import { SynapseRegisterRequestDTO } from "./types/synapse/SynapseRegisterRequestDTO";
-import { VoidCallback } from "../../interfaces/callbacks";
-import { LogLevel } from "../../types/LogLevel";
+import { VoidCallback } from "../interfaces/callbacks";
+import { LogLevel } from "../types/LogLevel";
 import {
     MATRIX_AUTHORIZATION_HEADER_NAME,
     MATRIX_CREATE_ROOM_URL,
@@ -67,14 +67,14 @@ import {
     MatrixSyncQueryParams,
     SYNAPSE_REGISTER_URL
 } from "./constants/matrix-routes";
-import { AuthorizationUtils } from "../../AuthorizationUtils";
+import { AuthorizationUtils } from "../AuthorizationUtils";
 import { isMatrixWhoAmIResponseDTO, MatrixWhoAmIResponseDTO } from "./types/response/whoami/MatrixWhoAmIResponseDTO";
 import { createMatrixIdentifierDTO } from "./types/request/login/types/MatrixIdentifierDTO";
 import { GetRoomStateByTypeResponseDTO, isGetRoomStateByTypeResponseDTO } from "./types/response/getRoomStateByType/GetRoomStateByTypeResponseDTO";
 import { SetRoomStateByTypeRequestDTO } from "./types/request/setRoomStateByType/SetRoomStateByTypeRequestDTO";
-import { SimpleRepositoryClient } from "../../simpleRepository/types/SimpleRepositoryClient";
-import { isString } from "../../types/String";
-import { keys } from "../../functions/keys";
+import { SimpleRepositoryClient } from "../simpleRepository/types/SimpleRepositoryClient";
+import { isString } from "../types/String";
+import { keys } from "../functions/keys";
 
 const LOG = LogService.createLogger('SimpleMatrixClient');
 

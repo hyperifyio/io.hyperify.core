@@ -10,12 +10,12 @@ import { MatrixRoomPowerLevelsEventDTO, isMatrixPowerLevelEventContentDTOOrUndef
 import { MatrixInvite3PidDTO } from "./types/MatrixInvite3PidDTO";
 import { MatrixUserId, isMatrixUserId, explainMatrixUserId } from "../../core/MatrixUserId";
 import { explainMatrixRoomVersionOrUndefined, isMatrixRoomVersionOrUndefined, MatrixRoomVersion } from "../../MatrixRoomVersion";
-import { explain, explainProperty } from "../../../../../types/explain";
-import { explainBooleanOrUndefined, isBooleanOrUndefined } from "../../../../../types/Boolean";
-import { explainStringOrUndefined, isStringOrUndefined } from "../../../../../types/String";
-import { explainRegularObject, isRegularObject } from "../../../../../types/RegularObject";
-import { explainNoOtherKeys, hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
-import { explainReadonlyArrayOfOrUndefined, isReadonlyArrayOfOrUndefined } from "../../../../../types/Array";
+import { explain, explainProperty } from "../../../../types/explain";
+import { explainBooleanOrUndefined, isBooleanOrUndefined } from "../../../../types/Boolean";
+import { explainStringOrUndefined, isStringOrUndefined } from "../../../../types/String";
+import { explainRegularObject, isRegularObject } from "../../../../types/RegularObject";
+import { explainNoOtherKeys, hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
+import { explainReadonlyArrayOfOrUndefined, isReadonlyArrayOfOrUndefined } from "../../../../types/Array";
 
 export interface MatrixCreateRoomDTO {
 

@@ -12,12 +12,12 @@ import { MatrixSyncResponseAccountDataDTO,
     getEventsFromMatrixSyncResponseAccountDataDTO,
     isMatrixSyncResponseAccountDataDTO
 } from "./MatrixSyncResponseAccountDataDTO";
-import { concat } from "../../../../../../functions/concat";
+import { concat } from "../../../../../functions/concat";
 import { MatrixSyncResponseEventDTO } from "./MatrixSyncResponseEventDTO";
 import { MatrixSyncResponseRoomEventDTO } from "./MatrixSyncResponseRoomEventDTO";
 import { MatrixSyncResponseStateEventDTO } from "./MatrixSyncResponseStateEventDTO";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
 
 export interface MatrixSyncResponseLeftRoomDTO {
     readonly state        : MatrixSyncResponseStateDTO;

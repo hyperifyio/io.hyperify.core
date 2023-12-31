@@ -2,9 +2,9 @@
 
 import { isRoomMembershipType, RoomMembershipType } from "./RoomMembershipType";
 import { isMatrixRoomId, MatrixRoomId } from "../../core/MatrixRoomId";
-import { ReadonlyJsonObject } from "../../../../../Json";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { ReadonlyJsonObject } from "../../../../Json";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 export interface RoomJoinRulesAllowConditionDTO extends ReadonlyJsonObject {
     readonly type    : RoomMembershipType;

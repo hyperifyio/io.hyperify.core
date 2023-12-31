@@ -1,11 +1,11 @@
 // Copyright (c) 2021-2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { SimpleMatrixClient } from "./SimpleMatrixClient";
-import { LogService } from "../../LogService";
-import { Observer, ObserverCallback } from "../../Observer";
+import { LogService } from "../LogService";
+import { Observer, ObserverCallback } from "../Observer";
 import { DEFAULT_IO_SERVER_HOSTNAME } from "./constants/matrix-backend";
-import { SimpleSharedClientService, SharedClientServiceDestructor} from "../../simpleRepository/types/SimpleSharedClientService";
-import { SimpleSharedClientServiceEvent } from "../../simpleRepository/types/SimpleSharedClientServiceEvent";
+import { SimpleSharedClientService, SharedClientServiceDestructor} from "../simpleRepository/types/SimpleSharedClientService";
+import { SimpleSharedClientServiceEvent } from "../simpleRepository/types/SimpleSharedClientServiceEvent";
 
 const LOG = LogService.createLogger('MatrixSharedClientService');
 

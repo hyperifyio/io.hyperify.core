@@ -2,9 +2,9 @@
 
 import { MatrixRoomId,  isMatrixRoomId } from "../../core/MatrixRoomId";
 import { MatrixRoomAlias,  isMatrixRoomAlias } from "../../core/MatrixRoomAlias";
-import { isUndefined } from "../../../../../types/undefined";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isUndefined } from "../../../../types/undefined";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 export interface MatrixCreateRoomResponseDTO {
     readonly room_id     : MatrixRoomId;

@@ -1,10 +1,10 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { MatrixErrorCode,  isMatrixErrorCode } from "./types/MatrixErrorCode";
-import { isString } from "../../../../../types/String";
-import { isNumberOrUndefined } from "../../../../../types/Number";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isString } from "../../../../types/String";
+import { isNumberOrUndefined } from "../../../../types/Number";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 export interface MatrixErrorDTO {
     readonly errcode         : MatrixErrorCode;

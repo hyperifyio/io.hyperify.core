@@ -3,12 +3,12 @@
 
 import { MatrixPreviousRoomDTO,  isMatrixPreviousRoomDTO } from "./types/MatrixPreviousRoomDTO";
 import { MatrixType } from "../../core/MatrixType";
-import { isUndefined } from "../../../../../types/undefined";
-import { explainNot, explainOk, explainOr } from "../../../../../types/explain";
-import { isBooleanOrUndefined } from "../../../../../types/Boolean";
-import { isString, isStringOrUndefined } from "../../../../../types/String";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isUndefined } from "../../../../types/undefined";
+import { explainNot, explainOk, explainOr } from "../../../../types/explain";
+import { isBooleanOrUndefined } from "../../../../types/Boolean";
+import { isString, isStringOrUndefined } from "../../../../types/String";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 export interface MatrixRoomCreateEventDTO {
     readonly type           ?: MatrixType;

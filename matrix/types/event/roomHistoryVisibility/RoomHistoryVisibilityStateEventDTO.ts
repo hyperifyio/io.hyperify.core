@@ -3,9 +3,9 @@
 import { isRoomHistoryVisibilityStateContentDTO, RoomHistoryVisibilityStateContentDTO } from "./RoomHistoryVisibilityStateContentDTO";
 import { MatrixStateEventOf } from "../../core/MatrixStateEventOf";
 import { MatrixType } from "../../core/MatrixType";
-import { isStringOrUndefined } from "../../../../../types/String";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isStringOrUndefined } from "../../../../types/String";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 export interface RoomHistoryVisibilityStateEventDTO extends MatrixStateEventOf<RoomHistoryVisibilityStateContentDTO> {
     readonly type      : MatrixType.M_ROOM_HISTORY_VISIBILITY;

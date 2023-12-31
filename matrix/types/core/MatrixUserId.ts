@@ -1,8 +1,8 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { explainNot, explainOk } from "../../../../types/explain";
-import { isString } from "../../../../types/String";
+import { explainNot, explainOk } from "../../../types/explain";
+import { isString } from "../../../types/String";
 
 /**
  * Size must not exceed 255 bytes.

@@ -1,10 +1,10 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { MatrixUserId,  isMatrixUserId } from "../../../core/MatrixUserId";
-import { isJsonObject, JsonObject } from "../../../../../../Json";
-import { isString } from "../../../../../../types/String";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
+import { isJsonObject, JsonObject } from "../../../../../Json";
+import { isString } from "../../../../../types/String";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
 
 export interface MatrixJoinRoomThirdPartySignedDTO {
 

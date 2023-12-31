@@ -3,9 +3,9 @@
 import { isRoomJoinRulesStateContentDTO, RoomJoinRulesStateContentDTO } from "./RoomJoinRulesStateContentDTO";
 import { MatrixStateEventOf } from "../../core/MatrixStateEventOf";
 import { MatrixType } from "../../core/MatrixType";
-import { isStringOrUndefined } from "../../../../../types/String";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isStringOrUndefined } from "../../../../types/String";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 /**
  * @see https://github.com/heusalagroup/hghs/issues/20

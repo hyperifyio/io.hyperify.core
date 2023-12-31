@@ -1,11 +1,11 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { isJsonObject, JsonObject } from "../../../../../../Json";
+import { isJsonObject, JsonObject } from "../../../../../Json";
 import { MatrixType,  isMatrixType } from "../../../core/MatrixType";
 import { MatrixUserId,  isMatrixUserId } from "../../../core/MatrixUserId";
-import { isUndefined } from "../../../../../../types/undefined";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
+import { isUndefined } from "../../../../../types/undefined";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
 
 export interface MatrixSyncResponseEventDTO {
     readonly content  : JsonObject;

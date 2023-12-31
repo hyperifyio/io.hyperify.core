@@ -1,13 +1,13 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { isNull } from "../../../../../types/Null";
-import { ReadonlyJsonObject } from "../../../../../Json";
+import { isNull } from "../../../../types/Null";
+import { ReadonlyJsonObject } from "../../../../Json";
 import { isRoomMembershipState, RoomMembershipState } from "./RoomMembershipState";
 import { isRoomMemberContent3rdPartyInviteDTOOrUndefined, RoomMemberContent3rdPartyInviteDTO } from "./RoomMemberContent3rdPartyInviteDTO";
-import { isBooleanOrUndefined } from "../../../../../types/Boolean";
-import { isStringOrUndefined } from "../../../../../types/String";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeys } from "../../../../../types/OtherKeys";
+import { isBooleanOrUndefined } from "../../../../types/Boolean";
+import { isStringOrUndefined } from "../../../../types/String";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeys } from "../../../../types/OtherKeys";
 
 export interface RoomMemberContentDTO extends ReadonlyJsonObject {
     readonly membership                        : RoomMembershipState;

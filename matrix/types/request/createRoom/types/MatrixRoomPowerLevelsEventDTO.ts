@@ -3,11 +3,11 @@
 import { MatrixEventPowerLevelsDTO, isMatrixEventPowerLevelsDTOOrUndefined, explainMatrixEventPowerLevelsDTOOrUndefined } from "./MatrixEventPowerLevelsDTO";
 import { MatrixUserPowerLevelsDTO, isMatrixUserPowerLevelsDTOOrUndefined, explainMatrixUserPowerLevelsDTOOrUndefined } from "./MatrixUserPowerLevelsDTO";
 import { MatrixNotificationPowerLevelsDTO, isMatrixNotificationPowerLevelsDTOOrUndefined, explainMatrixNotificationPowerLevelsDTOOrUndefined } from "./MatrixNotificationPowerLevelsDTO";
-import { isUndefined } from "../../../../../../types/undefined";
-import { explain, explainNot, explainOk, explainOr, explainProperty } from "../../../../../../types/explain";
-import { explainIntegerOrUndefined, isIntegerOrUndefined } from "../../../../../../types/Number";
-import { explainRegularObject, isRegularObject } from "../../../../../../types/RegularObject";
-import { explainNoOtherKeys, hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
+import { isUndefined } from "../../../../../types/undefined";
+import { explain, explainNot, explainOk, explainOr, explainProperty } from "../../../../../types/explain";
+import { explainIntegerOrUndefined, isIntegerOrUndefined } from "../../../../../types/Number";
+import { explainRegularObject, isRegularObject } from "../../../../../types/RegularObject";
+import { explainNoOtherKeys, hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
 
 export interface MatrixRoomPowerLevelsEventDTO {
     readonly ban            ?: number;

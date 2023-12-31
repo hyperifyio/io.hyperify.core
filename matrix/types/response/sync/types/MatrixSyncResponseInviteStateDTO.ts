@@ -4,11 +4,11 @@ import { MatrixSyncResponseStrippedStateDTO,
     explainMatrixSyncResponseStrippedStateDTO,
     isMatrixSyncResponseStrippedStateDTO
 } from "./MatrixSyncResponseStrippedStateDTO";
-import { find } from "../../../../../../functions/find";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
-import { keys } from "../../../../../../functions/keys";
-import { isArrayOf } from "../../../../../../types/Array";
+import { find } from "../../../../../functions/find";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { keys } from "../../../../../functions/keys";
+import { isArrayOf } from "../../../../../types/Array";
 
 export interface MatrixSyncResponseInviteStateDTO {
     readonly events: readonly MatrixSyncResponseStrippedStateDTO[];

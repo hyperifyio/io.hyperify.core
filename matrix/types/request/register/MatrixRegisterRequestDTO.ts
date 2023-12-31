@@ -1,10 +1,10 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { MatrixRegisterAuthenticationData,  isMatrixRegisterAuthenticationData } from "./types/MatrixRegisterAuthenticationData";
-import { isUndefined } from "../../../../../types/undefined";
-import { isStringOrUndefined } from "../../../../../types/String";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isUndefined } from "../../../../types/undefined";
+import { isStringOrUndefined } from "../../../../types/String";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 export interface MatrixRegisterRequestDTO {
     readonly auth                        ?: MatrixRegisterAuthenticationData;

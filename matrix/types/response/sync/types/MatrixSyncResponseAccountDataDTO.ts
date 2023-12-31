@@ -1,10 +1,10 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { concat } from "../../../../../../functions/concat";
+import { concat } from "../../../../../functions/concat";
 import { MatrixSyncResponseEventDTO,  isMatrixSyncResponseEventDTO } from "./MatrixSyncResponseEventDTO";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
-import { isArrayOfOrUndefined } from "../../../../../../types/Array";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isArrayOfOrUndefined } from "../../../../../types/Array";
 
 export interface MatrixSyncResponseAccountDataDTO {
     readonly events ?: readonly MatrixSyncResponseEventDTO[];

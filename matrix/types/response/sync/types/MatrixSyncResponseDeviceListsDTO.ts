@@ -1,11 +1,11 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { MatrixUserId,  isMatrixUserId } from "../../../core/MatrixUserId";
-import { isUndefined } from "../../../../../../types/undefined";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
-import { keys } from "../../../../../../functions/keys";
-import { isArrayOf, isArrayOfOrUndefined } from "../../../../../../types/Array";
+import { isUndefined } from "../../../../../types/undefined";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { keys } from "../../../../../functions/keys";
+import { isArrayOf, isArrayOfOrUndefined } from "../../../../../types/Array";
 
 export interface MatrixSyncResponseDeviceListsDTO {
     readonly changed ?: readonly MatrixUserId[];

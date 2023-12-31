@@ -1,6 +1,6 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { concat } from "../../../../../functions/concat";
+import { concat } from "../../../../functions/concat";
 import {
     MatrixSyncResponseRoomsDTO,
     explainMatrixSyncResponseRoomsDTO,
@@ -32,11 +32,11 @@ import {
     isMatrixSyncResponseDeviceOneTimeKeysCountDTO
 } from "./types/MatrixSyncResponseDeviceOneTimeKeysCountDTO";
 import { MatrixSyncResponseAnyEventDTO } from "./types/MatrixSyncResponseAnyEventDTO";
-import { isUndefined } from "../../../../../types/undefined";
-import { isString } from "../../../../../types/String";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
-import { keys } from "../../../../../functions/keys";
+import { isUndefined } from "../../../../types/undefined";
+import { isString } from "../../../../types/String";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
+import { keys } from "../../../../functions/keys";
 
 export interface MatrixSyncResponseDTO {
     readonly next_batch                  : string;

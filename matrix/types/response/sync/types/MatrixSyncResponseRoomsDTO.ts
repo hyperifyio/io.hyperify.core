@@ -15,13 +15,13 @@ import { MatrixSyncResponseLeftRoomDTO,
     getEventsFromMatrixSyncResponseLeftRoomDTO,
     isMatrixSyncResponseLeftRoomDTO
 } from "./MatrixSyncResponseLeftRoomDTO";
-import { concat } from "../../../../../../functions/concat";
-import { reduce } from "../../../../../../functions/reduce";
+import { concat } from "../../../../../functions/concat";
+import { reduce } from "../../../../../functions/reduce";
 import { MatrixSyncResponseAnyEventDTO } from "./MatrixSyncResponseAnyEventDTO";
-import { isUndefined } from "../../../../../../types/undefined";
-import { explainRegularObjectOf, isRegularObject, isRegularObjectOf } from "../../../../../../types/RegularObject";
-import { explainNoOtherKeys, hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
-import { keys } from "../../../../../../functions/keys";
+import { isUndefined } from "../../../../../types/undefined";
+import { explainRegularObjectOf, isRegularObject, isRegularObjectOf } from "../../../../../types/RegularObject";
+import { explainNoOtherKeys, hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { keys } from "../../../../../functions/keys";
 
 export interface MatrixSyncResponseRoomsDTO {
     readonly join   ?: {[K in MatrixRoomId]: MatrixSyncResponseJoinedRoomDTO};

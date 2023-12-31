@@ -1,6 +1,6 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { explainNot, explainOk, explainOr } from "../../../../../../types/explain";
+import { explainNot, explainOk, explainOr } from "../../../../../types/explain";
 
 export enum MatrixCreateRoomPreset {
     PRIVATE_CHAT         = "private_chat",

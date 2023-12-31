@@ -4,14 +4,14 @@ import { MatrixSyncResponseRoomEventDTO,
     explainMatrixSyncResponseRoomEventDTO,
     isMatrixSyncResponseRoomEventDTO
 } from "./MatrixSyncResponseRoomEventDTO";
-import { concat } from "../../../../../../functions/concat";
-import { find } from "../../../../../../functions/find";
-import { isBoolean } from "../../../../../../types/Boolean";
-import { isString, isStringOrUndefined } from "../../../../../../types/String";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
-import { keys } from "../../../../../../functions/keys";
-import { isArrayOf } from "../../../../../../types/Array";
+import { concat } from "../../../../../functions/concat";
+import { find } from "../../../../../functions/find";
+import { isBoolean } from "../../../../../types/Boolean";
+import { isString, isStringOrUndefined } from "../../../../../types/String";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { keys } from "../../../../../functions/keys";
+import { isArrayOf } from "../../../../../types/Array";
 
 export interface MatrixSyncResponseTimelineDTO {
     readonly events      : readonly MatrixSyncResponseRoomEventDTO[];

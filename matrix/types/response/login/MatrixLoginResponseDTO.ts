@@ -5,10 +5,10 @@ import {
     isMatrixDiscoveryInformationDTO
 } from "./types/MatrixDiscoveryInformationDTO";
 import { MatrixUserId } from "../../core/MatrixUserId";
-import { isUndefined } from "../../../../../types/undefined";
-import { isString, isStringOrUndefined } from "../../../../../types/String";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isUndefined } from "../../../../types/undefined";
+import { isString, isStringOrUndefined } from "../../../../types/String";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 export interface MatrixLoginResponseDTO {
 

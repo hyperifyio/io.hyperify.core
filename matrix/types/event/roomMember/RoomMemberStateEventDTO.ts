@@ -3,9 +3,9 @@
 import { MatrixStateEventOf } from "../../core/MatrixStateEventOf";
 import { isRoomMemberContentDTO, RoomMemberContentDTO } from "./RoomMemberContentDTO";
 import { MatrixType } from "../../core/MatrixType";
-import { isString } from "../../../../../types/String";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeys } from "../../../../../types/OtherKeys";
+import { isString } from "../../../../types/String";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeys } from "../../../../types/OtherKeys";
 
 export interface RoomMemberStateEventDTO extends MatrixStateEventOf<RoomMemberContentDTO> {
     readonly type      : MatrixType.M_ROOM_MEMBER;

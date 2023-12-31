@@ -1,8 +1,8 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { isString } from "../../../../../../types/String";
-import { isInteger } from "../../../../../../types/Number";
-import { isRegularObjectOf } from "../../../../../../types/RegularObject";
+import { isString } from "../../../../../types/String";
+import { isInteger } from "../../../../../types/Number";
+import { isRegularObjectOf } from "../../../../../types/RegularObject";
 
 export interface MatrixSyncResponseDeviceOneTimeKeysCountDTO {
     readonly [key : string] : number;

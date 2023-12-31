@@ -6,7 +6,7 @@ import { MatrixRoomId } from "./types/core/MatrixRoomId";
 import { MatrixCreateRoomPreset } from "./types/request/createRoom/types/MatrixCreateRoomPreset";
 import { MatrixVisibility } from "./types/request/createRoom/types/MatrixVisibility";
 import { MatrixStateEvent } from "./types/core/MatrixStateEvent";
-import { LogService } from "../../LogService";
+import { LogService } from "../LogService";
 import { createRoomJoinRulesStateEventDTO, RoomJoinRulesStateEventDTO } from "./types/event/roomJoinRules/RoomJoinRulesStateEventDTO";
 import { createRoomJoinRulesStateContentDTO } from "./types/event/roomJoinRules/RoomJoinRulesStateContentDTO";
 import { MatrixJoinRule } from "./types/event/roomJoinRules/MatrixJoinRule";

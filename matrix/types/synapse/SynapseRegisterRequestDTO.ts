@@ -1,9 +1,9 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { isBoolean } from "../../../../types/Boolean";
-import { isString } from "../../../../types/String";
-import { isRegularObject } from "../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
+import { isBoolean } from "../../../types/Boolean";
+import { isString } from "../../../types/String";
+import { isRegularObject } from "../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../types/OtherKeys";
 
 /**
  * @see https://matrix-org.github.io/synapse/latest/admin_api/register_api.html

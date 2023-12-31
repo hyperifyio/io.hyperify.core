@@ -1,15 +1,15 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { concat } from "../../../../../../functions/concat";
-import { find } from "../../../../../../functions/find";
+import { concat } from "../../../../../functions/concat";
+import { find } from "../../../../../functions/find";
 import { MatrixSyncResponseStateEventDTO,
     explainMatrixSyncResponseStateEventDTO,
     isMatrixSyncResponseStateEventDTO
 } from "./MatrixSyncResponseStateEventDTO";
-import { LogService } from "../../../../../../LogService";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
-import { isArrayOf } from "../../../../../../types/Array";
+import { LogService } from "../../../../../LogService";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isArrayOf } from "../../../../../types/Array";
 
 const LOG = LogService.createLogger('MatrixSyncResponseStateDTO');
 

@@ -4,13 +4,13 @@ import {
     explainReadonlyJsonObject,
     isReadonlyJsonObject,
     ReadonlyJsonObject
-} from "../../../../../../../Json";
+} from "../../../../../../Json";
 import { MatrixType } from "../../../../../types/core/MatrixType";
-import { explain, explainProperty } from "../../../../../../../types/explain";
-import { explainString, explainStringOrUndefined, isString, isStringOrUndefined } from "../../../../../../../types/String";
-import { explainNumber, isNumber } from "../../../../../../../types/Number";
-import { explainRegularObject, isRegularObject } from "../../../../../../../types/RegularObject";
-import { explainNoOtherKeys, hasNoOtherKeys } from "../../../../../../../types/OtherKeys";
+import { explain, explainProperty } from "../../../../../../types/explain";
+import { explainString, explainStringOrUndefined, isString, isStringOrUndefined } from "../../../../../../types/String";
+import { explainNumber, isNumber } from "../../../../../../types/Number";
+import { explainRegularObject, isRegularObject } from "../../../../../../types/RegularObject";
+import { explainNoOtherKeys, hasNoOtherKeys } from "../../../../../../types/OtherKeys";
 
 /**
  * The base type for events saved in the repository.

@@ -1,11 +1,11 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { isReadonlyJsonObject, ReadonlyJsonObject } from "../../../../../Json";
-import { isUndefined } from "../../../../../types/undefined";
-import { isStringOrUndefined } from "../../../../../types/String";
-import { isNumberOrUndefined } from "../../../../../types/Number";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isReadonlyJsonObject, ReadonlyJsonObject } from "../../../../Json";
+import { isUndefined } from "../../../../types/undefined";
+import { isStringOrUndefined } from "../../../../types/String";
+import { isNumberOrUndefined } from "../../../../types/Number";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 export interface GetRoomStateByTypeResponseDTO {
     readonly name    ?: string;

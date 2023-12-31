@@ -1,12 +1,12 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { SimpleStoredRepositoryItem, StoredRepositoryItemExplainCallback, StoredRepositoryItemTestCallback } from "../../simpleRepository/types/SimpleStoredRepositoryItem";
-import { SimpleRepository } from "../../simpleRepository/types/SimpleRepository";
-import { SimpleRepositoryInitializer } from "../../simpleRepository/types/SimpleRepositoryInitializer";
-import { SimpleRepositoryClient } from "../../simpleRepository/types/SimpleRepositoryClient";
+import { SimpleStoredRepositoryItem, StoredRepositoryItemExplainCallback, StoredRepositoryItemTestCallback } from "../simpleRepository/types/SimpleStoredRepositoryItem";
+import { SimpleRepository } from "../simpleRepository/types/SimpleRepository";
+import { SimpleRepositoryInitializer } from "../simpleRepository/types/SimpleRepositoryInitializer";
+import { SimpleRepositoryClient } from "../simpleRepository/types/SimpleRepositoryClient";
 import { MatrixCrudRepository } from "./MatrixCrudRepository";
 import { SimpleMatrixClient } from "./SimpleMatrixClient";
-import { explainNot, explainOk } from "../../types/explain";
+import { explainNot, explainOk } from "../types/explain";
 
 export class MatrixRepositoryInitializer<T extends SimpleStoredRepositoryItem> implements SimpleRepositoryInitializer<T> {
 

@@ -1,25 +1,25 @@
 // Copyright (c) 2021-2022. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { SimpleRepositoryEntry } from "../../simpleRepository/types/SimpleRepositoryEntry";
-import { SimpleRepository, REPOSITORY_NEW_IDENTIFIER } from "../../simpleRepository/types/SimpleRepository";
+import { SimpleRepositoryEntry } from "../simpleRepository/types/SimpleRepositoryEntry";
+import { SimpleRepository, REPOSITORY_NEW_IDENTIFIER } from "../simpleRepository/types/SimpleRepository";
 import { SimpleMatrixClient } from "./SimpleMatrixClient";
 import { MatrixCreateRoomResponseDTO } from "./types/response/createRoom/MatrixCreateRoomResponseDTO";
 import { MatrixCreateRoomPreset } from "./types/request/createRoom/types/MatrixCreateRoomPreset";
-import { isJsonObject, ReadonlyJsonAny, ReadonlyJsonObject } from "../../Json";
+import { isJsonObject, ReadonlyJsonAny, ReadonlyJsonObject } from "../Json";
 import { MatrixSyncResponseDTO } from "./types/response/sync/MatrixSyncResponseDTO";
-import { LogService } from "../../LogService";
-import { concat} from "../../functions/concat";
-import { filter } from "../../functions/filter";
-import { forEach } from "../../functions/forEach";
-import { get } from "../../functions/get";
-import { map } from "../../functions/map";
-import { reduce } from "../../functions/reduce";
-import { uniq } from "../../functions/uniq";
+import { LogService } from "../LogService";
+import { concat} from "../functions/concat";
+import { filter } from "../functions/filter";
+import { forEach } from "../functions/forEach";
+import { get } from "../functions/get";
+import { map } from "../functions/map";
+import { reduce } from "../functions/reduce";
+import { uniq } from "../functions/uniq";
 import { MatrixRoomId } from "./types/core/MatrixRoomId";
 import { MatrixSyncResponseJoinedRoomDTO } from "./types/response/sync/types/MatrixSyncResponseJoinedRoomDTO";
 import { MatrixSyncResponseRoomEventDTO } from "./types/response/sync/types/MatrixSyncResponseRoomEventDTO";
 import { isMatrixType, MatrixType } from "./types/core/MatrixType";
-import { RequestError } from "../../request/types/RequestError";
+import { RequestError } from "../request/types/RequestError";
 import { PutRoomStateWithEventTypeResponseDTO } from "./types/response/setRoomStateByType/PutRoomStateWithEventTypeResponseDTO";
 import { MatrixCreateRoomDTO } from "./types/request/createRoom/MatrixCreateRoomDTO";
 import { createMatrixStateEvent } from "./types/core/MatrixStateEvent";
@@ -29,8 +29,8 @@ import { MatrixHistoryVisibility } from "./types/event/roomHistoryVisibility/Mat
 import { MatrixJoinRule } from "./types/event/roomJoinRules/MatrixJoinRule";
 import { MatrixGuestAccess } from "./types/event/roomGuestAccess/MatrixGuestAccess";
 import { MatrixRoomJoinedMembersDTO } from "./types/response/roomJoinedMembers/MatrixRoomJoinedMembersDTO";
-import { SimpleRepositoryMember } from "../../simpleRepository/types/SimpleRepositoryMember";
-import { LogLevel } from "../../types/LogLevel";
+import { SimpleRepositoryMember } from "../simpleRepository/types/SimpleRepositoryMember";
+import { LogLevel } from "../types/LogLevel";
 import { createRoomGuestAccessStateEventDTO } from "./types/event/roomGuestAccess/RoomGuestAccessStateEventDTO";
 import { createRoomGuestAccessContentDTO } from "./types/event/roomGuestAccess/RoomGuestAccessContentDTO";
 import { MatrixStateEventOf } from "./types/core/MatrixStateEventOf";
@@ -42,13 +42,13 @@ import { createRoomJoinRulesStateContentDTO } from "./types/event/roomJoinRules/
 import { createRoomJoinRulesStateEventDTO } from "./types/event/roomJoinRules/RoomJoinRulesStateEventDTO";
 import { SetRoomStateByTypeRequestDTO } from "./types/request/setRoomStateByType/SetRoomStateByTypeRequestDTO";
 import { GetRoomStateByTypeResponseDTO } from "./types/response/getRoomStateByType/GetRoomStateByTypeResponseDTO";
-import { isStoredRepositoryItem, SimpleStoredRepositoryItem, StoredRepositoryItemExplainCallback, StoredRepositoryItemTestCallback } from "../../simpleRepository/types/SimpleStoredRepositoryItem";
-import { SimpleRepositoryUtils } from "../../simpleRepository/SimpleRepositoryUtils";
+import { isStoredRepositoryItem, SimpleStoredRepositoryItem, StoredRepositoryItemExplainCallback, StoredRepositoryItemTestCallback } from "../simpleRepository/types/SimpleStoredRepositoryItem";
+import { SimpleRepositoryUtils } from "../simpleRepository/SimpleRepositoryUtils";
 import { MatrixRoomVersion } from "./types/MatrixRoomVersion";
-import { explainNot, explainOk } from "../../types/explain";
-import { parseNonEmptyString } from "../../types/String";
-import { isInteger, isNumber } from "../../types/Number";
-import { keys } from "../../functions/keys";
+import { explainNot, explainOk } from "../types/explain";
+import { parseNonEmptyString } from "../types/String";
+import { isInteger, isNumber } from "../types/Number";
+import { keys } from "../functions/keys";
 
 const LOG = LogService.createLogger('MatrixCrudRepository');
 

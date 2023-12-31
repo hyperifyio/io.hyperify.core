@@ -4,13 +4,13 @@ import {
     explainJsonObject,
     isReadonlyJsonObject,
     ReadonlyJsonObject
-} from "../../../../Json";
+} from "../../../Json";
 import { MatrixStateEventOf } from "./MatrixStateEventOf";
 import { MatrixType } from "./MatrixType";
-import { explain, explainProperty } from "../../../../types/explain";
-import { explainString, explainStringOrUndefined, isString, isStringOrUndefined } from "../../../../types/String";
-import { explainRegularObject, isRegularObject } from "../../../../types/RegularObject";
-import { explainNoOtherKeys, hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
+import { explain, explainProperty } from "../../../types/explain";
+import { explainString, explainStringOrUndefined, isString, isStringOrUndefined } from "../../../types/String";
+import { explainRegularObject, isRegularObject } from "../../../types/RegularObject";
+import { explainNoOtherKeys, hasNoOtherKeysInDevelopment } from "../../../types/OtherKeys";
 
 export type MatrixStateEvent = MatrixStateEventOf<ReadonlyJsonObject>;
 

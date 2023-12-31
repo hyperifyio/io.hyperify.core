@@ -1,14 +1,14 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { MatrixSyncResponseEventDTO,  isMatrixSyncResponseEventDTO } from "./MatrixSyncResponseEventDTO";
-import { isJsonObjectOrUndefined, JsonObject } from "../../../../../../Json";
+import { isJsonObjectOrUndefined, JsonObject } from "../../../../../Json";
 import { MatrixUserId,  isMatrixUserId } from "../../../core/MatrixUserId";
-import { isUndefined } from "../../../../../../types/undefined";
-import { isStringOrUndefined } from "../../../../../../types/String";
-import { isIntegerOrUndefined } from "../../../../../../types/Number";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
-import { keys } from "../../../../../../functions/keys";
+import { isUndefined } from "../../../../../types/undefined";
+import { isStringOrUndefined } from "../../../../../types/String";
+import { isIntegerOrUndefined } from "../../../../../types/Number";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { keys } from "../../../../../functions/keys";
 
 /**
  *

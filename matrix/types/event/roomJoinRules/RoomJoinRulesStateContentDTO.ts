@@ -2,10 +2,10 @@
 
 import { isMatrixJoinRule, MatrixJoinRule } from "./MatrixJoinRule";
 import { isRoomJoinRulesAllowConditionDTO, RoomJoinRulesAllowConditionDTO } from "./RoomJoinRulesAllowConditionDTO";
-import { ReadonlyJsonObject } from "../../../../../Json";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
-import { isArrayOf } from "../../../../../types/Array";
+import { ReadonlyJsonObject } from "../../../../Json";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
+import { isArrayOf } from "../../../../types/Array";
 
 /**
  * @see https://spec.matrix.org/v1.2/client-server-api/#mroomjoin_rules

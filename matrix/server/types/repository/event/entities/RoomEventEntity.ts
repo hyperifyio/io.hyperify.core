@@ -2,11 +2,11 @@
 
 import { createEventEntity, EventEntity } from "./EventEntity";
 import { MatrixType } from "../../../../../types/core/MatrixType";
-import { isJsonObject, ReadonlyJsonObject } from "../../../../../../../Json";
-import { isString, isStringOrUndefined } from "../../../../../../../types/String";
-import { isNumber } from "../../../../../../../types/Number";
-import { isRegularObject } from "../../../../../../../types/RegularObject";
-import { hasNoOtherKeys } from "../../../../../../../types/OtherKeys";
+import { isJsonObject, ReadonlyJsonObject } from "../../../../../../Json";
+import { isString, isStringOrUndefined } from "../../../../../../types/String";
+import { isNumber } from "../../../../../../types/Number";
+import { isRegularObject } from "../../../../../../types/RegularObject";
+import { hasNoOtherKeys } from "../../../../../../types/OtherKeys";
 
 /**
  * Base type for room events saved in the repository.

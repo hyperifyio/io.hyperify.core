@@ -2,18 +2,19 @@
 
 import {
     MatrixSyncResponseUnsignedDataDTO,
-    isMatrixSyncResponseUnsignedDataDTO, explainMatrixSyncResponseUnsignedDataDTO
+    isMatrixSyncResponseUnsignedDataDTO,
+    explainMatrixSyncResponseUnsignedDataDTO,
 } from "./MatrixSyncResponseUnsignedDataDTO";
 import {
     isJsonObject,
     JsonObject
-} from "../../../../../../Json";
-import { isUndefined } from "../../../../../../types/undefined";
-import { isString } from "../../../../../../types/String";
-import { isInteger } from "../../../../../../types/Number";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
-import { keys } from "../../../../../../functions/keys";
+} from "../../../../../Json";
+import { isUndefined } from "../../../../../types/undefined";
+import { isString } from "../../../../../types/String";
+import { isInteger } from "../../../../../types/Number";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { keys } from "../../../../../functions/keys";
 
 export interface MatrixSyncResponseStateEventDTO {
     readonly content           : JsonObject;

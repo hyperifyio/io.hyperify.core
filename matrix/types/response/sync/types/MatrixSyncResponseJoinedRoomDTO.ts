@@ -30,13 +30,13 @@ import {
     MatrixSyncResponseUnreadNotificationCountsDTO,
     isMatrixSyncResponseUnreadNotificationCountsDTO
 } from "./MatrixSyncResponseUnreadNotificationCountsDTO";
-import { concat } from "../../../../../../functions/concat";
+import { concat } from "../../../../../functions/concat";
 import { MatrixSyncResponseEventDTO } from "./MatrixSyncResponseEventDTO";
 import { MatrixSyncResponseRoomEventDTO } from "./MatrixSyncResponseRoomEventDTO";
-import { isUndefined } from "../../../../../../types/undefined";
-import { isNumberOrUndefined } from "../../../../../../types/Number";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
+import { isUndefined } from "../../../../../types/undefined";
+import { isNumberOrUndefined } from "../../../../../types/Number";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
 
 export interface MatrixSyncResponseJoinedRoomDTO {
     readonly summary?: MatrixSyncResponseRoomSummaryDTO;

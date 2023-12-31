@@ -1,9 +1,9 @@
 // Copyright (c) 2021-2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { explain, explainProperty } from "../../../../../../types/explain";
-import { explainString, isString } from "../../../../../../types/String";
-import { explainRegularObject, isRegularObject } from "../../../../../../types/RegularObject";
-import { explainNoOtherKeys, hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
+import { explain, explainProperty } from "../../../../../types/explain";
+import { explainString, isString } from "../../../../../types/String";
+import { explainRegularObject, isRegularObject } from "../../../../../types/RegularObject";
+import { explainNoOtherKeys, hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
 
 export interface MatrixInvite3PidDTO {
     readonly id_server       : string;

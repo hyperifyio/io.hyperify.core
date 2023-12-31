@@ -2,10 +2,10 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { MatrixUserId,  isMatrixUserId } from "../../../core/MatrixUserId";
-import { isUndefined } from "../../../../../../types/undefined";
-import { explainNot, explainOk, explainOr } from "../../../../../../types/explain";
-import { isInteger } from "../../../../../../types/Number";
-import { isRegularObjectOf } from "../../../../../../types/RegularObject";
+import { isUndefined } from "../../../../../types/undefined";
+import { explainNot, explainOk, explainOr } from "../../../../../types/explain";
+import { isInteger } from "../../../../../types/Number";
+import { isRegularObjectOf } from "../../../../../types/RegularObject";
 
 export type MatrixUserPowerLevelsDTO = {
     [K in MatrixUserId]: number

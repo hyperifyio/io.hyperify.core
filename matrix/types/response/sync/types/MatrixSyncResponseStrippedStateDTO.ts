@@ -1,13 +1,13 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { MatrixSyncResponseUnsignedDataDTO,  isMatrixSyncResponseUnsignedDataDTO } from "./MatrixSyncResponseUnsignedDataDTO";
-import { isJsonObject, JsonObject } from "../../../../../../Json";
-import { isUndefined } from "../../../../../../types/undefined";
-import { isString, isStringOrUndefined } from "../../../../../../types/String";
-import { isNumberOrUndefined } from "../../../../../../types/Number";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
-import { keys } from "../../../../../../functions/keys";
+import { isJsonObject, JsonObject } from "../../../../../Json";
+import { isUndefined } from "../../../../../types/undefined";
+import { isString, isStringOrUndefined } from "../../../../../types/String";
+import { isNumberOrUndefined } from "../../../../../types/Number";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { keys } from "../../../../../functions/keys";
 
 export interface MatrixSyncResponseStrippedStateDTO {
     readonly content           : JsonObject;

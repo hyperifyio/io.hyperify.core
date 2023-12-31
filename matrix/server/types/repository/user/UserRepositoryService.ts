@@ -1,17 +1,17 @@
 // Copyright (c) 2021-2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { LogService } from "../../../../../../LogService";
-import { Observer, ObserverCallback, ObserverDestructor } from "../../../../../../Observer";
-import { SimpleRepositoryService } from "../../../../../../simpleRepository/types/SimpleRepositoryService";
+import { Observer, ObserverCallback, ObserverDestructor } from "../../../../../Observer";
+import { SimpleRepositoryService } from "../../../../../simpleRepository/types/SimpleRepositoryService";
+import { LogService } from "../../../../../LogService";
 import { StoredUserRepositoryItem } from "./StoredUserRepositoryItem";
-import { SimpleRepositoryServiceEvent } from "../../../../../../simpleRepository/types/SimpleRepositoryServiceEvent";
-import { SimpleSharedClientService } from "../../../../../../simpleRepository/types/SimpleSharedClientService";
-import { SimpleRepository } from "../../../../../../simpleRepository/types/SimpleRepository";
-import { SimpleRepositoryInitializer } from "../../../../../../simpleRepository/types/SimpleRepositoryInitializer";
+import { SimpleRepositoryServiceEvent } from "../../../../../simpleRepository/types/SimpleRepositoryServiceEvent";
+import { SimpleSharedClientService } from "../../../../../simpleRepository/types/SimpleSharedClientService";
+import { SimpleRepository } from "../../../../../simpleRepository/types/SimpleRepository";
+import { SimpleRepositoryInitializer } from "../../../../../simpleRepository/types/SimpleRepositoryInitializer";
 import { UserRepositoryItem, parseUserRepositoryItem, toStoredUserRepositoryItem } from "./UserRepositoryItem";
-import { SimpleRepositoryEntry } from "../../../../../../simpleRepository/types/SimpleRepositoryEntry";
-import { map } from "../../../../../../functions/map";
-import { toLower } from "../../../../../../functions/toLower";
+import { SimpleRepositoryEntry } from "../../../../../simpleRepository/types/SimpleRepositoryEntry";
+import { map } from "../../../../../functions/map";
+import { toLower } from "../../../../../functions/toLower";
 
 const LOG = LogService.createLogger('UserRepositoryService');
 

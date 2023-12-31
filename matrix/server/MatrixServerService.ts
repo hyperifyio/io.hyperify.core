@@ -4,6 +4,7 @@ import { JwtDecodeServiceImpl } from "../../../node/backend/JwtDecodeServiceImpl
 import { ReadonlyJsonObject } from "../../Json";
 import { JwtEngine } from "../../jwt/JwtEngine";
 import { LogService } from "../../LogService";
+import { LogLevel } from "../../types/LogLevel";
 import { createEventEntity } from "./types/repository/event/entities/EventEntity";
 import { createRoom } from "./types/repository/room/Room";
 import { UserRepositoryItem } from "./types/repository/user/UserRepositoryItem";
@@ -411,7 +412,7 @@ export class MatrixServerService {
         return await this.createRoomStateEvent(
             senderId,
             roomId,
-            content,
+            content as unknown as ReadonlyJsonObject,
             MatrixType.M_ROOM_MEMBER,
             userId,
             originServerTs

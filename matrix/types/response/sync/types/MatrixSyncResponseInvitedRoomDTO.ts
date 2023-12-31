@@ -6,9 +6,9 @@ import { MatrixSyncResponseInviteStateDTO,
     isMatrixSyncResponseInviteStateDTO
 } from "./MatrixSyncResponseInviteStateDTO";
 import { MatrixSyncResponseStrippedStateDTO } from "./MatrixSyncResponseStrippedStateDTO";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
-import { keys } from "../../../../../../functions/keys";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { keys } from "../../../../../functions/keys";
 
 export interface MatrixSyncResponseInvitedRoomDTO {
     readonly invite_state : MatrixSyncResponseInviteStateDTO;

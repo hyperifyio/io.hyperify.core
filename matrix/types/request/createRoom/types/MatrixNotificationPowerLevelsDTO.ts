@@ -1,10 +1,10 @@
 // Copyright (c) 2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { isUndefined } from "../../../../../../types/undefined";
-import { explain, explainNot, explainOk, explainOr, explainProperty } from "../../../../../../types/explain";
-import { explainNumberOrUndefined, isNumberOrUndefined } from "../../../../../../types/Number";
-import { explainRegularObject, isRegularObject } from "../../../../../../types/RegularObject";
-import { explainNoOtherKeys, hasNoOtherKeysInDevelopment } from "../../../../../../types/OtherKeys";
+import { isUndefined } from "../../../../../types/undefined";
+import { explain, explainNot, explainOk, explainOr, explainProperty } from "../../../../../types/explain";
+import { explainNumberOrUndefined, isNumberOrUndefined } from "../../../../../types/Number";
+import { explainRegularObject, isRegularObject } from "../../../../../types/RegularObject";
+import { explainNoOtherKeys, hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
 
 export interface MatrixNotificationPowerLevelsDTO {
     readonly room: number;

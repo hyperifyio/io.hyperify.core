@@ -1,14 +1,14 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { SimpleRepositoryItem } from "../../../../../../simpleRepository/types/SimpleRepositoryItem";
+import { SimpleRepositoryItem } from "../../../../../simpleRepository/types/SimpleRepositoryItem";
 import { EventEntity, explainEventEntity, isEventEntity } from "./entities/EventEntity";
-import { parseJson } from "../../../../../../Json";
+import { parseJson } from "../../../../../Json";
 import { createStoredEventRepositoryItem, StoredEventRepositoryItem } from "./StoredEventRepositoryItem";
-import { LogService } from "../../../../../../LogService";
-import { explain, explainProperty } from "../../../../../../types/explain";
-import { explainString, isString } from "../../../../../../types/String";
-import { explainRegularObject, isRegularObject } from "../../../../../../types/RegularObject";
-import { explainNoOtherKeys, hasNoOtherKeys } from "../../../../../../types/OtherKeys";
+import { LogService } from "../../../../../LogService";
+import { explain, explainProperty } from "../../../../../types/explain";
+import { explainString, isString } from "../../../../../types/String";
+import { explainRegularObject, isRegularObject } from "../../../../../types/RegularObject";
+import { explainNoOtherKeys, hasNoOtherKeys } from "../../../../../types/OtherKeys";
 
 const LOG = LogService.createLogger('EventRepositoryItem');
 

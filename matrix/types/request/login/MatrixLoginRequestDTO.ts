@@ -4,10 +4,10 @@
 import { isMatrixIdentifierDTO, MatrixIdentifierDTO } from "./types/MatrixIdentifierDTO";
 import { isMatrixLoginType, MatrixLoginType } from "./MatrixLoginType";
 import { MatrixUserId } from "../../core/MatrixUserId";
-import { isUndefined } from "../../../../../types/undefined";
-import { isString, isStringOrUndefined } from "../../../../../types/String";
-import { isRegularObject } from "../../../../../types/RegularObject";
-import { hasNoOtherKeysInDevelopment } from "../../../../../types/OtherKeys";
+import { isUndefined } from "../../../../types/undefined";
+import { isString, isStringOrUndefined } from "../../../../types/String";
+import { isRegularObject } from "../../../../types/RegularObject";
+import { hasNoOtherKeysInDevelopment } from "../../../../types/OtherKeys";
 
 export interface MatrixLoginRequestDTO {
 

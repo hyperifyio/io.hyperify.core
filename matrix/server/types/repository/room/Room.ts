@@ -2,9 +2,9 @@
 
 import { isMatrixVisibility, MatrixVisibility } from "../../../../types/request/createRoom/types/MatrixVisibility";
 import { isMatrixRoomVersion, MatrixRoomVersion } from "../../../../types/MatrixRoomVersion";
-import { isString } from "../../../../../../types/String";
-import { isRegularObject } from "../../../../../../types/RegularObject";
-import { hasNoOtherKeys } from "../../../../../../types/OtherKeys";
+import { isString } from "../../../../../types/String";
+import { isRegularObject } from "../../../../../types/RegularObject";
+import { hasNoOtherKeys } from "../../../../../types/OtherKeys";
 
 export interface Room {
 
