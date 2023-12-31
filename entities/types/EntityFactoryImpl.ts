@@ -524,7 +524,6 @@ export class EntityFactoryImpl<
         const entityAsDTO = !!opts?.entityAsDTO;
         if ( isEntityType(Type) && !entityAsDTO ) {
             return (item : EntityVariableValue) : EntityVariableValue => {
-                console.log(`data = `, item);
                 return Type.isDTO(item) ? Type.createFromDTO(item) : null;
             };
         }

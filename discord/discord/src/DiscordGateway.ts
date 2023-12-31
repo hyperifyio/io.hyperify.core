@@ -1,12 +1,9 @@
 // Copyright (c) 2021 Sendanor. All rights reserved.
 
 import WebSocket from "ws";
-
 import {Observer, ObserverCallback, ObserverDestructor} from "../../../Observer";
 import { map } from "../../../functions/map";
-
 import {DiscordService} from "./DiscordService";
-
 import {DiscordGatewayState} from "./types/DiscordGatewayState";
 import {DiscordUserDTO} from "./types/DiscordUserDTO";
 import {DiscordBotGatewayDTO} from "./types/DiscordBotGatewayDTO";
@@ -186,7 +183,7 @@ export class DiscordGateway {
 
     }
 
-    private async _reconnect () {
+    private async _reconnect () : Promise<void> {
 
         this._disconnect();
 
