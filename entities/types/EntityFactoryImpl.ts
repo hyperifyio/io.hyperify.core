@@ -1610,16 +1610,16 @@ export class EntityFactoryImpl<
                     return setPropertyByKey.call(this, key, value);
                 } : undefined;
 
-                const addObjectPropertyByKey = setPropertyByKey && setObjectPropertyMethodNames.length ? function addObjectPropertyByKey (
-                    this: FinalType,
-                    key : string,
-                    value : unknown,
-                ) : ReadonlyJsonObject | undefined {
-                    if (!isObject(value)) {
-                        throw new TypeError(`${name}.${setObjectPropertyMethodName}(): The new property value was not an object: ${ LogUtils.stringifyValue(value) }`);
-                    }
-                    return setPropertyByKey.call(this, key, value);
-                } : undefined;
+                // const addObjectPropertyByKey = setPropertyByKey && setObjectPropertyMethodNames.length ? function addObjectPropertyByKey (
+                //     this: FinalType,
+                //     key : string,
+                //     value : unknown,
+                // ) : ReadonlyJsonObject | undefined {
+                //     if (!isObject(value)) {
+                //         throw new TypeError(`${name}.${setObjectPropertyMethodName}(): The new property value was not an object: ${ LogUtils.stringifyValue(value) }`);
+                //     }
+                //     return setPropertyByKey.call(this, key, value);
+                // } : undefined;
 
 
                 const dtoGetterMethod = (
