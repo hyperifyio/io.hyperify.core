@@ -1335,7 +1335,7 @@ describe('ComponentEntity', () => {
 
     });
 
-    describe.only('.addStyles', () => {
+    describe('.addStyles', () => {
 
         let entity : Component;
 

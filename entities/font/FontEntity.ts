@@ -4,6 +4,7 @@ import { ReadonlyJsonObject } from "../../Json";
 import { LogUtils } from "../../LogUtils";
 import { isNumber } from "../../types/Number";
 import { isString } from "../../types/String";
+import { Size } from "../size/Size";
 import { SizeDTO } from "../size/SizeDTO";
 import {
     isSizeDTO,
@@ -208,6 +209,46 @@ export class FontEntity
             ...(lineHeight ? { lineHeight: lineHeight.getCssStyles() } : {}),
             ...(family ? { fontFamily: family } : {}),
         };
+    }
+
+    public getFontWeight () : FontWeight | undefined {
+        return this.getWeight();
+    }
+
+    public setFontWeight (value : FontWeight | undefined) : this {
+        return this.setWeight(value);
+    }
+
+    public getFontStyle () : FontStyle | undefined {
+        return this.getStyle();
+    }
+
+    public setFontStyle (value : FontStyle | undefined) : this {
+        return this.setStyle(value);
+    }
+
+    public getFontVariant () : FontVariant | undefined {
+        return this.getVariant();
+    }
+
+    public setFontVariant (value : FontVariant | undefined) : this {
+        return this.setVariant(value);
+    }
+
+    public getFontSize () : Size | undefined {
+        return this.getSize();
+    }
+
+    public setFontSize (value : Size | SizeDTO | SizeEntity | number | undefined) : this {
+        return this.setSize(value);
+    }
+
+    public getFontFamily () : string | undefined {
+        return this.getFamily();
+    }
+
+    public setFontFamily (value : string | undefined) : this {
+        return this.setFamily(value);
     }
 
 }

@@ -38,6 +38,7 @@ export interface Font
      */
     getCssStyles () : ReadonlyJsonObject;
 
+
     /**
      * Get a font style.
      */
@@ -61,6 +62,7 @@ export interface Font
      * @param value
      */
     setStyle (value : FontStyle | undefined) : this;
+
 
     /**
      * Get a font variant.
@@ -86,6 +88,7 @@ export interface Font
      */
     setVariant (value : FontVariant | undefined) : this;
 
+
     /**
      * Get a font weight.
      */
@@ -109,6 +112,7 @@ export interface Font
      * @param value
      */
     setWeight (value : FontWeight | undefined) : this;
+
 
     /**
      * Get a font size.
@@ -135,14 +139,15 @@ export interface Font
      *
      * @param value
      */
-    setSize (value : SizeEntity | SizeDTO | undefined) : this;
+    setSize (value : SizeEntity | SizeDTO | number | undefined) : this;
 
     /**
      * Set a font size.
      *
      * @param value
      */
-    setFontSize (value : SizeEntity | SizeDTO | undefined) : this;
+    setFontSize (value : SizeEntity | SizeDTO | number | undefined) : this;
+
 
     /**
      * Get a font line-height.
@@ -160,6 +165,7 @@ export interface Font
      * @param value
      */
     setLineHeight (value : SizeEntity | SizeDTO | undefined) : this;
+
 
     /**
      * Get a font family.
@@ -186,6 +192,7 @@ export interface Font
      * @param value
      */
     setFamily (value : string | undefined) : this;
+
 
 }
 
