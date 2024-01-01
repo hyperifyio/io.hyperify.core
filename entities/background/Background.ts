@@ -16,7 +16,6 @@ import { BackgroundBlendMode } from "../types/BackgroundBlendMode";
 import { BackgroundClip } from "../types/BackgroundClip";
 import { BackgroundOrigin } from "../types/BackgroundOrigin";
 import { BackgroundPositionValue } from "../types/BackgroundPositionValue";
-import { BackgroundPositionOptions } from "../types/BackgroundPositionOptions";
 import { BackgroundSizeOptions } from "../types/BackgroundSizeOptions";
 import { BackgroundImage } from "../backgroundImage/BackgroundImage";
 import { BackgroundRepeat } from "../backgroundRepeat/BackgroundRepeat";

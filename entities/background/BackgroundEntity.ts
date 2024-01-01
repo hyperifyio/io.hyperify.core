@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { BackgroundPositionDTO } from "../backgroundPosition/BackgroundPositionDTO";
 import { BackgroundPositionEntity } from "../backgroundPosition/BackgroundPositionEntity";
@@ -14,7 +14,6 @@ import { BackgroundAttachment } from "../types/BackgroundAttachment";
 import { BackgroundBlendMode } from "../types/BackgroundBlendMode";
 import { BackgroundClip } from "../types/BackgroundClip";
 import { BackgroundOrigin } from "../types/BackgroundOrigin";
-import { BackgroundPositionOptions, getCssStylesForBackgroundPosition } from "../types/BackgroundPositionOptions";
 import { BackgroundSizeOptions, getCssStylesForBackgroundSizeOptions } from "../types/BackgroundSizeOptions";
 import { BackgroundImageEntity } from "../backgroundImage/BackgroundImageEntity";
 import { BackgroundRepeatEntity } from "../backgroundRepeat/BackgroundRepeatEntity";
