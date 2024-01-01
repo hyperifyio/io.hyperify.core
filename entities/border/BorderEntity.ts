@@ -1,5 +1,10 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { LogUtils } from "../../LogUtils";
+import { isNumber } from "../../types/Number";
+import { Size } from "../size/Size";
+import { EntityMethodImpl } from "../types/EntityMethodImpl";
+import { UnitType } from "../types/UnitType";
 import { VariableType } from "../types/VariableType";
 import {
     BorderDTO,
@@ -19,15 +24,25 @@ import {
     ColorEntity,
 } from "../color/ColorEntity";
 import {
+    isSize,
+    isSizeDTO,
+    isSizeEntity,
     SizeEntity,
+    SizeEntityFactory,
 } from "../size/SizeEntity";
 import {
     Border,
+    isBorder,
 } from "./Border";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 
 export const BorderEntityFactory = (
     EntityFactoryImpl.create<BorderDTO, Border>('Border')
+                     .addStaticMethod(
+                         EntityMethodImpl.create('create')
+                                         .addArgument(VariableType.NUMBER)
+                                         .returnType('Border')
+                     )
                      .add( EntityFactoryImpl.createProperty("style").setTypes(BorderStyle, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("width").setTypes(SizeEntity, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("radius").setTypes(SizeEntity, VariableType.UNDEFINED) )
@@ -53,10 +68,8 @@ export class BorderEntity
 {
 
     public static create () : BorderEntity;
-
-    public static create (
-        style : BorderDTO,
-    ) : BorderEntity;
+    public static create ( width : number ) : BorderEntity;
+    public static create ( style : BorderDTO ) : BorderEntity;
 
     public static create (
         style ?: BorderStyle | undefined,
@@ -74,7 +87,7 @@ export class BorderEntity
      * @param radius
      */
     public static create (
-        style ?: BorderDTO | BorderStyle | undefined,
+        style ?: BorderDTO | BorderStyle | number | undefined,
         width ?: SizeDTO | undefined,
         color ?: ColorDTO | undefined,
         radius ?: SizeDTO | undefined,
@@ -112,12 +125,42 @@ export class BorderEntity
         );
     }
 
+    public static toDTO (
+        value: BorderEntity | Border | number | undefined,
+    ) : BorderDTO | undefined {
+        if (value === undefined) {
+            return undefined;
+        }
+        if (isBorderEntity(value)) {
+            return value.getDTO();
+        }
+        if (isBorder(value)) {
+            return value.getDTO();
+        }
+        if (isNumber(value)) {
+            return {
+                width: {
+                    value: value,
+                    unit: UnitType.PX,
+                },
+            };
+        }
+        throw new TypeError(`BorderEntity.toDTO(): Could not turn into DTO: ${LogUtils.stringifyValue(value)}`);
+    }
+
+
     public constructor (
-        style ?: BorderStyle | BorderDTO | undefined,
+        style ?: BorderStyle | BorderDTO | number | undefined,
         width ?: SizeDTO | undefined,
         color ?: ColorDTO | undefined,
         radius ?: SizeDTO | undefined,
     ) {
+
+        if ( isNumber(style) ) {
+            width = SizeEntity.create(style).getDTO();
+            style = undefined;
+        }
+
         if ( style === undefined && width === undefined && color === undefined && radius === undefined ) {
             super();
         } else if ( isBorderStyle(style) ) {
@@ -129,10 +172,19 @@ export class BorderEntity
                     radius,
                 }
             );
+        } else if ( style === undefined && isSizeDTO(width) ) {
+            super(
+                {
+                    width,
+                    style,
+                    color,
+                    radius,
+                }
+            );
         } else if ( isBorderDTO(style) ) {
             super(style);
         } else {
-            throw new TypeError(`new BorderEntity(): Incorrect arguments: ${style}, ${width}, ${color}, ${radius}`);
+            throw new TypeError(`new BorderEntity(): Incorrect arguments: ${LogUtils.stringifyValue(style)}, ${LogUtils.stringifyValue(width)}, ${LogUtils.stringifyValue(color)}, ${LogUtils.stringifyValue(radius)}`);
         }
     }
 

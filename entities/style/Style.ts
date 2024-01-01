@@ -51,10 +51,16 @@ export interface Style
      */
     toJSON () : ReadonlyJsonObject;
 
+
     /**
-     * Get text color.
+     * Get text color as entity.
      */
     getTextColor () : ColorEntity | undefined;
+
+    /**
+     * Get text color as DTO.
+     */
+    getTextColorDTO () : ColorDTO | undefined;
 
     /**
      * Set text color.
@@ -62,6 +68,7 @@ export interface Style
      * @param value
      */
     setTextColor (value: ColorEntity | ColorDTO | string | undefined) : this;
+
 
     /**
      * Get text alignment.
@@ -75,6 +82,7 @@ export interface Style
      */
     setTextAlign (value: TextAlign | undefined) : this;
 
+
     /**
      * Get box sizing.
      */
@@ -86,6 +94,7 @@ export interface Style
      * @param value
      */
     setBoxSizing (value: BoxSizing | undefined) : this;
+
 
     /**
      * Get background color
@@ -104,6 +113,7 @@ export interface Style
      */
     setBackgroundColor (value: ColorEntity | ColorDTO | string | undefined) : this;
 
+
     /**
      * Returns CSS styles.
      */
@@ -115,7 +125,7 @@ export interface Style
     getRightMargin () : Size | undefined;
     getLeftMargin () : Size | undefined;
 
-    setMargin (value: SizeEntity | Size | number | undefined) : this;
+    setMargin (value: SizeEntity | Size | SizeBox | number | undefined) : this;
     setTopMargin (value: SizeEntity | Size | number | undefined) : this;
     setBottomMargin (value: SizeEntity | Size | number | undefined) : this;
     setRightMargin (value: SizeEntity | Size | number | undefined) : this;
@@ -139,7 +149,7 @@ export interface Style
 
     getBorder () : Border | BorderBox | undefined;
     getBorderDTO () : BorderDTO | BorderBoxDTO | undefined;
-    setBorder (value : BorderEntity | BorderDTO | BorderBoxEntity | BorderBoxDTO | undefined) : this;
+    setBorder (value : BorderEntity | BorderDTO | BorderBoxEntity | BorderBoxDTO | number | undefined) : this;
 
     getTopBorder () : Border | undefined;
     getBottomBorder () : Border | undefined;
@@ -198,6 +208,6 @@ export interface Style
 
     getBackground () : Background | undefined;
     getBackgroundDTO () : BackgroundDTO | undefined;
-    setBackground (value: Background | BackgroundEntity | number | undefined) : this;
+    setBackground (value: Background | BackgroundDTO | BackgroundEntity | number | undefined) : this;
 
 }

@@ -39,128 +39,40 @@ export interface SizeBox
      */
     getCssStyles () : string;
 
-
-    /**
-     * Get a top size.
-     */
     getTop () : SizeEntity | undefined;
-
-    /**
-     * Get top size as a DTO.
-     */
     getTopDTO () : SizeDTO | undefined;
+    setTop ( value : undefined ) : this;
+    setTop ( value : SizeEntity ) : this;
+    setTop ( value : SizeDTO ) : this;
+    setTop ( value : SpecialSize.AUTO ) : this;
+    setTop ( value : number ) : this;
+    setTop ( value : number, unit : UnitType ) : this;
 
-    /**
-     * Set a top value as auto
-     *
-     * @param value
-     */
-    setTop (
-        value : SpecialSize.AUTO,
-    ) : this;
-
-    /**
-     * Set a top as a unit.
-     *
-     * @param value
-     * @param unit
-     */
-    setTop (
-        value ?: number | undefined,
-        unit  ?: UnitType | undefined,
-    ) : this;
-
-
-    /**
-     * Get a right size.
-     */
     getRight () : SizeEntity | undefined;
-
-    /**
-     * Get right size as a DTO.
-     */
     getRightDTO () : SizeDTO | undefined;
+    setRight ( value : undefined ) : this;
+    setRight ( value : SizeEntity ) : this;
+    setRight ( value : SizeDTO ) : this;
+    setRight ( value : SpecialSize.AUTO ) : this;
+    setRight ( value : number ) : this;
+    setRight ( value : number, unit : UnitType ) : this;
 
-    /**
-     * Set a right value as auto
-     *
-     * @param value
-     */
-    setRight (
-        value : SpecialSize.AUTO,
-    ) : this;
-
-    /**
-     * Set a right as a unit.
-     *
-     * @param value
-     * @param unit
-     */
-    setRight (
-        value ?: number | undefined,
-        unit  ?: UnitType | undefined,
-    ) : this;
-
-
-    /**
-     * Get a bottom size.
-     */
     getBottom () : SizeEntity | undefined;
-
-    /**
-     * Get bottom size as a DTO.
-     */
     getBottomDTO () : SizeDTO | undefined;
+    setBottom ( value : undefined ) : this;
+    setBottom ( value : SizeEntity ) : this;
+    setBottom ( value : SizeDTO ) : this;
+    setBottom ( value : SpecialSize.AUTO ) : this;
+    setBottom ( value : number ) : this;
+    setBottom ( value : number, unit : UnitType ) : this;
 
-    /**
-     * Set a bottom value as auto
-     *
-     * @param value
-     */
-    setBottom (
-        value : SpecialSize.AUTO,
-    ) : this;
-
-    /**
-     * Set a bottom as a unit.
-     *
-     * @param value
-     * @param unit
-     */
-    setBottom (
-        value ?: number | undefined,
-        unit  ?: UnitType | undefined,
-    ) : this;
-
-
-    /**
-     * Get a left size.
-     */
     getLeft () : SizeEntity | undefined;
-
-    /**
-     * Get left size as a DTO.
-     */
     getLeftDTO () : SizeDTO | undefined;
-
-    /**
-     * Set a left value as auto
-     *
-     * @param value
-     */
-    setLeft (
-        value : SpecialSize.AUTO,
-    ) : this;
-
-    /**
-     * Set a left as a unit.
-     *
-     * @param value
-     * @param unit
-     */
-    setLeft (
-        value ?: number | undefined,
-        unit  ?: UnitType | undefined,
-    ) : this;
+    setLeft ( value : undefined ) : this;
+    setLeft ( value : SizeEntity ) : this;
+    setLeft ( value : SizeDTO ) : this;
+    setLeft ( value : SpecialSize.AUTO ) : this;
+    setLeft ( value : number ) : this;
+    setLeft ( value : number, unit : UnitType ) : this;
 
 }

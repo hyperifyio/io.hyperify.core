@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { LogUtils } from "../../LogUtils";
 import { isNumber } from "../../types/Number";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { EntityMethodImpl } from "../types/EntityMethodImpl";
@@ -130,6 +131,27 @@ export class SizeEntity
             value,
             unit ?? UnitType.PX,
         );
+    }
+
+    public static toDTO (
+        value: SizeEntity | Size | number | undefined,
+    ) : SizeDTO | undefined {
+        if (value === undefined) {
+            return undefined;
+        }
+        if (isSizeEntity(value)) {
+            return value.getDTO();
+        }
+        if (isSize(value)) {
+            return value.getDTO();
+        }
+        if (isNumber(value)) {
+            return {
+                value: value,
+                unit: UnitType.PX,
+            };
+        }
+        throw new TypeError(`SizeEntity.toDTO(): Could not turn into DTO: ${LogUtils.stringifyValue(value)}`);
     }
 
     /**

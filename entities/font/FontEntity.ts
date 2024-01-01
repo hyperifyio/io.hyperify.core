@@ -1,25 +1,41 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { VariableType } from "../types/VariableType";
-import {
-    FontDTO,
-} from "./FontDTO";
-import { SizeDTO } from "../size/SizeDTO";
 import { ReadonlyJsonObject } from "../../Json";
+import { LogUtils } from "../../LogUtils";
+import { isNumber } from "../../types/Number";
+import { isString } from "../../types/String";
+import { SizeDTO } from "../size/SizeDTO";
 import {
+    isSizeDTO,
+    isSizeEntity,
     SizeEntity,
 } from "../size/SizeEntity";
 import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
+import { EntityMethodImpl } from "../types/EntityMethodImpl";
+import { UnitType } from "../types/UnitType";
+import { VariableType } from "../types/VariableType";
 import { Font } from "./Font";
+import { FontDTO } from "./FontDTO";
 import {
     FontStyle,
     isFontStyle,
+    isFontStyleOrUndefined,
 } from "./types/FontStyle";
 import { FontVariant } from "./types/FontVariant";
 import { FontWeight } from "./types/FontWeight";
 
 export const FontEntityFactory = (
     EntityFactoryImpl.create<FontDTO, Font>('Font')
+                     .addStaticMethod(
+                         EntityMethodImpl.create('create')
+                                         .addArgument(VariableType.NUMBER)
+                                         .returnType('Font')
+                     )
+                     .addStaticMethod(
+                         EntityMethodImpl.create('create')
+                                         .addArgument(VariableType.STRING)
+                                         .returnType('Font')
+                     )
                      .add( EntityFactoryImpl.createProperty("style").setTypes( FontStyle, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("variant").setTypes( FontVariant, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("weight").setTypes( FontWeight, VariableType.UNDEFINED) )
@@ -49,23 +65,28 @@ export class FontEntity
     implements Font
 {
 
+    public static create () : FontEntity;
+    public static create (value : string) : FontEntity;
+    public static create (value : number) : FontEntity;
+    public static create (value : FontDTO) : FontEntity;
+
     /**
      * Creates a font entity.
      *
      * @param value
      */
     public static create (
-        value ?: string | undefined,
+        value ?: FontDTO | number | string | undefined,
     ) : FontEntity {
-        return new FontEntity(
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            value,
+        if (value === undefined) return new FontEntity();
+        if (isFontDTO(value)) return new FontEntity(value);
+        if (isNumber(value)) return new FontEntity(value);
+        if (isString(value)) return new FontEntity(value);
+        throw new TypeError(
+            `FontEntity.create(): Invalid argument: ${LogUtils.stringifyValue(value)}`
         );
     }
+
 
     /**
      * Creates a font entity from DTO.
@@ -85,32 +106,64 @@ export class FontEntity
         );
     }
 
+    public static toDTO (
+        value : FontStyle | FontDTO | SizeEntity | SizeDTO | FontEntity | Font | number | string | undefined,
+    ) : FontDTO {
+        if ( value === undefined ) return {};
+        if ( isFontDTO(value) ) return value;
+        if ( isFontEntity(value) ) return value.getDTO();
+        if ( isFontStyle(value) ) {
+            return {
+                style: value,
+            };
+        }
+        if ( isSizeEntity(value) ) {
+            return {
+                size: value.getDTO(),
+            };
+        }
+        if ( isSizeDTO(value) ) {
+            return {
+                size: value,
+            };
+        }
+        if ( isNumber(value) ) {
+            return {
+                size: {
+                    value,
+                    unit: UnitType.PX,
+                },
+            };
+        }
+        throw new TypeError(
+            `FontEntity.toDTO(): Invalid argument: ${LogUtils.stringifyValue(value)}`
+        );
+    }
+
     public constructor ();
-
+    public constructor ( font: FontDTO );
+    public constructor ( font: FontEntity );
+    public constructor ( font: Font );
+    public constructor ( font: number );
+    public constructor ( font: string );
     public constructor (
-        font: FontDTO | FontEntity | Font,
+        style      ?: FontStyle | undefined,
+        variant    ?: FontVariant | undefined,
+        weight     ?: FontWeight | undefined,
+        size       ?: SizeDTO | undefined,
+        lineHeight ?: SizeDTO | undefined,
+        family     ?: string | undefined,
     );
 
     public constructor (
-        style ?: FontStyle | undefined,
-        variant ?: FontVariant | undefined,
-        weight ?: FontWeight | undefined,
-        size ?: SizeDTO | undefined,
+        style      ?: FontStyle | FontDTO | FontEntity | Font | number | string | undefined,
+        variant    ?: FontVariant | undefined,
+        weight     ?: FontWeight | undefined,
+        size       ?: SizeDTO | undefined,
         lineHeight ?: SizeDTO | undefined,
-        family ?: string | undefined,
-    );
-
-    public constructor (
-        style ?: FontStyle | FontDTO | FontEntity | Font | undefined,
-        variant ?: FontVariant | undefined,
-        weight ?: FontWeight | undefined,
-        size ?: SizeDTO | undefined,
-        lineHeight ?: SizeDTO | undefined,
-        family ?: string | undefined,
+        family     ?: string | undefined,
     ) {
-        if (style === undefined && variant === undefined && weight === undefined && size === undefined && lineHeight === undefined && family === undefined) {
-            super();
-        } else if ( isFontStyle(style) ) {
+        if ( isFontStyleOrUndefined(style) ) {
             super( {
                 style,
                 variant,
@@ -119,14 +172,21 @@ export class FontEntity
                 lineHeight,
                 family,
             } );
-        } else if (isFontDTO(style)) {
-            super( style );
-        } else if (isFontEntity(style)) {
-            super( style.getDTO() );
         } else {
-            throw new TypeError(
-                `new FontEntity(): Invalid arguments: ${style}, ${variant }, ${ weight }, ${ size }, ${ lineHeight }, ${ family }`
-            );
+            const dto: FontDTO | undefined = FontEntity.toDTO(style);
+            if (dto) {
+                super(dto);
+            } else {
+                throw new TypeError(
+                    `new FontEntity(): Invalid arguments: ${
+                        LogUtils.stringifyValue(style) }, ${
+                        LogUtils.stringifyValue(variant) }, ${
+                        LogUtils.stringifyValue(weight) }, ${
+                        LogUtils.stringifyValue(size) }, ${
+                        LogUtils.stringifyValue(lineHeight) }, ${
+                        LogUtils.stringifyValue(family) }`
+                );
+            }
         }
     }
 

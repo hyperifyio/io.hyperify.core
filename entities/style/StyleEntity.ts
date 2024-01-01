@@ -1,9 +1,10 @@
-// Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { BackgroundDTO } from "../background/BackgroundDTO";
 import {
     BorderDTO,
 } from "../border/BorderDTO";
+import { BorderBox } from "../borderBox/BorderBox";
 import {
     ColorDTO,
 } from "../color/ColorDTO";
@@ -13,6 +14,7 @@ import {
 import {
     SizeDTO,
 } from "../size/SizeDTO";
+import { SizeBox } from "../sizeBox/SizeBox";
 import { VariableType } from "../types/VariableType";
 import {
     StyleDTO,
@@ -30,7 +32,11 @@ import {
     BackgroundEntity,
     isBackgroundEntity,
 } from "../background/BackgroundEntity";
-import { BorderBoxEntity } from "../borderBox/BorderBoxEntity";
+import {
+    BorderBoxEntity,
+    isBorderBox,
+    isBorderBoxEntity,
+} from "../borderBox/BorderBoxEntity";
 import {
     BorderEntity,
     isBorderDTO,
@@ -43,7 +49,11 @@ import {
     FontEntity,
     isFontEntity,
 } from "../font/FontEntity";
-import { SizeBoxEntity } from "../sizeBox/SizeBoxEntity";
+import {
+    isSizeBox,
+    isSizeBoxEntity,
+    SizeBoxEntity,
+} from "../sizeBox/SizeBoxEntity";
 import {
     isSizeDTO,
     isSizeEntity,
@@ -457,10 +467,323 @@ export class StyleEntity
         };
     }
 
+    public getBackgroundColor () : ColorEntity | undefined {
+        const bg = this.getBackground();
+        return bg ? bg.getColor() : undefined;
+    }
+
+    public getBackgroundColorDTO () : ColorDTO | undefined {
+        const bg = this.getBackground();
+        return bg ? bg.getColor()?.getDTO() : undefined;
+    }
+
     public setBackgroundColor ( value : ColorEntity | ColorDTO | string | undefined ) : this {
         const color = value ? ColorEntity.toDTO(value) : undefined;
         const bg = (this.getBackground() ?? BackgroundEntity.create()).setColor(color);
         return this.setBackground( bg );
+    }
+
+    public getTopMargin () : Size | undefined {
+        const margin = this.getMargin();
+        if (isSizeBox(margin)) {
+            return margin.getTop();
+        }
+        return margin;
+    }
+
+    public getBottomMargin () : Size | undefined {
+        const margin = this.getMargin();
+        if (isSizeBox(margin)) {
+            return margin.getBottom();
+        }
+        return margin;
+    }
+
+    public getLeftMargin () : Size | undefined {
+        const margin = this.getMargin();
+        if (isSizeBox(margin)) {
+            return margin.getLeft();
+        }
+        return margin;
+    }
+
+    public getRightMargin () : Size | undefined {
+        const margin = this.getMargin();
+        if (isSizeBox(margin)) {
+            return margin.getRight();
+        }
+        return margin;
+    }
+
+    public setTopMargin ( value : SizeEntity | Size | number | undefined ) : this {
+        const dto : SizeDTO | undefined = SizeEntity.toDTO(value);
+        const current : Size | SizeBox | undefined = this.getMargin();
+        if (isSizeBoxEntity(current)) {
+            return this.setMargin( dto ? current.setTop(dto) : current.setTop(undefined) );
+        }
+        if (isSizeEntity(current)) {
+            const currentDTO : SizeDTO = current.getDTO();
+            return this.setMargin(
+                dto
+                ? SizeBoxEntity.create().setRight(currentDTO).setBottom(currentDTO).setLeft(currentDTO).setTop(dto)
+                : SizeBoxEntity.create().setRight(currentDTO).setBottom(currentDTO).setLeft(currentDTO)
+            );
+        }
+        return this.setMargin( dto ? SizeBoxEntity.create().setTop(dto) : SizeBoxEntity.create() );
+    }
+
+    public setRightMargin ( value : SizeEntity | Size | number | undefined ) : this {
+        const dto : SizeDTO | undefined = SizeEntity.toDTO(value);
+        const current : Size | SizeBox | undefined = this.getMargin();
+        if (isSizeBoxEntity(current)) {
+            return this.setMargin( dto ? current.setRight(dto) : current.setRight(undefined) );
+        }
+        if (isSizeEntity(current)) {
+            const currentDTO : SizeDTO = current.getDTO();
+            return this.setMargin(
+                dto
+                ? SizeBoxEntity.create().setTop(currentDTO).setBottom(currentDTO).setLeft(currentDTO).setRight(dto)
+                : SizeBoxEntity.create().setTop(currentDTO).setBottom(currentDTO).setLeft(currentDTO)
+            );
+        }
+        return this.setMargin( dto ? SizeBoxEntity.create().setRight(dto) : SizeBoxEntity.create() );
+    }
+
+    public setBottomMargin ( value : SizeEntity | Size | number | undefined ) : this {
+        const dto : SizeDTO | undefined = SizeEntity.toDTO(value);
+        const current : Size | SizeBox | undefined = this.getMargin();
+        if (isSizeBoxEntity(current)) {
+            return this.setMargin( dto ? current.setBottom(dto) : current.setBottom(undefined) );
+        }
+        if (isSizeEntity(current)) {
+            const currentDTO : SizeDTO = current.getDTO();
+            return this.setMargin(
+                dto
+                ? SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setLeft(currentDTO).setBottom(dto)
+                : SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setLeft(currentDTO)
+            );
+        }
+        return this.setMargin( dto ? SizeBoxEntity.create().setBottom(dto) : SizeBoxEntity.create() );
+    }
+
+    public setLeftMargin ( value : SizeEntity | Size | number | undefined ) : this {
+        const dto : SizeDTO | undefined = SizeEntity.toDTO(value);
+        const current : Size | SizeBox | undefined = this.getMargin();
+        if (isSizeBoxEntity(current)) {
+            return this.setMargin( dto ? current.setLeft(dto) : current.setLeft(undefined) );
+        }
+        if (isSizeEntity(current)) {
+            const currentDTO : SizeDTO = current.getDTO();
+            return this.setMargin(
+                dto
+                ? SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setBottom(currentDTO).setLeft(dto)
+                : SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setBottom(currentDTO)
+            );
+        }
+        return this.setMargin( dto ? SizeBoxEntity.create().setLeft(dto) : SizeBoxEntity.create() );
+    }
+
+
+    public getTopPadding () : Size | undefined {
+        const padding = this.getPadding();
+        if (isSizeBox(padding)) {
+            return padding.getTop();
+        }
+        return padding;
+    }
+
+    public getBottomPadding () : Size | undefined {
+        const padding = this.getPadding();
+        if (isSizeBox(padding)) {
+            return padding.getBottom();
+        }
+        return padding;
+    }
+
+    public getLeftPadding () : Size | undefined {
+        const padding = this.getPadding();
+        if (isSizeBox(padding)) {
+            return padding.getLeft();
+        }
+        return padding;
+    }
+
+    public getRightPadding () : Size | undefined {
+        const padding = this.getPadding();
+        if (isSizeBox(padding)) {
+            return padding.getRight();
+        }
+        return padding;
+    }
+
+    public setTopPadding ( value : SizeEntity | Size | number | undefined ) : this {
+        const dto : SizeDTO | undefined = SizeEntity.toDTO(value);
+        const current : Size | SizeBox | undefined = this.getPadding();
+        if (isSizeBoxEntity(current)) {
+            return this.setPadding( dto ? current.setTop(dto) : current.setTop(undefined) );
+        }
+        if (isSizeEntity(current)) {
+            const currentDTO : SizeDTO = current.getDTO();
+            return this.setPadding(
+                dto
+                ? SizeBoxEntity.create().setRight(currentDTO).setBottom(currentDTO).setLeft(currentDTO).setTop(dto)
+                : SizeBoxEntity.create().setRight(currentDTO).setBottom(currentDTO).setLeft(currentDTO)
+            );
+        }
+        return this.setPadding( dto ? SizeBoxEntity.create().setTop(dto) : SizeBoxEntity.create() );
+    }
+
+    public setRightPadding ( value : SizeEntity | Size | number | undefined ) : this {
+        const dto : SizeDTO | undefined = SizeEntity.toDTO(value);
+        const current : Size | SizeBox | undefined = this.getPadding();
+        if (isSizeBoxEntity(current)) {
+            return this.setPadding( dto ? current.setRight(dto) : current.setRight(undefined) );
+        }
+        if (isSizeEntity(current)) {
+            const currentDTO : SizeDTO = current.getDTO();
+            return this.setPadding(
+                dto
+                ? SizeBoxEntity.create().setTop(currentDTO).setBottom(currentDTO).setLeft(currentDTO).setRight(dto)
+                : SizeBoxEntity.create().setTop(currentDTO).setBottom(currentDTO).setLeft(currentDTO)
+            );
+        }
+        return this.setPadding( dto ? SizeBoxEntity.create().setRight(dto) : SizeBoxEntity.create() );
+    }
+
+    public setBottomPadding ( value : SizeEntity | Size | number | undefined ) : this {
+        const dto : SizeDTO | undefined = SizeEntity.toDTO(value);
+        const current : Size | SizeBox | undefined = this.getPadding();
+        if (isSizeBoxEntity(current)) {
+            return this.setPadding( dto ? current.setBottom(dto) : current.setBottom(undefined) );
+        }
+        if (isSizeEntity(current)) {
+            const currentDTO : SizeDTO = current.getDTO();
+            return this.setPadding(
+                dto
+                ? SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setLeft(currentDTO).setBottom(dto)
+                : SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setLeft(currentDTO)
+            );
+        }
+        return this.setPadding( dto ? SizeBoxEntity.create().setBottom(dto) : SizeBoxEntity.create() );
+    }
+
+    public setLeftPadding ( value : SizeEntity | Size | number | undefined ) : this {
+        const dto : SizeDTO | undefined = SizeEntity.toDTO(value);
+        const current : Size | SizeBox | undefined = this.getPadding();
+        if (isSizeBoxEntity(current)) {
+            return this.setPadding( dto ? current.setLeft(dto) : current.setLeft(undefined) );
+        }
+        if (isSizeEntity(current)) {
+            const currentDTO : SizeDTO = current.getDTO();
+            return this.setPadding(
+                dto
+                ? SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setBottom(currentDTO).setLeft(dto)
+                : SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setBottom(currentDTO)
+            );
+        }
+        return this.setPadding( dto ? SizeBoxEntity.create().setLeft(dto) : SizeBoxEntity.create() );
+    }
+
+
+
+    public getTopBorder () : Border | undefined {
+        const border = this.getBorder();
+        if (isBorderBox(border)) {
+            return border.getTop();
+        }
+        return border;
+    }
+
+    public getBottomBorder () : Border | undefined {
+        const border = this.getBorder();
+        if (isBorderBox(border)) {
+            return border.getBottom();
+        }
+        return border;
+    }
+
+    public getLeftBorder () : Border | undefined {
+        const border = this.getBorder();
+        if (isBorderBox(border)) {
+            return border.getLeft();
+        }
+        return border;
+    }
+
+    public getRightBorder () : Border | undefined {
+        const border = this.getBorder();
+        if (isBorderBox(border)) {
+            return border.getRight();
+        }
+        return border;
+    }
+
+    public setTopBorder ( value : BorderEntity | Border | number | undefined ) : this {
+        const dto : BorderDTO | undefined = BorderEntity.toDTO(value);
+        const current : Border | BorderBox | undefined = this.getBorder();
+        if (isBorderBoxEntity(current)) {
+            return this.setBorder( dto ? current.setTop(dto) : current.setTop(undefined) );
+        }
+        if (isBorderEntity(current)) {
+            const currentDTO : BorderDTO = current.getDTO();
+            return this.setBorder(
+                dto
+                ? BorderBoxEntity.create().setRight(currentDTO).setBottom(currentDTO).setLeft(currentDTO).setTop(dto)
+                : BorderBoxEntity.create().setRight(currentDTO).setBottom(currentDTO).setLeft(currentDTO)
+            );
+        }
+        return this.setBorder( dto ? BorderBoxEntity.create().setTop(dto) : BorderBoxEntity.create() );
+    }
+
+    public setRightBorder ( value : BorderEntity | Border | number | undefined ) : this {
+        const dto : BorderDTO | undefined = BorderEntity.toDTO(value);
+        const current : Border | BorderBox | undefined = this.getBorder();
+        if (isBorderBoxEntity(current)) {
+            return this.setBorder( dto ? current.setRight(dto) : current.setRight(undefined) );
+        }
+        if (isBorderEntity(current)) {
+            const currentDTO : BorderDTO = current.getDTO();
+            return this.setBorder(
+                dto
+                ? BorderBoxEntity.create().setTop(currentDTO).setBottom(currentDTO).setLeft(currentDTO).setRight(dto)
+                : BorderBoxEntity.create().setTop(currentDTO).setBottom(currentDTO).setLeft(currentDTO)
+            );
+        }
+        return this.setBorder( dto ? BorderBoxEntity.create().setRight(dto) : BorderBoxEntity.create() );
+    }
+
+    public setBottomBorder ( value : BorderEntity | Border | number | undefined ) : this {
+        const dto : BorderDTO | undefined = BorderEntity.toDTO(value);
+        const current : Border | BorderBox | undefined = this.getBorder();
+        if (isBorderBoxEntity(current)) {
+            return this.setBorder( dto ? current.setBottom(dto) : current.setBottom(undefined) );
+        }
+        if (isBorderEntity(current)) {
+            const currentDTO : BorderDTO = current.getDTO();
+            return this.setBorder(
+                dto
+                ? BorderBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setLeft(currentDTO).setBottom(dto)
+                : BorderBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setLeft(currentDTO)
+            );
+        }
+        return this.setBorder( dto ? BorderBoxEntity.create().setBottom(dto) : BorderBoxEntity.create() );
+    }
+
+    public setLeftBorder ( value : BorderEntity | Border | number | undefined ) : this {
+        const dto : BorderDTO | undefined = BorderEntity.toDTO(value);
+        const current : Border | BorderBox | undefined = this.getBorder();
+        if (isBorderBoxEntity(current)) {
+            return this.setBorder( dto ? current.setLeft(dto) : current.setLeft(undefined) );
+        }
+        if (isBorderEntity(current)) {
+            const currentDTO : BorderDTO = current.getDTO();
+            return this.setBorder(
+                dto
+                ? BorderBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setBottom(currentDTO).setLeft(dto)
+                : BorderBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setBottom(currentDTO)
+            );
+        }
+        return this.setBorder( dto ? BorderBoxEntity.create().setLeft(dto) : BorderBoxEntity.create() );
     }
 
 }
