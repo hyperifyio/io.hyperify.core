@@ -1,8 +1,10 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ReadonlyJsonObject } from "../../Json";
 import { isFunction } from "../../types/Function";
 import { isObject } from "../../types/Object";
+import { BackgroundPositionDTO } from "../backgroundPosition/BackgroundPositionDTO";
+import { BackgroundPositionEntity } from "../backgroundPosition/BackgroundPositionEntity";
 import { ColorEntity } from "../color/ColorEntity";
 import { BackgroundRepeatType } from "../types/BackgroundRepeatType";
 import { BackgroundDTO } from "./BackgroundDTO";
@@ -54,7 +56,6 @@ export interface Background extends Entity<BackgroundDTO> {
     getImage () : BackgroundImage | undefined;
     getImageDTO () : BackgroundImageDTO | undefined;
     getOrigin () : BackgroundOrigin | undefined;
-    getPosition () : BackgroundPositionOptions | undefined;
     getRepeat () : BackgroundRepeat | undefined;
     getRepeatDTO () : BackgroundRepeatDTO | undefined;
     getSize () : BackgroundSizeOptions | undefined;
@@ -67,11 +68,6 @@ export interface Background extends Entity<BackgroundDTO> {
     setSetTransparentColor () : this;
     setImage (value : BackgroundImage | BackgroundImageDTO | undefined) : this;
     setOrigin (value : BackgroundOrigin | undefined) : this;
-    setPosition (
-        a : BackgroundPositionValue | undefined,
-        b : BackgroundPositionValue | undefined,
-    ) : this;
-    setPosition (value : BackgroundPositionOptions | undefined) : this;
     setRepeat (value : BackgroundRepeat | BackgroundRepeatDTO | undefined) : this;
     setSize (value : BackgroundSizeOptions | undefined) : this;
 
@@ -83,13 +79,15 @@ export interface Background extends Entity<BackgroundDTO> {
     setTransparentColor () : this;
     image (value : BackgroundImage | BackgroundImageDTO | undefined) : this;
     origin (value : BackgroundOrigin | undefined) : this;
-    position (
-        a : BackgroundPositionValue | undefined,
-        b : BackgroundPositionValue | undefined,
-    ) : this;
-    position (value : BackgroundPositionOptions | undefined) : this;
+
     repeat (value : BackgroundRepeat | BackgroundRepeatDTO | BackgroundRepeatType | undefined) : this;
     size (value : BackgroundSizeOptions | undefined) : this;
+
+
+    getPosition () : BackgroundPositionEntity | undefined;
+    getPositionDTO () : BackgroundPositionDTO | undefined;
+    setPosition (value : BackgroundPositionValue | BackgroundPositionEntity | BackgroundPositionDTO | undefined) : this;
+    position (value : BackgroundPositionValue | BackgroundPositionEntity | BackgroundPositionDTO | undefined) : this;
 
 }
 

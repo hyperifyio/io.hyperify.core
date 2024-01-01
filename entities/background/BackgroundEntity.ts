@@ -1,6 +1,8 @@
 // Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { BackgroundPositionDTO } from "../backgroundPosition/BackgroundPositionDTO";
 import { BackgroundPositionEntity } from "../backgroundPosition/BackgroundPositionEntity";
+import { BackgroundPositionValue } from "../types/BackgroundPositionValue";
 import { BackgroundSize } from "../types/BackgroundSize";
 import { ReadonlyJsonObject } from "../../Json";
 import { VariableType } from "../types/VariableType";
@@ -109,8 +111,8 @@ export class BackgroundEntity
 
     /**
      */
-    public static position (value : BackgroundPositionOptions | undefined) : BackgroundEntity {
-        return this.create().position(value);
+    public static position (value : BackgroundPositionValue | BackgroundPositionDTO | BackgroundPositionEntity | undefined) : BackgroundEntity {
+        return this.create().setPosition(value);
     }
 
     /**
@@ -152,7 +154,7 @@ export class BackgroundEntity
             ...(color ? { backgroundColor: color.getCssStyles() } : {}),
             ...(image ? { backgroundImage: image.getCssStyles() } : {}),
             ...(origin ? { backgroundOrigin: origin } : {}),
-            ...(position ? { backgroundPosition: getCssStylesForBackgroundPosition(position) } : {}),
+            ...(position ? position.getCssStyles() : {}),
             ...(repeat ? { backgroundRepeat: repeat.getCssStyles() } : {}),
             ...(size ? { backgroundSize: getCssStylesForBackgroundSizeOptions(size) } : {}),
         };
