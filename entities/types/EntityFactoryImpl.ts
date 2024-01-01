@@ -1510,6 +1510,13 @@ export class EntityFactoryImpl<
                 ) : any | undefined {
                     const value : any = (this as any)[dtoGetterMethodName]();
 
+                    if (isEntity(newValues)) {
+                        return (this as any)[setterMethodName]({
+                            ...(value ? value : {}),
+                            ...newValues.getDTO(),
+                        });
+                    }
+
                     if (isReadonlyJsonObject(newValues)) {
                         return (this as any)[setterMethodName]({
                             ...(value ? value : {}),

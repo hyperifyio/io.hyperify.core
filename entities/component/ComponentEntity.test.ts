@@ -2,6 +2,8 @@
 
 import { isString } from "../../types/String";
 import { ColorEntity } from "../color/ColorEntity";
+import { StyleEntity } from "../style/StyleEntity";
+import { BoxSizing } from "../types/BoxSizing";
 import { TextAlign } from "../types/TextAlign";
 import { Component } from "./Component";
 import { ComponentEntity } from "./ComponentEntity";
@@ -1169,13 +1171,24 @@ describe('ComponentEntity', () => {
             expect( entity.getStyle() ).toEqual(undefined);
         });
 
-        it('can get a style when it is defined', () => {
+        it('can get a style when text align is defined', () => {
             entity.setStyle({
                 textAlign : TextAlign.CENTER
             });
             expect( entity.getStyle().getDTO() ).toEqual(
                 expect.objectContaining({
                     textAlign: TextAlign.CENTER
+                }),
+            );
+        });
+
+        it('can get a style when box sizing is defined', () => {
+            entity.setStyle({
+                boxSizing : BoxSizing.BORDER_BOX
+            });
+            expect( entity.getStyle().getDTO() ).toEqual(
+                expect.objectContaining({
+                    boxSizing: BoxSizing.BORDER_BOX
                 }),
             );
         });
@@ -1215,13 +1228,35 @@ describe('ComponentEntity', () => {
             entity = ComponentEntity.create('Foo');
         });
 
-        it('can set a style', () => {
+        it('can set a text align style using DTO', () => {
             entity.setStyle({
                 textAlign : TextAlign.CENTER
             });
             expect( entity.getStyleDTO() ).toEqual(
                 expect.objectContaining({
                     textAlign : TextAlign.CENTER
+                }),
+            );
+        });
+
+        it('can set a box sizing style using DTO', () => {
+            entity.setStyle({
+                boxSizing : BoxSizing.BORDER_BOX
+            });
+            expect( entity.getStyleDTO() ).toEqual(
+                expect.objectContaining({
+                    boxSizing : BoxSizing.BORDER_BOX
+                }),
+            );
+        });
+
+        it('can set a box sizing style using entity', () => {
+            entity.setStyle(
+                StyleEntity.create().setBoxSizing(BoxSizing.BORDER_BOX)
+            );
+            expect( entity.getStyleDTO() ).toEqual(
+                expect.objectContaining({
+                    boxSizing : BoxSizing.BORDER_BOX
                 }),
             );
         });
@@ -1290,6 +1325,56 @@ describe('ComponentEntity', () => {
             entity.addStyle({
                 textColor : color
             });
+            expect( entity.getStyleDTO() ).toEqual(
+                expect.objectContaining({
+                    textAlign : TextAlign.CENTER,
+                    textColor: color,
+                }),
+            );
+        });
+
+    });
+
+    describe.only('.addStyles', () => {
+
+        let entity : Component;
+
+        beforeEach(() => {
+            entity = ComponentEntity.create('Foo');
+            entity.setStyle({
+                textAlign : TextAlign.CENTER
+            });
+        });
+
+        it('can override a style from DTO', () => {
+            entity.addStyles({
+                textAlign : TextAlign.LEFT
+            });
+            expect( entity.getStyleDTO() ).toEqual(
+                expect.objectContaining({
+                    textAlign : TextAlign.LEFT
+                }),
+            );
+        });
+
+        it('can append a text color style from DTO', () => {
+            const color = ColorEntity.create('#fff').getDTO();
+            entity.addStyles({
+                textColor : color
+            });
+            expect( entity.getStyleDTO() ).toEqual(
+                expect.objectContaining({
+                    textAlign : TextAlign.CENTER,
+                    textColor: color,
+                }),
+            );
+        });
+
+        it('can append a style from entity', () => {
+            const color = ColorEntity.create('#fff').getDTO();
+            entity.addStyles(
+                StyleEntity.create().setTextColor(color)
+            );
             expect( entity.getStyleDTO() ).toEqual(
                 expect.objectContaining({
                     textAlign : TextAlign.CENTER,

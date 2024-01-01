@@ -285,6 +285,7 @@ export interface Component
      * @param style
      */
     addStyle (style : Style | StyleEntity | StyleDTO | undefined) : this;
+    addStyles (style : Style | StyleEntity | StyleDTO | undefined) : this;
 
 
 }
