@@ -168,6 +168,20 @@ export class BackgroundEntity
         return this.setImage( BackgroundImageEntity.url(value) );
     }
 
+    /**
+     * @inheritDoc
+     */
+    public setTransparentColor () : this {
+        return this.setColor('transparent');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public transparentColor () : this {
+        return this.setTransparentColor();
+    }
+
 }
 
 export function isBackgroundEntity (value: unknown): value is BackgroundEntity {

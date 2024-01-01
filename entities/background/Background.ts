@@ -62,7 +62,7 @@ export interface Background extends Entity<BackgroundDTO> {
     setAttachment (value : BackgroundAttachment | undefined) : this;
     setBlendMode (value : BackgroundBlendMode | undefined) : this;
     setClip (value : BackgroundClip | undefined) : this;
-    setColor (value : ColorEntity | Color | ColorDTO | undefined) : this;
+    setColor (value : ColorEntity | Color | ColorDTO | string | undefined) : this;
     setTransparentColor () : this;
     setSetTransparentColor () : this;
     setImage (value : BackgroundImage | BackgroundImageDTO | undefined) : this;

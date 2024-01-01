@@ -40,11 +40,33 @@ describe('BackgroundEntity', () => {
     });
 
     describe('.setColor', () => {
-        it('can set width by number', () => {
-            let obj = BackgroundEntity.create().setColor({value: '#444'});
-            expect(obj.getDTO()).toStrictEqual({
+        it('can set color', () => {
+            let entity = BackgroundEntity.create().setColor({value: '#444'});
+            expect(entity.getDTO()).toStrictEqual({
                 color: {
                     value: '#444',
+                }
+            });
+        });
+    });
+
+    describe('.setTransparentColor', () => {
+        it('can set transparent color', () => {
+            let entity = BackgroundEntity.create().setTransparentColor();
+            expect(entity.getDTO()).toStrictEqual({
+                color: {
+                    value: 'transparent',
+                }
+            });
+        });
+    });
+
+    describe('.transparentColor', () => {
+        it('can set transparent color', () => {
+            let entity = BackgroundEntity.create().transparentColor();
+            expect(entity.getDTO()).toStrictEqual({
+                color: {
+                    value: 'transparent',
                 }
             });
         });
