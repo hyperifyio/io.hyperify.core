@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import {
     explainArrayOf,
@@ -19,17 +19,20 @@ import {
     ComponentEntity,
     explainComponentDTOOrString,
     isComponentDTOOrString,
+    isComponentOrString,
 } from "./ComponentEntity";
+
 
 export type UnreparedComponentContentItem = string | ComponentDTO | ComponentEntity | Component;
 export type UnreparedComponentContentList = readonly UnreparedComponentContentItem[];
 export type UnreparedComponentContent = UnreparedComponentContentItem | UnreparedComponentContentList;
 
-export type ComponentContentItem = string | ComponentDTO;
+
+export type ComponentContentItem = string | ComponentEntity | Component;
 export type ComponentContent = readonly ComponentContentItem[];
 
 export function isComponentContent ( value: unknown) : value is ComponentContent {
-    return isArrayOf<ComponentContentItem>(value, isComponentDTOOrString);
+    return isArrayOf<ComponentContentItem>(value, isComponentOrString);
 }
 
 export function explainComponentContent (value: any) : string {
@@ -53,3 +56,13 @@ export function explainComponentContentOrUndefined ( value: unknown): string {
         'undefined'
     ]));
 }
+
+
+
+export type ComponentDTOContentItem = string | ComponentDTO;
+export type ComponentDTOContent = readonly ComponentDTOContentItem[];
+
+export function isComponentDTOContent ( value: unknown) : value is ComponentDTOContent {
+    return isArrayOf<ComponentDTOContentItem>(value, isComponentDTOOrString);
+}
+

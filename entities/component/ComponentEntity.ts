@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { map } from "../../functions/map";
 import { LogUtils } from "../../LogUtils";
@@ -13,8 +13,8 @@ import { EntityFactoryImpl } from "../types/EntityFactoryImpl";
 import { VariableType } from "../types/VariableType";
 import { Component } from "./Component";
 import {
-    ComponentContent,
-    ComponentContentItem,
+    ComponentDTOContent,
+    ComponentDTOContentItem,
     UnreparedComponentContent,
     UnreparedComponentContentItem,
 } from "./ComponentContent";
@@ -35,6 +35,8 @@ export const BaseComponentEntity = ComponentEntityFactory.createEntityType();
 export const isComponentDTO = ComponentEntityFactory.createTestFunctionOfDTO();
 
 export const isComponent = ComponentEntityFactory.createTestFunctionOfInterface();
+
+export const isComponentOrString = ComponentEntityFactory.createTestFunctionOfInterfaceOrOneOf<string>( VariableType.STRING );
 
 export const explainComponentDTO = ComponentEntityFactory.createExplainFunctionOfDTO();
 
@@ -103,12 +105,12 @@ export class ComponentEntity
     public addContent ( value : UnreparedComponentContent ) : this {
 
         if ( isArray(value) ) {
-            const prevContent : ComponentContent | undefined = this.getContent();
+            const prevContent : ComponentDTOContent | undefined = this.getContentDTO();
             return this.setContent( [
                 ...(prevContent ? prevContent : []),
                 ...map(
                     value,
-                    (item: UnreparedComponentContentItem) : ComponentContentItem => {
+                    (item: UnreparedComponentContentItem) : ComponentDTOContentItem => {
                         if (isComponentEntity(item)) {
                             return item.getDTO();
                         }
@@ -122,7 +124,7 @@ export class ComponentEntity
         }
 
         if ( isString(value) || isComponentDTO(value) ) {
-            const prevContent = this.getContent();
+            const prevContent = this.getContentDTO();
             return this.setContent( [
                 ...(prevContent ? prevContent : []),
                 value,
@@ -130,12 +132,14 @@ export class ComponentEntity
         }
 
         if ( isComponentEntity(value) || isComponent(value) ) {
-            const prevContent = this.getContent();
+            const prevContent = this.getContentDTO();
             return this.setContent( [
                 ...(prevContent ? prevContent : []),
                 value.getDTO(),
             ]);
         }
+
+        console.log(`WOOT: value = `, value);
 
         throw new TypeError(`${this.getEntityType().getEntityName()}.addContent: Invalid argument: ${LogUtils.stringifyValue(value)}`);
 
@@ -155,12 +159,12 @@ export class ComponentEntity
         return this.addContent(value);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public getContentDTO () : ComponentContent | undefined {
-        return this.getContent();
-    }
+    // /**
+    //  * @inheritDoc
+    //  */
+    // public getContentDTO () : ComponentDTOContent | undefined {
+    //     return this.getContentDTO();
+    // }
 
     /**
      * @inheritDoc

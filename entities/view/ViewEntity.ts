@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { map } from "../../functions/map";
 import { LogUtils } from "../../LogUtils";
@@ -7,7 +7,7 @@ import { isString } from "../../types/String";
 import {
     UnreparedComponentContentItem,
     UnreparedComponentContent,
-    ComponentContentItem,
+    ComponentDTOContentItem,
 } from "../component/ComponentContent";
 import {
     ComponentEntity,
@@ -77,12 +77,12 @@ export class ViewEntity
     public addContent ( value : UnreparedComponentContent ) : this {
 
         if ( isArray(value) ) {
-            const prevContent = this.getContent();
+            const prevContent = this.getContentDTO();
             return this.setContent( [
                 ...(prevContent ? prevContent : []),
                 ...map(
                     value,
-                    (item: UnreparedComponentContentItem) : ComponentContentItem => {
+                    (item: UnreparedComponentContentItem) : ComponentDTOContentItem => {
                         if (isComponentEntity(item)) {
                             return item.getDTO();
                         }
@@ -96,7 +96,7 @@ export class ViewEntity
         }
 
         if ( isString(value) || isComponentDTO(value) ) {
-            const prevContent = this.getContent();
+            const prevContent = this.getContentDTO();
             return this.setContent( [
                 ...(prevContent ? prevContent : []),
                 value,
@@ -104,13 +104,14 @@ export class ViewEntity
         }
 
         if ( isComponentEntity(value) || isComponent(value) ) {
-            const prevContent = this.getContent();
+            const prevContent = this.getContentDTO();
             return this.setContent( [
                 ...(prevContent ? prevContent : []),
                 value.getDTO(),
             ]);
         }
 
+        console.log(`WOOT: value = `, value);
         throw new TypeError(`${this.getEntityType().getEntityName()}.addContent: Invalid argument: ${LogUtils.stringifyValue(value)}`);
 
     }

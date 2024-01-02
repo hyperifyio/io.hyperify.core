@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { map } from "../../functions/map";
 import { uniq } from "../../functions/uniq";
@@ -27,7 +27,9 @@ import {
     EntityVariableType,
     EntityVariableValue,
 } from "./EntityVariableType";
-import { VariableType } from "./VariableType";
+import {
+    VariableType,
+} from "./VariableType";
 
 const LOG = LogService.createLogger('EntityPropertyImpl');
 

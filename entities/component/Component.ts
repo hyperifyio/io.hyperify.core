@@ -1,9 +1,10 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ReadonlyJsonAny, ReadonlyJsonArray, ReadonlyJsonArrayOf, ReadonlyJsonObject } from "../../Json";
 import { TestCallbackNonStandard } from "../../types/TestCallback";
 import {
     ComponentContent,
+    ComponentDTOContent,
     UnreparedComponentContent,
 } from "./ComponentContent";
 import { ComponentDTO } from "./ComponentDTO";
@@ -71,17 +72,17 @@ export interface Component
     /**
      * Get inner content.
      */
-    getContentDTO () : ComponentContent | undefined;
+    getContentDTO () : ComponentDTOContent | undefined;
 
     /**
      * Get inner content.
      */
-    setContent (value : ComponentContent | undefined) : this;
+    setContent (value : UnreparedComponentContent | undefined) : this;
 
     /**
      * Get inner content.
      */
-    content (value : ComponentContent | undefined) : this;
+    content (value : UnreparedComponentContent | undefined) : this;
 
     /**
      * Add inner content.

@@ -22,6 +22,14 @@ export interface IsInterfaceTestFunction<
     (value : unknown) : value is T;
 }
 
+export interface IsInterfaceOrTestFunction<
+    D extends DTO,
+    T extends Entity<D>,
+    X
+> {
+    (value : unknown) : value is T | X;
+}
+
 /**
  * Type for DTO test function which supports other types.
  *

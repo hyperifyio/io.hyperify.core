@@ -1,6 +1,6 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { ComponentContent } from "../../entities/component/ComponentContent";
+import { ComponentDTOContent } from "../../entities/component/ComponentContent";
 import { ViewEntity } from "../../entities/view/ViewEntity";
 import { find } from "../../functions/find";
 import { LogService } from "../../LogService";
@@ -42,8 +42,8 @@ export function populateViewDTO (
         throw new TypeError( `Could not find view by name ${extend} to extend for ${view.name}` );
     }
 
-    const componentContent: ComponentContent | undefined = view.content;
-    const extendContent: ComponentContent | undefined = extendView.content;
+    const componentContent: ComponentDTOContent | undefined = view.content;
+    const extendContent: ComponentDTOContent | undefined = extendView.content;
 
     return populateViewDTO(
         ViewEntity.create(extendView.name)

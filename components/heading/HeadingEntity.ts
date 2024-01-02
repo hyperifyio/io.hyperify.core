@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ComponentEntity } from "../../entities/component/ComponentEntity";
 import { HEADING_COMPONENT_NAME } from "./HeadingComponent";
@@ -26,7 +26,7 @@ export class HeadingEntity extends ComponentEntity {
     }
 
     public addText (value: string) : this {
-        return this.addContent([value]);
+        return this.addContent(value);
     }
 
 }

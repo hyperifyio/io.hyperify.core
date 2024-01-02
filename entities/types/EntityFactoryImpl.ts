@@ -105,6 +105,7 @@ import {
     IsDTOExplainFunction,
     IsDTOOrTestFunction,
     IsDTOTestFunction,
+    IsInterfaceOrTestFunction,
     IsInterfaceTestFunction,
 } from "./IsDTOTestFunction";
 import { TypeCheckFunctionUtils } from "./TypeCheckFunctionUtils";
@@ -1219,6 +1220,16 @@ export class EntityFactoryImpl<
         return (value : unknown) : value is T => isObject(value) && checkFunctions(value);
     }
 
+    public createTestFunctionOfInterfaceOrOneOf<X> ( ...types : EntityVariableType[] ) : IsInterfaceOrTestFunction<D, T, X> {
+        const isInterface = this.createTestFunctionOfInterface();
+        const anotherFn = EntityFactoryImpl._typeCheckFactory.createChainedTypeCheckFunction(
+            ChainOperation.OR,
+            types,
+            true,
+        );
+        return (value: unknown) : value is T | X => isInterface( value ) || anotherFn( value );
+    }
+
 
     /**
      * @inheritDoc
@@ -1389,7 +1400,13 @@ export class EntityFactoryImpl<
                 const types : readonly EntityVariableType[] = item.getTypes();
 
                 const hasJsonType : boolean = some(types, (type) => type === VariableType.JSON);
-                const hasEntityType : boolean = some(types, isEntityType);
+
+                const hasEntityType : boolean = some(types, (item) => {
+                    if ( isString(item) && !isVariableType(item) ) {
+                        return true;
+                    }
+                    return isEntityType(item);
+                });
 
                 const getterMethodNames : readonly string[] = item.getGetterNames();
                 const getterMethodName : string = getterMethodNames[0];

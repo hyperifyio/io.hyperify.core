@@ -1,8 +1,8 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ReadonlyJsonObject } from "../../Json";
 import {
-    ComponentContent,
+    ComponentDTOContent,
 } from "../component/ComponentContent";
 import { DTO } from "../types/DTO";
 import { ExtendableDTO } from "../types/ExtendableDTO";
@@ -23,7 +23,7 @@ export interface ViewDTO
     readonly language       ?: string;
     readonly seo            ?: SeoDTO;
     readonly style          ?: StyleDTO;
-    readonly content        ?: ComponentContent;
+    readonly content        ?: ComponentDTOContent;
     readonly meta           ?: ReadonlyJsonObject;
 }
 
@@ -37,7 +37,7 @@ export function createViewDTO (
     publicUrl : string | undefined,
     language  : string | undefined,
     seo       : SeoDTO | undefined,
-    content   : ComponentContent | undefined,
+    content   : ComponentDTOContent | undefined,
     style     : StyleDTO | undefined,
     meta      : ReadonlyJsonObject | undefined,
 ) : ViewDTO {

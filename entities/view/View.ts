@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ReadonlyJsonObject } from "../../Json";
 import { Component } from "../component/Component";
@@ -169,16 +169,16 @@ export interface View
     ////////////////////////////////////////////////////////////////////////////
 
 
-    getContent () : readonly (string|ComponentDTO)[];
+    getContent () : readonly (string|Component|ComponentEntity|ComponentDTO)[];
 
-    getContentDTO () : readonly (string|ComponentDTO)[];
+    getContentDTO () : readonly (string|Component|ComponentEntity|ComponentDTO)[];
 
     /**
      * Set inner content.
      *
      * @param value
      */
-    setContent (value : readonly (string|ComponentDTO)[] ) : this;
+    setContent (value : readonly (string|Component|ComponentEntity|ComponentDTO)[] ) : this;
 
     /**
      * Add inner content.

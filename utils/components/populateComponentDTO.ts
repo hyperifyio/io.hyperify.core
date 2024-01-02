@@ -1,6 +1,6 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { ComponentContent } from "../../entities/component/ComponentContent";
+import { ComponentDTOContent } from "../../entities/component/ComponentContent";
 import { ComponentEntity } from "../../entities/component/ComponentEntity";
 import { find } from "../../functions/find";
 import { ComponentDTO } from "../../entities/component/ComponentDTO";
@@ -22,7 +22,7 @@ export function populateComponentDTO (
         (c: ComponentDTO): boolean => c.name === extend
     );
 
-    const componentContent: ComponentContent | undefined = component.content;
+    const componentContent: ComponentDTOContent | undefined = component.content;
 
     if ( !extendComponent ) {
         // Is built in component
@@ -38,7 +38,7 @@ export function populateComponentDTO (
         throw new TypeError( `Could not find component by name ${extend} to extend for ${component.name}` );
     }
 
-    const extendContent: ComponentContent | undefined = extendComponent.content;
+    const extendContent: ComponentDTOContent | undefined = extendComponent.content;
 
     return populateComponentDTO(
         (
