@@ -178,7 +178,7 @@ export interface Component
      * @param name
      * @param value
      */
-    setMetaString (name : string, value: string) : this;
+    setMetaString (name : string, value: string | undefined) : this;
 
     /**
      * Get a value of internal number meta property.
@@ -193,7 +193,7 @@ export interface Component
      * @param name
      * @param value
      */
-    setMetaNumber (name : string, value: number) : this;
+    setMetaNumber (name : string, value: number | undefined) : this;
 
     /**
      * Get a value of internal boolean meta property.
@@ -208,7 +208,7 @@ export interface Component
      * @param name
      * @param value
      */
-    setMetaBoolean (name : string, value: boolean) : this;
+    setMetaBoolean (name : string, value: boolean | undefined) : this;
 
     /**
      * Get a value of internal object meta property.
@@ -223,7 +223,7 @@ export interface Component
      * @param name
      * @param value
      */
-    setMetaObject (name : string, value: ReadonlyJsonObject | null) : this;
+    setMetaObject (name : string, value: ReadonlyJsonObject | null | undefined) : this;
 
     /**
      * Get a value of internal array meta property.
@@ -248,7 +248,7 @@ export interface Component
      * @param name
      * @param value
      */
-    setMetaArray (name : string, value: ReadonlyJsonArray) : this;
+    setMetaArray (name : string, value: ReadonlyJsonArray | undefined) : this;
 
 
     ////////////////////////////////////////////////////////////////////////////
