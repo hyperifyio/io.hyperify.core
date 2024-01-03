@@ -1,6 +1,12 @@
 // Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { ReadonlyJsonObject } from "../../Json";
+import {
+    ReadonlyJsonAny,
+    ReadonlyJsonArray,
+    ReadonlyJsonArrayOf,
+    ReadonlyJsonObject,
+} from "../../Json";
+import { TestCallbackNonStandard } from "../../types/TestCallback";
 import { Component } from "../component/Component";
 import { UnreparedComponentContent } from "../component/ComponentContent";
 import { ComponentDTO } from "../component/ComponentDTO";
@@ -246,5 +252,103 @@ export interface View
      * @param value
      */
     setTimestamp (value: string) : this;
+
+    /**
+     * Returns true if the meta property exists.
+     *
+     * @param name
+     */
+    hasMetaProperty (name : string) : boolean;
+
+    /**
+     * Returns the value of a meta property.
+     * @param name
+     */
+    getMetaProperty (name : string) : any | undefined;
+
+    /**
+     * Get a value of internal string meta property.
+     *
+     * @param name
+     */
+    getMetaString (name : string) : string | undefined;
+
+    /**
+     * Set a value of internal string meta property.
+     *
+     * @param name
+     * @param value
+     */
+    setMetaString (name : string, value: string) : this;
+
+    /**
+     * Get a value of internal number meta property.
+     *
+     * @param name
+     */
+    getMetaNumber (name : string) : number | null | undefined;
+
+    /**
+     * Set a value of internal number meta property.
+     *
+     * @param name
+     * @param value
+     */
+    setMetaNumber (name : string, value: number) : this;
+
+    /**
+     * Get a value of internal boolean meta property.
+     *
+     * @param name
+     */
+    getMetaBoolean (name : string) : boolean | null | undefined;
+
+    /**
+     * Set a value of internal boolean meta property.
+     *
+     * @param name
+     * @param value
+     */
+    setMetaBoolean (name : string, value: boolean) : this;
+
+    /**
+     * Get a value of internal object meta property.
+     *
+     * @param name
+     */
+    getMetaObject (name : string) : ReadonlyJsonObject | null | undefined;
+
+    /**
+     * Set a value of internal object meta property.
+     *
+     * @param name
+     * @param value
+     */
+    setMetaObject (name : string, value: ReadonlyJsonObject | null) : this;
+
+    /**
+     * Get a value of internal array meta property.
+     *
+     * @param name
+     */
+    getMetaArray (name : string) : ReadonlyJsonArray | undefined;
+
+    /**
+     * Get a value of internal array meta property.
+     *
+     * @param name
+     */
+    getMetaArrayOf<T extends ReadonlyJsonAny = ReadonlyJsonAny> (
+        name : string,
+        isItemOf : TestCallbackNonStandard,
+    ) : ReadonlyJsonArrayOf<T> | undefined;
+
+    /**
+     * Set a value of internal array meta property.
+     *
+     * @param name
+     * @param value
+     */
+    setMetaArray (name : string, value: ReadonlyJsonArray) : this;
 
 }

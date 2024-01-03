@@ -124,6 +124,30 @@ export class ViewEntity
         return this.addContent(value);
     }
 
+    public getRefresh () : number | null | undefined {
+        return this.getMetaNumber("refresh");
+    }
+
+    public getIntervalRefresh () : number | null | undefined {
+        return this.getMetaNumber("refresh");
+    }
+
+    public setRefresh (value: number | undefined) : this {
+        return this.setMetaNumber("refresh", value);
+    }
+
+    public setIntervalRefresh (value: number | undefined) : this {
+        return this.setRefresh(value);
+    }
+
+    public getTimestamp () : string | undefined {
+        return this.getMetaString("timestamp");
+    }
+
+    public setTimestamp (value: string | undefined) : this {
+        return this.setMetaString("timestamp", value);
+    }
+
 }
 
 export function isViewEntity (value: unknown): value is ViewEntity {
