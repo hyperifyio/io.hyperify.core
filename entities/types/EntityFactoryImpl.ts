@@ -892,6 +892,11 @@ export class EntityFactoryImpl<
             this: T,
             value: unknown
         ) : T {
+
+            if (value === undefined) {
+                return this._setPropertyValue(propertyName, undefined);
+            }
+
             return this._setPropertyValue(
                 propertyName,
                 map(
