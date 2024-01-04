@@ -1,8 +1,7 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { LogUtils } from "../../LogUtils";
 import { isNumber } from "../../types/Number";
-import { Size } from "../size/Size";
 import { EntityMethodImpl } from "../types/EntityMethodImpl";
 import { UnitType } from "../types/UnitType";
 import { VariableType } from "../types/VariableType";
@@ -20,15 +19,10 @@ import {
     isBorderStyle,
 } from "../types/BorderStyle";
 import { ReadonlyJsonObject } from "../../Json";
+import { ColorEntity } from "../color/ColorEntity";
 import {
-    ColorEntity,
-} from "../color/ColorEntity";
-import {
-    isSize,
     isSizeDTO,
-    isSizeEntity,
     SizeEntity,
-    SizeEntityFactory,
 } from "../size/SizeEntity";
 import {
     Border,
@@ -173,6 +167,15 @@ export class BorderEntity
                 }
             );
         } else if ( style === undefined && isSizeDTO(width) ) {
+            super(
+                {
+                    width,
+                    style,
+                    color,
+                    radius,
+                }
+            );
+        } else if ( style === undefined && isSizeDTO(radius) ) {
             super(
                 {
                     width,
