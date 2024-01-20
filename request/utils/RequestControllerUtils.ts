@@ -161,7 +161,7 @@ export class RequestControllerUtils {
     }
 
     /**
-     * Find the controller from arbitrary variable.
+     * Find the controller's static controller from arbitrary variable.
      *
      * If provided with a class directly, will return the class itself.
      *
@@ -177,6 +177,24 @@ export class RequestControllerUtils {
         }
         if ( isObject(target) && isFunction(target?.constructor) && isRequestController(target.constructor) ) {
             return target.constructor;
+        }
+        return undefined;
+    }
+
+    /**
+     * Find the controller's instance controller from arbitrary variable.
+     *
+     * If provided with a class directly, will return the class itself.
+     *
+     * If provided with an instance of a class, will return the class instead.
+     *
+     * Otherwise, will return `undefined`.
+     *
+     * @param target
+     */
+    public static findInstanceController (target : any) : RequestController | undefined {
+        if ( isObject(target) && isRequestController(target) ) {
+            return target;
         }
         return undefined;
     }

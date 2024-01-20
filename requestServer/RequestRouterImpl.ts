@@ -2,11 +2,13 @@
 // Copyright (c) 2020-2021. Sendanor <info@sendanor.fi>. All rights reserved.
 // Copyright (c) 2020-2021. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { LogUtils } from "../LogUtils";
 import { getRequestControllerMappingObject, isRequestController, RequestController } from "../request/types/RequestController";
 import { parseRequestMethod, RequestMethod } from "../request/types/RequestMethod";
 import { filter } from "../functions/filter";
 import { forEach } from "../functions/forEach";
 import { has } from "../functions/has";
+import { RequestControllerUtils } from "../request/utils/RequestControllerUtils";
 import { isNull } from "../types/Null";
 import { map } from "../functions/map";
 import { trim } from "../functions/trim";
@@ -63,7 +65,18 @@ export class RequestRouterImpl implements RequestRouter {
         LOG.setLogLevel(level);
     }
 
-    private readonly _controllers : RequestController[];
+    /**
+     * These are references to controller's static properties
+     * @private
+     */
+    private readonly _staticControllers : RequestController[];
+
+    /**
+     * These are references to controller's instance properties
+     * @private
+     */
+    private readonly _instanceControllers : (RequestController | null)[];
+
     private _routes               : BaseRoutes | undefined;
     private _modelAttributeNames  : Map<RequestController, ModelAttributeProperty[]> | undefined;
     private _requestMappings      : readonly RequestControllerMappingObject[] | undefined;
@@ -76,8 +89,9 @@ export class RequestRouterImpl implements RequestRouter {
     private readonly _asyncSynchronizer : Map<string, AsyncSynchronizer>;
 
     protected constructor () {
-        this._controllers             = [];
-        this._asyncSynchronizer        = new Map<string, AsyncSynchronizer>();
+        this._staticControllers       = [];
+        this._instanceControllers     = [];
+        this._asyncSynchronizer       = new Map<string, AsyncSynchronizer>();
         this._routes                  = undefined;
         this._requestMappings         = undefined;
         this._modelAttributeNames     = undefined;
@@ -101,7 +115,17 @@ export class RequestRouterImpl implements RequestRouter {
     }
 
     public attachController (controller : RequestController) : void {
-        this._controllers.push(controller);
+        const staticController = RequestControllerUtils.findController(controller);
+        if (!staticController) {
+            throw new TypeError(`Controller invalid: ${LogUtils.stringifyValue(controller)}`);
+        }
+        if (staticController !== controller) {
+            this._staticControllers.push(staticController);
+            this._instanceControllers.push(controller);
+        } else {
+            this._staticControllers.push(staticController);
+            this._instanceControllers.push(null);
+        }
         this._routes = undefined;
     }
 
@@ -112,18 +136,32 @@ export class RequestRouterImpl implements RequestRouter {
         requestHeaders    : Headers
     ) : Promise<ResponseEntity<any>> {
 
+        function selectController (
+            staticController   : any,
+            instanceController : any | undefined,
+            propertyName       : string,
+        ) : any | undefined {
+            const instanceHasProperty : boolean = instanceController && !!instanceController[propertyName];
+            const staticHasProperty : boolean = staticController && !!staticController[propertyName];
+            if ( instanceController && staticHasProperty ) {
+                LOG.warn(`Warning! Identical name for controller's static and instance properties not yet supported. You should use unique names. Using static member for backward compatibility.`);
+            }
+            if ( staticHasProperty ) {
+                return staticController;
+            } else if ( instanceHasProperty ) {
+                return instanceController;
+            }
+            return undefined;
+        }
+
         try {
-
             const method : RequestMethod = parseRequestMethod(methodString);
-
             const {
                 pathName,
                 queryParams
             } : RequestContext = parseRequestContextFromPath(urlString);
             LOG.debug(`handleRequest: method="${method}", pathName="${pathName}", queryParams=`, queryParams);
-
             const requestPathName : string | undefined = pathName;
-
             const requestQueryParams : RequestQueryParameters = queryParams ?? {};
             // LOG.debug('requestQueryParams: ', requestQueryParams);
 
@@ -177,19 +215,19 @@ export class RequestRouterImpl implements RequestRouter {
             // Handle requests using controllers
             await reduce(routes, async (previousPromise, route: RequestRouterMappingPropertyObject) => {
 
-                const routeController : any = route.controller;
+                const staticController : any = route.controller;
                 const routePropertyName : string = route.propertyName;
                 const routePropertyParams : readonly (RequestParamObject | null)[] = route.propertyParams;
-
-                const routeIndex : number = this._controllers.indexOf(routeController);
+                const routeIndex : number = staticController ? this._staticControllers.indexOf(staticController) : -2;
+                const instanceController : any | undefined = (routeIndex >= 0 ? this._instanceControllers[routeIndex] : undefined) ?? undefined;
 
                 await previousPromise;
 
-                if ( this._modelAttributeNames && this._modelAttributeNames.has(routeController) ) {
+                if ( this._modelAttributeNames && this._modelAttributeNames.has(staticController) ) {
 
                     LOG.debug(`Populating attributes for property "${routePropertyName}"`);
 
-                    const modelAttributeValues : Map<string, any> = RequestRouterImpl._getOrCreateRequestModelAttributesForController(requestModelAttributes, routeController);
+                    const modelAttributeValues : Map<string, any> = RequestRouterImpl._getOrCreateRequestModelAttributesForController(requestModelAttributes, staticController);
 
                     const routeAttributeNames : string[] = map(
                         filter(routePropertyParams, (item : any) : item is RequestModelAttributeParamObject => isRequestModelAttributeParamObject(item)),
@@ -197,7 +235,7 @@ export class RequestRouterImpl implements RequestRouter {
                     );
                     LOG.debug('route attributeNames: ', routeAttributeNames);
 
-                    const allModelAttributeNamesForRouteController = this._modelAttributeNames.get(routeController);
+                    const allModelAttributeNamesForRouteController = this._modelAttributeNames.get(staticController);
                     LOG.debug('all attributeNamePairs: ', allModelAttributeNamesForRouteController);
 
                     const attributeNamePairs : ModelAttributeProperty[] = filter(
@@ -225,9 +263,13 @@ export class RequestRouterImpl implements RequestRouter {
                             modelAttributeValues
                         );
 
-                        const stepResult : any = await routeController[propertyName](...stepParams);
-
-                        modelAttributeValues.set(attributeName, stepResult);
+                        const controller = selectController( staticController, instanceController, propertyName );
+                        if (controller) {
+                            const stepResult : any = await controller[propertyName](...stepParams);
+                            modelAttributeValues.set(attributeName, stepResult);
+                        } else {
+                            LOG.warn(`Warning! No property found in the controller for modelAttributeValues: `, propertyName);
+                        }
 
                     }, Promise.resolve());
 
@@ -239,12 +281,15 @@ export class RequestRouterImpl implements RequestRouter {
                     routePropertyParams,
                     requestHeaders,
                     pathVariables,
-                    requestModelAttributes.get(routeController) ?? new Map<string, any>()
+                    requestModelAttributes.get(staticController) ?? new Map<string, any>()
                 );
                 LOG.debug('handleRequest: stepParams 1: ', stepParams);
 
-                if (!has(routeController, routePropertyName)) {
-                    LOG.warn(`Warning! No property by name "${routePropertyName}" found in the controller`);
+                const controller = selectController( staticController, instanceController, routePropertyName );
+                if ( !controller ) {
+                    LOG.warn(`Warning! No property found in the controller:`, routePropertyName);
+                    LOG.debug(`staticController =`, keys(staticController) );
+                    LOG.debug(`instanceController =`, keys(instanceController) );
                     responseEntity = ResponseEntity.notFound<JsonObject>().body({error:"404 - Not Found", code: 404});
                     return;
                 }
@@ -270,12 +315,12 @@ export class RequestRouterImpl implements RequestRouter {
 
                     stepResult = await synchronizer.run(async () : Promise<any> => {
                         LOG.debug(`handleRequest: Calling route property by name "${routePropertyName}"`);
-                        return await routeController[routePropertyName](...stepParams);
+                        return await controller[routePropertyName](...stepParams);
                     });
 
                 } else {
                     LOG.debug(`handleRequest: Calling route property by name "${routePropertyName}"`);
-                    stepResult = await routeController[routePropertyName](...stepParams);
+                    stepResult = await controller[routePropertyName](...stepParams);
                 }
 
                 if (isRequestStatus(stepResult)) {
@@ -521,12 +566,12 @@ export class RequestRouterImpl implements RequestRouter {
     }
 
     private _getRequestMappings () : RequestControllerMappingObject[] {
-        if (this._controllers.length === 0) {
+        if (this._staticControllers.length === 0) {
             return [];
         }
         return filter(
             map(
-                this._controllers,
+                this._staticControllers,
                 (controller : RequestController) => getRequestControllerMappingObject(controller)
             ),
             (item : RequestControllerMappingObject | undefined) : boolean => !!item
