@@ -75,7 +75,7 @@ export class RequestRouterImpl implements RequestRouter {
      * These are references to controller's instance properties
      * @private
      */
-    private readonly _instanceControllers : RequestController[];
+    private readonly _instanceControllers : (RequestController | null)[];
 
     private _routes               : BaseRoutes | undefined;
     private _modelAttributeNames  : Map<RequestController, ModelAttributeProperty[]> | undefined;
@@ -135,6 +135,25 @@ export class RequestRouterImpl implements RequestRouter {
         parseRequestBody  : ParseRequestBodyCallback | undefined = undefined,
         requestHeaders    : Headers
     ) : Promise<ResponseEntity<any>> {
+
+        function selectController (
+            staticController   : any,
+            instanceController : any | undefined,
+            propertyName       : string,
+        ) : any | undefined {
+            const instanceHasProperty : boolean = instanceController && !!instanceController[propertyName];
+            const staticHasProperty : boolean = staticController && !!staticController[propertyName];
+            if ( instanceController && staticHasProperty ) {
+                LOG.warn(`Warning! Identical name for controller's static and instance properties not yet supported. You should use unique names. Using static member for backward compatibility.`);
+            }
+            if ( staticHasProperty ) {
+                return staticController;
+            } else if ( instanceHasProperty ) {
+                return instanceController;
+            }
+            return undefined;
+        }
+
         try {
             const method : RequestMethod = parseRequestMethod(methodString);
             const {
@@ -192,24 +211,6 @@ export class RequestRouterImpl implements RequestRouter {
             LOG.debug('handleRequest: requestBody: ', requestBody);
 
             const requestModelAttributes = new Map<RequestController, Map<string, any>>();
-
-            function selectController (
-                staticController   : any,
-                instanceController : any | undefined,
-                propertyName       : string,
-            ) : any | undefined {
-                const instanceHasProperty : boolean = instanceController && !!instanceController[propertyName];
-                const staticHasProperty : boolean = staticController && !!staticController[propertyName];
-                if ( instanceController && staticHasProperty ) {
-                    LOG.warn(`Warning! Identical name for controller's static and instance properties not yet supported. You should use unique names. Using static member for backward compatibility.`);
-                }
-                if ( staticHasProperty ) {
-                    return staticController;
-                } else if ( instanceHasProperty ) {
-                    return instanceController;
-                }
-                return undefined;
-            }
 
             // Handle requests using controllers
             await reduce(routes, async (previousPromise, route: RequestRouterMappingPropertyObject) => {
