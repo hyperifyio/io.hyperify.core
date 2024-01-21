@@ -1,11 +1,12 @@
 // Copyright (c) 2021-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { DTO } from "../../entities/types/DTO";
 import { BannerLanguage } from "./BannerLanguage";
 import { BannerLocation } from "./BannerLocation";
 import { BannerState } from "./BannerState";
 import { BannerType } from "./BannerType";
 
-export interface BannerModel {
+export interface BannerDTO extends DTO {
 
     /**
      * The state of the banner
@@ -41,8 +42,8 @@ export interface BannerModel {
     readonly imageUrl     : string;
     readonly imageAlt     : string;
 
-    readonly languages   ?: BannerLanguage[];
-    readonly locations   ?: BannerLocation[];
+    readonly languages   ?: readonly BannerLanguage[];
+    readonly locations   ?: readonly BannerLocation[];
 
     readonly draftTime   ?: string;
     readonly startTime   ?: string;
