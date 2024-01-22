@@ -15,6 +15,7 @@ export const BannerEntityFactory = (
                      .add( EntityFactoryImpl.createProperty("type").setTypes(BannerType) )
                      .add( EntityFactoryImpl.createProperty("addTitleText").setTypes(VariableType.BOOLEAN) )
                      .add( EntityFactoryImpl.createProperty("addAltText").setTypes(VariableType.BOOLEAN) )
+                     .add( EntityFactoryImpl.createProperty("id").setTypes(VariableType.STRING) )
                      .add( EntityFactoryImpl.createProperty("title").setTypes(VariableType.STRING) )
                      .add( EntityFactoryImpl.createProperty("url").setTypes(VariableType.STRING) )
                      .add( EntityFactoryImpl.createProperty("imageUrl").setTypes(VariableType.STRING) )
