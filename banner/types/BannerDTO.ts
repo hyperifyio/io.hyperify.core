@@ -8,6 +8,8 @@ import { BannerType } from "./BannerType";
 
 export interface BannerDTO extends DTO {
 
+    readonly id           : string;
+
     /**
      * The state of the banner
      */
