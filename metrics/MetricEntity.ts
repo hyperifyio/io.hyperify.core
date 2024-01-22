@@ -127,7 +127,7 @@ export class MetricEntity
     }
 
     public toString () : string {
-        const metricName = this.getName();
+        const metricName = escapeMetricName(this.getName());
         const helpText = this.getHelp();
         const type = this.getType();
         const metricValue = this.getValue();
@@ -136,11 +136,11 @@ export class MetricEntity
             keys(labels),
             (labelKey: string) : string => {
                 const labelValue : string = `${labels[labelKey]}`;
-                return `${labelKey}="${labelValue}"`;
+                return `${escapeMetricName(labelKey)}="${escapeMetricLabelValue(labelValue)}"`;
             }
         );
         const lines = [
-            metricName && helpText ? `# HELP ${ metricName } ${ helpText }` : '',
+            metricName && helpText ? `# HELP ${ metricName } ${ escapeMetricHelp(helpText) }` : '',
             metricName && type ? `# TYPE ${ metricName } counter` : '',
             metricName && metricValue ? `${ metricName }${
                 labelStrings.length ? `{${labelStrings.join(', ')}}` : ''
@@ -153,4 +153,26 @@ export class MetricEntity
 
 export function isMetricEntity ( value: unknown): value is MetricEntity {
     return value instanceof MetricEntity;
+}
+
+export function escapeMetricName ( value : string) : string {
+    return value.replace(
+        /[^a-zA-Z0-9:_]/g,
+        "_"
+    );
+}
+
+export function escapeMetricHelp ( value : string) : string {
+    return (
+        value.replace(/\\/g, '\\\\')
+             .replace(/\n/g, '\\n')
+    );
+}
+
+export function escapeMetricLabelValue ( value : string) : string {
+    return (
+        value.replace(/\\/g, '\\\\')
+             .replace(/"/g, '\\"')
+             .replace(/\n/g, '\\n')
+    );
 }
