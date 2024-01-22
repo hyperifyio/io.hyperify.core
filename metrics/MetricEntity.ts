@@ -12,8 +12,8 @@ import { Metric } from "./Metric";
 import { MetricDTO } from "./MetricDTO";
 import { MetricType } from "./types/MetricType";
 
-export const PrometheusMetricEntityFactory = (
-    EntityFactoryImpl.create<MetricDTO, Metric>('PrometheusMetric')
+export const MetricEntityFactory = (
+    EntityFactoryImpl.create<MetricDTO, Metric>('Metric')
                      .add( EntityFactoryImpl.createProperty("name").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("help").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("type").setTypes(MetricType, VariableType.UNDEFINED) )
@@ -21,60 +21,60 @@ export const PrometheusMetricEntityFactory = (
                      .add( EntityFactoryImpl.createProperty("value").setTypes(VariableType.STRING, VariableType.UNDEFINED) )
 );
 
-export const isPrometheusMetricDTO = PrometheusMetricEntityFactory.createTestFunctionOfDTO();
+export const isMetricDTO = MetricEntityFactory.createTestFunctionOfDTO();
 
-export const isPrometheusMetric = PrometheusMetricEntityFactory.createTestFunctionOfInterface();
+export const isMetric = MetricEntityFactory.createTestFunctionOfInterface();
 
-export const explainPrometheusMetricDTO = PrometheusMetricEntityFactory.createExplainFunctionOfDTO();
+export const explainMetricDTO = MetricEntityFactory.createExplainFunctionOfDTO();
 
-export const isPrometheusMetricDTOOrUndefined = PrometheusMetricEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+export const isMetricDTOOrUndefined = MetricEntityFactory.createTestFunctionOfDTOorOneOf(VariableType.UNDEFINED);
 
-export const explainPrometheusMetricDTOOrUndefined = PrometheusMetricEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
+export const explainMetricDTOOrUndefined = MetricEntityFactory.createExplainFunctionOfDTOorOneOf(VariableType.UNDEFINED);
 
-export const BasePrometheusMetricEntity = PrometheusMetricEntityFactory.createEntityType();
+export const BaseMetricEntity = MetricEntityFactory.createEntityType();
 
 /**
- * PrometheusMetric entity.
+ * Metric entity.
  */
-export class PrometheusMetricEntity
-    extends BasePrometheusMetricEntity
+export class MetricEntity
+    extends BaseMetricEntity
     implements Metric
 {
 
     /**
-     * Creates a PrometheusMetric entity.
+     * Creates a metric entity.
      *
-     * @param value The optional DTO of PrometheusMetric
+     * @param value The optional DTO of Metric
      */
     public static create (
         value ?: MetricDTO,
-    ) : PrometheusMetricEntity {
-        return new PrometheusMetricEntity(value);
+    ) : MetricEntity {
+        return new MetricEntity(value);
     }
 
     /**
-     * Creates a PrometheusMetric entity from DTO.
+     * Creates a Metric entity from DTO.
      *
-     * @param dto The optional DTO of PrometheusMetric
+     * @param dto The optional DTO of Metric
      */
     public static createFromDTO (
         dto : MetricDTO,
-    ) : PrometheusMetricEntity {
-        return new PrometheusMetricEntity(dto);
+    ) : MetricEntity {
+        return new MetricEntity(dto);
     }
 
     /**
      * Merges multiple values as one entity.
      */
     public static merge (
-        ...values: readonly (MetricDTO | Metric | PrometheusMetricEntity)[]
-    ) : PrometheusMetricEntity {
-        return PrometheusMetricEntity.createFromDTO(
+        ...values: readonly (MetricDTO | Metric | MetricEntity)[]
+    ) : MetricEntity {
+        return MetricEntity.createFromDTO(
             reduce(
                 values,
                 (
                     prev: MetricDTO,
-                    item: MetricDTO | Metric | PrometheusMetricEntity,
+                    item: MetricDTO | Metric | MetricEntity,
                 ) : MetricDTO => {
                     const dto : MetricDTO = this.toDTO(item);
                     return {
@@ -91,11 +91,11 @@ export class PrometheusMetricEntity
      * Normalizes the value as a DTO.
      */
     public static toDTO (
-        value: MetricDTO | Metric | PrometheusMetricEntity,
+        value: MetricDTO | Metric | MetricEntity,
     ) : MetricDTO {
-        if (isPrometheusMetricEntity(value)) {
+        if (isMetricEntity(value)) {
             return value.getDTO();
-        } else if (isPrometheusMetric(value)) {
+        } else if (isMetric(value)) {
             return value.getDTO();
         } else {
             return value;
@@ -103,7 +103,7 @@ export class PrometheusMetricEntity
     }
 
     /**
-     * Construct an entity of PrometheusMetricEntity.
+     * Construct an entity of MetricEntity.
      */
     public constructor (
         dto ?: MetricDTO | undefined,
@@ -151,6 +151,6 @@ export class PrometheusMetricEntity
 
 }
 
-export function isPrometheusMetricEntity (value: unknown): value is PrometheusMetricEntity {
-    return value instanceof PrometheusMetricEntity;
+export function isMetricEntity ( value: unknown): value is MetricEntity {
+    return value instanceof MetricEntity;
 }

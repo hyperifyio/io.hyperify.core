@@ -2,13 +2,13 @@
 
 import { EntityFactoryImpl } from "../entities/types/EntityFactoryImpl";
 import { VariableType } from "../entities/types/VariableType";
-import { PrometheusMetricEntity } from "./PrometheusMetricEntity";
+import { MetricEntity } from "./MetricEntity";
 import { MetricCollection } from "./MetricCollection";
 import { MetricCollectionDTO } from "./MetricCollectionDTO";
 
 export const MetricCollectionEntityFactory = (
     EntityFactoryImpl.create<MetricCollectionDTO, MetricCollection>('MetricCollection')
-                     .add( EntityFactoryImpl.createArrayProperty("payload").setTypes(PrometheusMetricEntity) )
+                     .add( EntityFactoryImpl.createArrayProperty("payload").setTypes(MetricEntity) )
 );
 
 export const isMetricCollectionDTO = MetricCollectionEntityFactory.createTestFunctionOfDTO();

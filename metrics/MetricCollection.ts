@@ -3,7 +3,7 @@
 import { Entity } from "../entities/types/Entity";
 import { ReadonlyJsonObject } from "../Json";
 import { MetricDTO } from "./MetricDTO";
-import { PrometheusMetricEntity } from "./PrometheusMetricEntity";
+import { MetricEntity } from "./MetricEntity";
 import { MetricCollectionDTO } from "./MetricCollectionDTO";
 
 /**
@@ -35,7 +35,7 @@ export interface MetricCollection extends Entity<MetricCollectionDTO> {
     /**
      * Get a payload.
      */
-    getPayload () : readonly PrometheusMetricEntity[];
+    getPayload () : readonly MetricEntity[];
 
     /**
      * Get a payload as DTO.
@@ -47,7 +47,7 @@ export interface MetricCollection extends Entity<MetricCollectionDTO> {
      *
      * @param payload
      */
-    setPayload (payload : readonly ( MetricDTO | PrometheusMetricEntity )[]) : this;
+    setPayload (payload : readonly ( MetricDTO | MetricEntity )[]) : this;
 
     /**
      * Set a payload.
@@ -56,6 +56,6 @@ export interface MetricCollection extends Entity<MetricCollectionDTO> {
      *
      * @param payload
      */
-    payload (payload : readonly (MetricDTO | PrometheusMetricEntity)[]) : this;
+    payload (payload : readonly (MetricDTO | MetricEntity)[]) : this;
 
 }
