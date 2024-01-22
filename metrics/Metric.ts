@@ -2,13 +2,13 @@
 
 import { Entity } from "../entities/types/Entity";
 import { ReadonlyJsonObject } from "../Json";
-import { PrometheusMetricDTO } from "./PrometheusMetricDTO";
-import { PrometheusMetricType } from "./types/PrometheusMetricType";
+import { MetricDTO } from "./MetricDTO";
+import { MetricType } from "./types/MetricType";
 
 /**
  * Presents an interface for SeoEntity.
  */
-export interface PrometheusMetric extends Entity<PrometheusMetricDTO> {
+export interface Metric extends Entity<MetricDTO> {
 
     /**
      * @inheritDoc
@@ -18,7 +18,7 @@ export interface PrometheusMetric extends Entity<PrometheusMetricDTO> {
     /**
      * @inheritDoc
      */
-    getDTO () : PrometheusMetricDTO;
+    getDTO () : MetricDTO;
 
     /**
      * @inheritDoc
@@ -73,14 +73,14 @@ export interface PrometheusMetric extends Entity<PrometheusMetricDTO> {
     /**
      * Get a type.
      */
-    getType () : PrometheusMetricType | undefined;
+    getType () : MetricType | undefined;
 
     /**
      * Set a type.
      *
      * @param type
      */
-    setType (type : PrometheusMetricType | undefined) : this;
+    setType (type : MetricType | undefined) : this;
 
     /**
      * Set a type.
@@ -89,7 +89,7 @@ export interface PrometheusMetric extends Entity<PrometheusMetricDTO> {
      *
      * @param type
      */
-    type (type : PrometheusMetricType | undefined) : this;
+    type (type : MetricType | undefined) : this;
 
 
     /**
