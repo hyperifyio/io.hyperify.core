@@ -2,6 +2,7 @@
 
 import { BackgroundDTO } from "../background/BackgroundDTO";
 import { BorderDTO } from "../border/BorderDTO";
+import { BorderBoxDTO } from "../borderBox/BorderBoxDTO";
 import { ColorDTO } from "../color/ColorDTO";
 import { FontDTO } from "../font/FontDTO";
 import { SizeBoxDTO } from "../sizeBox/SizeBoxDTO";
@@ -18,7 +19,7 @@ export interface StyleDTO extends DTO {
     readonly height             ?: SizeDTO;
     readonly margin             ?: SizeDTO | SizeBoxDTO;
     readonly padding            ?: SizeDTO | SizeBoxDTO;
-    readonly border             ?: BorderDTO | [BorderDTO, BorderDTO] | [BorderDTO, BorderDTO, BorderDTO, BorderDTO];
+    readonly border             ?: BorderDTO | BorderBoxDTO;
     readonly font               ?: FontDTO;
     readonly textDecoration     ?: TextDecorationDTO;
     readonly background         ?: BackgroundDTO;
