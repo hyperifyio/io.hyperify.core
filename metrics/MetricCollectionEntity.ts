@@ -2,6 +2,7 @@
 
 import { EntityFactoryImpl } from "../entities/types/EntityFactoryImpl";
 import { VariableType } from "../entities/types/VariableType";
+import { MetricDTO } from "./MetricDTO";
 import { MetricEntity } from "./MetricEntity";
 import { MetricCollection } from "./MetricCollection";
 import { MetricCollectionDTO } from "./MetricCollectionDTO";
@@ -75,6 +76,15 @@ export class MetricCollectionEntity
         dto ?: MetricCollectionDTO | undefined,
     ) {
         super(dto);
+    }
+
+    public add (entity: MetricEntity | MetricDTO ) : this {
+        return this.setPayload(
+            [
+                ...this.getPayload(),
+                entity,
+            ]
+        );
     }
 
 }
