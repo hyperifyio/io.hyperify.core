@@ -195,10 +195,12 @@ export class BorderEntity
         const width = this.getWidth();
         const color = this.getColor();
         const style = this.getStyle();
+        const radius = this.getRadius();
         return {
             border: `${ width ? width.getCssStyles() : '0' } ${
                 style
-            }${ color ? ' ' + color.getCssStyles() : '' }`
+            }${ color ? ' ' + color.getCssStyles() : '' }`,
+            ...(radius ? { borderRadius : radius.getCssStyles() } : {}),
         };
     }
 
