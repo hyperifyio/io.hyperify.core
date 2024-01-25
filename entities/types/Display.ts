@@ -3,7 +3,11 @@ import { isEnum, explainEnum, stringifyEnum, parseEnum } from "../../types/Enum"
 import { explainOk, explainNot, explainOr } from "../../types/explain";
 
 export enum Display {
-    FLEX = 'flex'
+    BLOCK = "block",
+    INLINE_BLOCK = "inline-block",
+    NONE = "none",
+    FLEX = "flex",
+    GRID = "grid",
 }
 
 export function isDisplay (value: unknown) : value is Display {

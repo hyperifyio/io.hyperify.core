@@ -121,9 +121,9 @@ export const StyleEntityFactory = (
                      .add( EntityFactoryImpl.createProperty("alignItems").setTypes(AlignItems, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("alignContent").setTypes(AlignContent, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("alignSelf").setTypes(AlignSelf, VariableType.UNDEFINED) )
-                     .add( EntityFactoryImpl.createProperty("flexShrink").setTypes(VariableType.NUMBER) )
-                     .add( EntityFactoryImpl.createProperty("flexGrow").setTypes(VariableType.NUMBER) )
-                     .add( EntityFactoryImpl.createProperty("order").setTypes(VariableType.NUMBER) )
+                     .add( EntityFactoryImpl.createProperty("flexShrink").setTypes(VariableType.NUMBER, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("flexGrow").setTypes(VariableType.NUMBER, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("order").setTypes(VariableType.NUMBER, VariableType.UNDEFINED) )
                      );
 
 export const isStyleDTO = StyleEntityFactory.createTestFunctionOfDTO();
