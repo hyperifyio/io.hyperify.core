@@ -28,6 +28,13 @@ import { Font } from "../font/Font";
 import { Size } from "../size/Size";
 import { SizeBox } from "../sizeBox/SizeBox";
 import { TextDecoration } from "../textDecoration/TextDecoration";
+import { Display } from "../types/Display";
+import { FlexDirection } from "../types/FlexDirection";
+import { FlexWrap } from "../types/FlexWrap";
+import { JustifyContent } from "../types/JustifyContent";
+import { AlignItems } from "../types/AlignItems";
+import { AlignContent } from "../types/AlignContent";
+import { AlignSelf } from "../types/AlignSelf";
 
 /**
  * Interface for Style entities.
@@ -209,5 +216,35 @@ export interface Style
     getBackground () : Background | undefined;
     getBackgroundDTO () : BackgroundDTO | undefined;
     setBackground (value: Background | BackgroundDTO | BackgroundEntity | number | undefined) : this;
+
+    getDisplay () : Display | undefined;
+    setDisplay (value: Display | undefined) : this;
+
+    getFlexDirection () : FlexDirection | undefined;
+    setFlexDirection (value: FlexDirection | undefined) : this;
+
+    getFlexWrap () : FlexWrap | undefined;
+    setFlexWrap (value: FlexWrap | undefined) : this;
+
+    getJustifyContent () : JustifyContent | undefined;
+    setJustifyContent (value: JustifyContent | undefined) : this;
+
+    getAlignItems () : AlignItems | undefined;
+    setAlignItems (value: AlignItems | undefined) : this;
+
+    getAlignContent () : AlignContent | undefined;
+    setAlignContent (value: AlignContent | undefined) : this;
+
+    getAlignSelf () : AlignSelf | undefined;
+    setAlignSelf (value: AlignSelf | undefined) : this;
+
+    getFlexShrink () : number | undefined;
+    setFlexShrink (value: number | undefined) : this;
+
+    getFlexGrow () : number | undefined;
+    setFlexGrow (value: number | undefined) : this;
+
+    getOrder () : number | undefined;
+    setOrder (value: number | undefined) : this;
 
 }

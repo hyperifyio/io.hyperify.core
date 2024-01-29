@@ -11,6 +11,14 @@ import { TextDecorationDTO } from "../textDecoration/TextDecorationDTO";
 import { BoxSizing} from "../types/BoxSizing";
 import { DTO } from "../types/DTO";
 import { TextAlign } from "../types/TextAlign";
+import { FlexDirection } from "../types/FlexDirection";
+import { Display } from "../types/Display";
+import { FlexWrap } from "../types/FlexWrap";
+import { JustifyContent } from "../types/JustifyContent";
+import { AlignItems } from "../types/AlignItems";
+import { AlignContent } from "../types/AlignContent";
+import { AlignSelf } from "../types/AlignSelf";
+
 
 export interface StyleDTO extends DTO {
     readonly textAlign          ?: TextAlign;
@@ -28,4 +36,14 @@ export interface StyleDTO extends DTO {
     readonly maxWidth           ?: SizeDTO;
     readonly maxHeight          ?: SizeDTO;
     readonly boxSizing          ?: BoxSizing;
+    readonly display            ?: Display;
+    readonly flexDirection      ?: FlexDirection;
+    readonly flexWrap           ?: FlexWrap;
+    readonly justifyContent     ?: JustifyContent;
+    readonly alignItems         ?: AlignItems;
+    readonly alignContent       ?: AlignContent;
+    readonly alignSelf          ?: AlignSelf;
+    readonly flexShrink         ?: number;
+    readonly flexGrow           ?: number;
+    readonly order              ?: number;
 }

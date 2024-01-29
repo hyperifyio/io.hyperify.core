@@ -82,6 +82,13 @@ import {
     Style,
 } from "./Style";
 import { UnitType } from "../types/UnitType";
+import { Display } from "../types/Display";
+import { FlexDirection } from "../types/FlexDirection";
+import { FlexWrap } from "../types/FlexWrap";
+import { JustifyContent } from "../types/JustifyContent";
+import { AlignItems } from "../types/AlignItems";
+import { AlignContent } from "../types/AlignContent";
+import { AlignSelf } from "../types/AlignSelf";
 
 const TOP_AND_BOTTOM_MARGIN_INDEX = 0;
 const LEFT_AND_RIGHT_MARGIN_INDEX = 1;
@@ -107,7 +114,17 @@ export const StyleEntityFactory = (
                      .add( EntityFactoryImpl.createProperty("maxWidth").setTypes(SizeEntity, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("maxHeight").setTypes(SizeEntity, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("boxSizing").setTypes(BoxSizing, VariableType.UNDEFINED) )
-);
+                     .add( EntityFactoryImpl.createProperty("display").setTypes(Display, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("flexDirection").setTypes(FlexDirection, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("flexWrap").setTypes(FlexWrap, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("justifyContent").setTypes(JustifyContent, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("alignItems").setTypes(AlignItems, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("alignContent").setTypes(AlignContent, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("alignSelf").setTypes(AlignSelf, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("flexShrink").setTypes(VariableType.NUMBER, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("flexGrow").setTypes(VariableType.NUMBER, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("order").setTypes(VariableType.NUMBER, VariableType.UNDEFINED) )
+                     );
 
 export const isStyleDTO = StyleEntityFactory.createTestFunctionOfDTO();
 
@@ -447,6 +464,16 @@ export class StyleEntity
         const border = this.getBorder();
         const font = this.getFont();
         const textDecoration = this.getTextDecoration();
+        const display = this.getDisplay();
+        const flexDirection = this.getFlexDirection();
+        const flexWrap = this.getFlexWrap();
+        const justifyContent = this.getJustifyContent();
+        const alignItems = this.getAlignItems();
+        const alignContent = this.getAlignContent();
+        const alignSelf = this.getAlignSelf();
+        const flexShrink = this.getFlexShrink();
+        const flexGrow = this.getFlexGrow();
+        const order = this.getOrder();
 
         return {
             ...(textColor ? { color: textColor.getCssStyles() } : {}),
@@ -464,6 +491,16 @@ export class StyleEntity
             ...(border ? border.getCssStyles() : {}),
             ...(font ? font.getCssStyles() : {}),
             ...(textDecoration ? textDecoration.getCssStyles() : {}),
+            ...(display ? { display: display } : {}),
+            ...(flexDirection ? { flexDirection: flexDirection } : {}),
+            ...(flexWrap ? { flexWrap: flexWrap } : {}),
+            ...(justifyContent ? { justifyContent: justifyContent } : {}),
+            ...(alignItems ? { alignItems: alignItems } : {}),
+            ...(alignContent ? { alignContent: alignContent } : {}),
+            ...(alignSelf ? { alignSelf: alignSelf } : {}),
+            ...(flexShrink ? { flexShrink: flexShrink } : {}),
+            ...(flexGrow ? { flexGrow: flexGrow } : {}),
+            ...(order ? { order: order } : {}),
         };
     }
 
