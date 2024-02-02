@@ -371,6 +371,7 @@ describe('StyleEntity', () => {
         });
 
         describe('.setTopMargin', () => {
+
             it('can set top margin by number', () => {
                 entity.setTopMargin(100);
                 expect(entity.getDTO()).toEqual(
@@ -396,6 +397,34 @@ describe('StyleEntity', () => {
                     })
                 );
             });
+
+            it('can set top margin by number two times', () => {
+                entity.setTopMargin(10);
+                entity.setTopMargin(100);
+                expect(entity.getDTO()).toEqual(
+                    expect.objectContaining({
+                        margin: expect.objectContaining({
+                            top: expect.objectContaining({
+                                value: 100,
+                                unit: UnitType.PX,
+                            }),
+                            right: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            bottom: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            left: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                        })
+                    })
+                );
+            });
+
         });
 
         describe('.setRightMargin', () => {
