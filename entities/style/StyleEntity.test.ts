@@ -453,6 +453,32 @@ describe('StyleEntity', () => {
                     })
                 );
             });
+            it('can set top margin by number two times', () => {
+                entity.setRightMargin(10);
+                entity.setRightMargin(100);
+                expect(entity.getDTO()).toEqual(
+                    expect.objectContaining({
+                        margin: expect.objectContaining({
+                            top: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            right: expect.objectContaining({
+                                value: 100,
+                                unit: UnitType.PX,
+                            }),
+                            bottom: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            left: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                        })
+                    })
+                );
+            });
         });
 
         describe('.setBottomMargin', () => {
@@ -481,10 +507,62 @@ describe('StyleEntity', () => {
                     })
                 );
             });
+            it('can set top margin by number two times', () => {
+                entity.setBottomMargin(10);
+                entity.setBottomMargin(100);
+                expect(entity.getDTO()).toEqual(
+                    expect.objectContaining({
+                        margin: expect.objectContaining({
+                            top: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            right: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            bottom: expect.objectContaining({
+                                value: 100,
+                                unit: UnitType.PX,
+                            }),
+                            left: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                        })
+                    })
+                );
+            });
         });
 
         describe('.setLeftMargin', () => {
             it('can set top margin by number', () => {
+                entity.setLeftMargin(100);
+                expect(entity.getDTO()).toEqual(
+                    expect.objectContaining({
+                        margin: expect.objectContaining({
+                            top: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            right: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            bottom: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            left: expect.objectContaining({
+                                value: 100,
+                                unit: UnitType.PX,
+                            }),
+                        })
+                    })
+                );
+            });
+            it('can set top margin by number two times', () => {
+                entity.setLeftMargin(10);
                 entity.setLeftMargin(100);
                 expect(entity.getDTO()).toEqual(
                     expect.objectContaining({
@@ -624,10 +702,62 @@ describe('StyleEntity', () => {
                     })
                 );
             });
+            it('can set top padding by number two times', () => {
+                entity.setTopPadding(10);
+                entity.setTopPadding(100);
+                expect(entity.getDTO()).toEqual(
+                    expect.objectContaining({
+                        padding: expect.objectContaining({
+                            top: expect.objectContaining({
+                                value: 100,
+                                unit: UnitType.PX,
+                            }),
+                            right: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            bottom: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            left: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                        })
+                    })
+                );
+            });
         });
 
         describe('.setRightPadding', () => {
             it('can set top padding by number', () => {
+                entity.setRightPadding(100);
+                expect(entity.getDTO()).toEqual(
+                    expect.objectContaining({
+                        padding: expect.objectContaining({
+                            top: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            right: expect.objectContaining({
+                                value: 100,
+                                unit: UnitType.PX,
+                            }),
+                            bottom: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            left: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                        })
+                    })
+                );
+            });
+            it('can set top padding by number two times', () => {
+                entity.setRightPadding(10);
                 entity.setRightPadding(100);
                 expect(entity.getDTO()).toEqual(
                     expect.objectContaining({
@@ -680,10 +810,62 @@ describe('StyleEntity', () => {
                     })
                 );
             });
+            it('can set top padding by number two times', () => {
+                entity.setBottomPadding(10);
+                entity.setBottomPadding(100);
+                expect(entity.getDTO()).toEqual(
+                    expect.objectContaining({
+                        padding: expect.objectContaining({
+                            top: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            right: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            bottom: expect.objectContaining({
+                                value: 100,
+                                unit: UnitType.PX,
+                            }),
+                            left: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                        })
+                    })
+                );
+            });
         });
 
         describe('.setLeftPadding', () => {
             it('can set top padding by number', () => {
+                entity.setLeftPadding(100);
+                expect(entity.getDTO()).toEqual(
+                    expect.objectContaining({
+                        padding: expect.objectContaining({
+                            top: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            right: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            bottom: expect.objectContaining({
+                                value: 10,
+                                unit: UnitType.PX,
+                            }),
+                            left: expect.objectContaining({
+                                value: 100,
+                                unit: UnitType.PX,
+                            }),
+                        })
+                    })
+                );
+            });
+            it('can set top padding by number two times', () => {
+                entity.setLeftPadding(10);
                 entity.setLeftPadding(100);
                 expect(entity.getDTO()).toEqual(
                     expect.objectContaining({
