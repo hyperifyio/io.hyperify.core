@@ -121,32 +121,37 @@ export class MetricEntity
 
     public getLabel ( labelName : string ) : string | undefined {
         const labels = this.getLabels();
-        if (!has(labels, labelName)) return undefined;
-        const labelValue =  labels[labelName];
-        return `${labelValue}`;
+        if (labels) {
+            if (!has(labels, labelName)) return undefined;
+            const labelValue =  (labels as any)[labelName];
+            return `${labelValue}`;
+        }
+        return undefined;
     }
 
     public toString () : string {
-        const metricName = escapeMetricName(this.getName());
+        const name = this.getName();
+        if ( !name ) return '';
+        const metricName = escapeMetricName( name );
         const helpText = this.getHelp();
         const type = this.getType();
         const metricValue = this.getValue();
         const labels = this.getLabels() ?? {};
         const labelStrings : readonly string[] = map(
-            keys(labels),
-            (labelKey: string) : string => {
-                const labelValue : string = `${labels[labelKey]}`;
-                return `${escapeMetricName(labelKey)}="${escapeMetricLabelValue(labelValue)}"`;
-            }
+            keys( labels ),
+            ( labelKey : string ) : string => {
+                const labelValue : string = `${ labels[labelKey] }`;
+                return `${ escapeMetricName( labelKey ) }="${ escapeMetricLabelValue( labelValue ) }"`;
+            },
         );
         const lines = [
-            metricName && helpText ? `# HELP ${ metricName } ${ escapeMetricHelp(helpText) }` : '',
+            metricName && helpText ? `# HELP ${ metricName } ${ escapeMetricHelp( helpText ) }` : '',
             metricName && type ? `# TYPE ${ metricName } counter` : '',
             metricName && metricValue ? `${ metricName }${
-                labelStrings.length ? `{${labelStrings.join(', ')}}` : ''
-            } ${ metricValue }` : ''
+                labelStrings.length ? `{${ labelStrings.join( ', ' ) }}` : ''
+            } ${ metricValue }` : '',
         ];
-        return filter(lines, line => !!trim(line)).join('\n') + '\n';
+        return filter( lines, line => !!trim( line ) ).join( '\n' ) + '\n';
     }
 
 }
