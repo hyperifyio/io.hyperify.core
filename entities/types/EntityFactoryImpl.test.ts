@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Sendanor <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import {
     afterEach,
@@ -8,7 +8,6 @@ import {
     it,
 } from "@jest/globals";
 import "../../../testing/jest/matchers/index";
-import { factory } from "ts-jest/dist/transformers/hoist-jest";
 import { BaseEntity } from "./BaseEntity";
 import { DTO } from "./DTO";
 import { Entity } from "./Entity";
@@ -1180,7 +1179,7 @@ describe('EntityFactoryImpl', () => {
 
     });
 
-    describe('Getters and setters', () => {
+    describe.only('Getters and setters', () => {
 
         interface CarDTO extends DTO {
             readonly model: string;
@@ -1194,6 +1193,19 @@ describe('EntityFactoryImpl', () => {
         let carFactory : EntityFactoryImpl<CarDTO, Car>;
         let CarEntity : EntityType<CarDTO, Car>;
 
+
+        interface PlaneDTO extends DTO {
+            readonly tailNumber ?: string;
+        }
+        interface Plane extends Entity<PlaneDTO> {
+            getTailNumber() : string | undefined;
+            setTailNumber(tailNumber: string | undefined) : this;
+        }
+
+        let planeFactory : EntityFactoryImpl<PlaneDTO, Plane>;
+        let PlaneEntity : EntityType<PlaneDTO, Plane>;
+
+
         interface TestDTO {
             readonly name : string;
             readonly age : number;
@@ -1206,11 +1218,12 @@ describe('EntityFactoryImpl', () => {
             readonly thirdCar ?: CarDTO;
             readonly fourthCar ?: CarDTO | null;
             readonly cars : CarDTO[];
+            readonly vehicle ?: CarDTO | PlaneDTO;
         }
 
         class TestEntity extends BaseEntity<TestDTO, TestEntity> {
 
-            public static create () : TestEntity {
+            public static create (dto ?: Partial<TestDTO>) : TestEntity {
                 return new TestEntity({
                     name: 'test',
                     age: 30,
@@ -1221,6 +1234,7 @@ describe('EntityFactoryImpl', () => {
                     secondCar: CarEntity.create().setModel('Audi').getDTO(),
                     fourthCar: null,
                     cars: [],
+                    ...dto,
                 });
             }
 
@@ -1247,11 +1261,19 @@ describe('EntityFactoryImpl', () => {
         }
 
         beforeEach(() => {
+
             carFactory = (
                 EntityFactoryImpl.create<CarDTO, Car>('Car')
                 .add( EntityFactoryImpl.createProperty("model").setDefaultValue("Ford") )
             );
             CarEntity = carFactory.createEntityType('CarEntity');
+
+            planeFactory = (
+                EntityFactoryImpl.create<PlaneDTO, Plane>('Plane')
+                .add( EntityFactoryImpl.createProperty("tailNumber").setTypes(VariableType.STRING, VariableType.UNDEFINED).setDefaultValue(undefined) )
+            );
+            PlaneEntity = planeFactory.createEntityType('PlaneEntity');
+
         });
 
         describe('#createPropertyGetter', () => {
@@ -1379,6 +1401,130 @@ describe('EntityFactoryImpl', () => {
                 const entity = TestEntity.create();
                 expect( fn.call(entity) ).toStrictEqual([]);
             });
+
+            it('can create a car or plane or undefined getter with an non-defined value', () => {
+                const fn = EntityFactoryImpl.createPropertyGetter<TestDTO, TestEntity>(
+                    'vehicle',
+                    [
+                        CarEntity,
+                        PlaneEntity,
+                        VariableType.UNDEFINED,
+                    ]
+                );
+                const entity = TestEntity.create();
+                expect( fn.call(entity) ).toStrictEqual(undefined);
+            });
+
+            it('can create a car or plane or undefined getter with a car value', () => {
+                const fn = EntityFactoryImpl.createPropertyGetter<TestDTO, TestEntity>(
+                    'vehicle',
+                    [
+                        CarEntity,
+                        PlaneEntity,
+                        VariableType.UNDEFINED,
+                    ]
+                );
+                const entity = TestEntity.create({
+                    vehicle: {
+                        model: 'Ford'
+                    }
+                });
+                expect( fn.call(entity).getDTO() ).toStrictEqual({
+                    model: 'Ford'
+                });
+            });
+
+            it('can create a car or plane or undefined getter with a car value in different order', () => {
+                const fn = EntityFactoryImpl.createPropertyGetter<TestDTO, TestEntity>(
+                    'vehicle',
+                    [
+                        PlaneEntity,
+                        CarEntity,
+                        VariableType.UNDEFINED,
+                    ]
+                );
+                const entity = TestEntity.create({
+                    vehicle: {
+                        model: 'Ford'
+                    }
+                });
+                expect( fn.call(entity).getDTO() ).toStrictEqual({
+                    model: 'Ford'
+                });
+            });
+
+            it('can create a car or plane or undefined getter with a plain value', () => {
+                const fn = EntityFactoryImpl.createPropertyGetter<TestDTO, TestEntity>(
+                    'vehicle',
+                    [
+                        CarEntity,
+                        PlaneEntity,
+                        VariableType.UNDEFINED,
+                    ]
+                );
+                const entity = TestEntity.create({
+                    vehicle: {
+                        tailNumber: 'FI1234'
+                    }
+                });
+                expect( fn.call(entity).getDTO() ).toStrictEqual({
+                    tailNumber: 'FI1234'
+                });
+            });
+
+            it('can create a car or plane or undefined getter with a plain value in different order', () => {
+                const fn = EntityFactoryImpl.createPropertyGetter<TestDTO, TestEntity>(
+                    'vehicle',
+                    [
+                        PlaneEntity,
+                        CarEntity,
+                        VariableType.UNDEFINED,
+                    ]
+                );
+                const entity = TestEntity.create({
+                    vehicle: {
+                        tailNumber: 'FI1234'
+                    }
+                });
+                expect( fn.call(entity).getDTO() ).toStrictEqual({
+                    tailNumber: 'FI1234'
+                });
+            });
+
+            it('can create a car or plane or undefined getter with an empty plain object', () => {
+                const fn = EntityFactoryImpl.createPropertyGetter<TestDTO, TestEntity>(
+                    'vehicle',
+                    [
+                        CarEntity,
+                        PlaneEntity,
+                        VariableType.UNDEFINED,
+                    ]
+                );
+                const entity = TestEntity.create({
+                    vehicle: {
+                    }
+                });
+                expect( fn.call(entity).getDTO() ).toStrictEqual({
+                });
+            });
+
+            it('can create a car or plane or undefined getter with an empty plain object in different order', () => {
+                const fn = EntityFactoryImpl.createPropertyGetter<TestDTO, TestEntity>(
+                    'vehicle',
+                    [
+                        PlaneEntity,
+                        CarEntity,
+                        VariableType.UNDEFINED,
+                    ]
+                );
+                const entity = TestEntity.create({
+                    vehicle: {
+                    }
+                });
+                expect( fn.call(entity).getDTO() ).toStrictEqual({});
+                expect( PlaneEntity.isEntity( fn.call(entity)) ).toBe(true);
+            });
+
 
         });
 
@@ -1515,6 +1661,72 @@ describe('EntityFactoryImpl', () => {
                 expect( entity.getDTO().fourthCar ).toBe(undefined);
                 expect( fn.call(entity, CarEntity.create().setModel('Tesla')) ).toBe(entity);
                 expect( entity.getDTO().fourthCar ).toStrictEqual({'model': 'Tesla'});
+            });
+
+            it('can create a car or plain or undefined setter with an non-defined value', () => {
+                const fn = EntityFactoryImpl.createPropertySetter<TestDTO, TestEntity>(
+                    'vehicle',
+                    [
+                        CarEntity,
+                        PlaneEntity,
+                        VariableType.UNDEFINED,
+                    ]
+                );
+                const entity = TestEntity.create();
+                expect( fn.call(entity, undefined) ).toBe(entity);
+                expect( entity.getDTO().vehicle ).toBe(undefined);
+                expect( fn.call(entity, CarEntity.create().setModel('Tesla')) ).toBe(entity);
+                expect( entity.getDTO().vehicle ).toStrictEqual({'model': 'Tesla'});
+            });
+
+            it('can create a car or plain or undefined setter with a car DTO value', () => {
+                const fn = EntityFactoryImpl.createPropertySetter<TestDTO, TestEntity>(
+                    'vehicle',
+                    [
+                        CarEntity,
+                        PlaneEntity,
+                        VariableType.UNDEFINED,
+                    ]
+                );
+                const entity = TestEntity.create();
+                expect( fn.call(entity, {
+                    model: 'Ford'
+                }) ).toBe(entity);
+                expect( entity.getDTO().vehicle ).toStrictEqual({ model: 'Ford' });
+                expect( fn.call(entity, CarEntity.create().setModel('Tesla')) ).toBe(entity);
+                expect( entity.getDTO().vehicle ).toStrictEqual({ model: 'Tesla'});
+            });
+
+            it('can create a car or plain or undefined setter with a car entity value', () => {
+                const fn = EntityFactoryImpl.createPropertySetter<TestDTO, TestEntity>(
+                    'vehicle',
+                    [
+                        CarEntity,
+                        PlaneEntity,
+                        VariableType.UNDEFINED,
+                    ]
+                );
+                const entity = TestEntity.create();
+                expect( fn.call(entity, CarEntity.create().setModel('Ford')) ).toBe(entity);
+                expect( entity.getDTO().vehicle ).toStrictEqual({ model: 'Ford' });
+                expect( fn.call(entity, CarEntity.create().setModel('Tesla')) ).toBe(entity);
+                expect( entity.getDTO().vehicle ).toStrictEqual({ model: 'Tesla'});
+            });
+
+            it('can create a car or plain or undefined setter with a plane entity value', () => {
+                const fn = EntityFactoryImpl.createPropertySetter<TestDTO, TestEntity>(
+                    'vehicle',
+                    [
+                        CarEntity,
+                        PlaneEntity,
+                        VariableType.UNDEFINED,
+                    ]
+                );
+                const entity = TestEntity.create();
+                expect( fn.call(entity, PlaneEntity.create().setTailNumber('FI1234')) ).toBe(entity);
+                expect( entity.getDTO().vehicle ).toStrictEqual({ tailNumber: 'FI1234' });
+                expect( fn.call(entity, PlaneEntity.create().setTailNumber('US9999')) ).toBe(entity);
+                expect( entity.getDTO().vehicle ).toStrictEqual({ tailNumber: 'US9999'});
             });
 
         });

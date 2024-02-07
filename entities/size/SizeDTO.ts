@@ -12,6 +12,7 @@ export interface SizeDTO extends DTO {
      * Defaults to pixels.
      */
     readonly unit ?: UnitType;
+
 }
 
 /**

@@ -103,9 +103,9 @@ export const StyleEntityFactory = (
                      .add( EntityFactoryImpl.createProperty("textColor").setTypes(ColorEntity, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("width").setTypes(SizeEntity, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("height").setTypes(SizeEntity, VariableType.UNDEFINED) )
-                     .add( EntityFactoryImpl.createProperty("margin").setTypes(SizeEntity, SizeBoxEntity, VariableType.UNDEFINED) )
-                     .add( EntityFactoryImpl.createProperty("padding").setTypes(SizeEntity, SizeBoxEntity, VariableType.UNDEFINED) )
-                     .add( EntityFactoryImpl.createProperty("border").setTypes(BorderEntity, BorderBoxEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("margin").setTypes(SizeBoxEntity, SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("padding").setTypes(SizeBoxEntity, SizeEntity, VariableType.UNDEFINED) )
+                     .add( EntityFactoryImpl.createProperty("border").setTypes(BorderBoxEntity, BorderEntity, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("font").setTypes(FontEntity, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("textDecoration").setTypes(TextDecorationEntity, VariableType.UNDEFINED) )
                      .add( EntityFactoryImpl.createProperty("background").setTypes(BackgroundEntity, VariableType.UNDEFINED) )
@@ -209,186 +209,6 @@ export class StyleEntity
         if (isBorderEntity(value)) return value.getDTO();
         if (isBorder(value)) return value.getDTO();
         return value;
-    }
-
-    public static prepareSizeListDTO (
-        value : (
-            SizeEntity
-            | [
-                SizeEntity | SizeDTO | number | undefined,
-                SizeEntity | SizeDTO | number | undefined,
-            ]
-            | [
-                SizeEntity | SizeDTO | number | undefined,
-                SizeEntity | SizeDTO | number | undefined,
-                SizeEntity | SizeDTO | number | undefined,
-                SizeEntity | SizeDTO | number | undefined,
-            ]
-            | SizeDTO
-            | number
-            | undefined
-            )
-    ) : SizeDTO | [SizeDTO, SizeDTO, SizeDTO, SizeDTO] | undefined {
-        if (value === undefined) return undefined;
-        if (isNumber(value)) return {value, unit: UnitType.PX};
-        if (isSizeEntity(value)) return value.getDTO();
-        if (isArray(value)) {
-
-            if (value.length === 2) {
-                const top_and_bottom : SizeDTO | undefined = StyleEntity.prepareSizeDTO(value[TOP_AND_BOTTOM_MARGIN_INDEX]);
-                if (!top_and_bottom) throw new TypeError(`prepareSizeListDTO: Invalid [undefined, *] array provided`);
-                const right_and_left: SizeDTO | undefined = StyleEntity.prepareSizeDTO(value[LEFT_AND_RIGHT_MARGIN_INDEX]);
-                if (!right_and_left) throw new TypeError(`prepareSizeListDTO: Invalid [SizeDTO, undefined] array provided`);
-                return [
-                    top_and_bottom, // top
-                    right_and_left, // right
-                    top_and_bottom, // bottom
-                    right_and_left, // left
-                ];
-            }
-
-            if (value.length === 4) {
-                const top : SizeDTO | undefined = StyleEntity.prepareSizeDTO( value[TOP_MARGIN_INDEX] );
-                if (!top) throw new TypeError(`prepareSizeListDTO: Invalid [undefined, *, *, *] array provided`);
-                const right : SizeDTO | undefined = StyleEntity.prepareSizeDTO( value[RIGHT_MARGIN_INDEX] );
-                if (!right) throw new TypeError(`prepareSizeListDTO: Invalid [SizeDTO, undefined, *, *] array provided`);
-                const bottom : SizeDTO | undefined = StyleEntity.prepareSizeDTO( value[BOTTOM_MARGIN_INDEX] );
-                if (!bottom) throw new TypeError(`prepareSizeListDTO: Invalid [SizeDTO, SizeDTO, undefined, *] array provided`);
-                const left : SizeDTO | undefined = StyleEntity.prepareSizeDTO( value[LEFT_MARGIN_INDEX] );
-                if (!left) throw new TypeError(`prepareSizeListDTO: Invalid [SizeDTO, SizeDTO, SizeDTO, undefined] array provided`);
-                return [
-                    top,
-                    right,
-                    bottom,
-                    left,
-                ];
-            }
-
-            // Runtime assert, should not happen.
-            // @ts-ignore
-            throw new TypeError(`prepareSizeListDTO: Incorrect array length: ${value.length}`);
-
-        }
-        return value;
-    }
-
-    public static prepareBorderListDTO (
-        value : (
-            Border
-            | [
-                Border | BorderDTO | number | undefined,
-                Border | BorderDTO | number | undefined,
-            ]
-            | [
-                Border | BorderDTO | number | undefined,
-                Border | BorderDTO | number | undefined,
-                Border | BorderDTO | number | undefined,
-                Border | BorderDTO | number | undefined,
-            ]
-            | BorderDTO
-            | number
-            | undefined
-            )
-    ) : BorderDTO | [BorderDTO, BorderDTO, BorderDTO, BorderDTO] | undefined {
-        if (value === undefined) return undefined;
-        if (isNumber(value)) {
-            return BorderEntity.create().setWidth( SizeEntity.create(value) ).getDTO();
-        }
-        if (isBorderEntity(value)) return value.getDTO();
-        if (isBorder(value)) return value.getDTO();
-        if (isArray(value)) {
-
-            if (value.length === 2) {
-                const top_and_bottom : BorderDTO | undefined = StyleEntity.prepareBorderDTO(value[TOP_AND_BOTTOM_MARGIN_INDEX]);
-                if (!top_and_bottom) throw new TypeError(`prepareBorderListDTO: Invalid [undefined, *] array provided`);
-                const right_and_left: BorderDTO | undefined = StyleEntity.prepareBorderDTO(value[LEFT_AND_RIGHT_MARGIN_INDEX]);
-                if (!right_and_left) throw new TypeError(`prepareBorderListDTO: Invalid [BorderDTO, undefined] array provided`);
-                return [
-                    top_and_bottom, // top
-                    right_and_left, // right
-                    top_and_bottom, // bottom
-                    right_and_left, // left
-                ];
-            }
-
-            if (value.length === 4) {
-                const top : BorderDTO | undefined = StyleEntity.prepareBorderDTO( value[0] );
-                if (!top) throw new TypeError(`prepareBorderListDTO: Invalid [undefined, *, *, *] array provided`);
-                const right : BorderDTO | undefined = StyleEntity.prepareBorderDTO( value[1] );
-                if (!right) throw new TypeError(`prepareBorderListDTO: Invalid [BorderDTO, undefined, *, *] array provided`);
-                const bottom : BorderDTO | undefined = StyleEntity.prepareBorderDTO( value[2] );
-                if (!bottom) throw new TypeError(`prepareBorderListDTO: Invalid [BorderDTO, BorderDTO, undefined, *] array provided`);
-                const left : BorderDTO | undefined = StyleEntity.prepareBorderDTO( value[3] );
-                if (!left) throw new TypeError(`prepareBorderListDTO: Invalid [BorderDTO, BorderDTO, BorderDTO, undefined] array provided`);
-                return [
-                    top,
-                    right,
-                    bottom,
-                    left,
-                ];
-            }
-
-            // Runtime assert, should not happen.
-            // @ts-ignore
-            throw new TypeError(`prepareBorderListDTO: Incorrect array length: ${value.length}`);
-
-        }
-        return value;
-    }
-
-    public static prepareSizeListCssStyles (
-        key : string,
-        value : SizeDTO | [SizeDTO, SizeDTO, SizeDTO, SizeDTO] | undefined
-    ) : ReadonlyJsonObject {
-
-        if (isSizeDTO(value)) {
-            return {
-                [key]: SizeEntity.createFromDTO(value).getCssStyles()
-            };
-        }
-
-        if (isArray(value)) {
-            return {
-                [key]: map(
-                    value,
-                    (item: SizeDTO) : string => SizeEntity.createFromDTO(item).getCssStyles()
-                ).join(' ')
-            };
-        }
-
-        return {};
-
-    }
-
-    public static prepareBorderListCssStyles (
-        value : BorderDTO | [BorderDTO, BorderDTO, BorderDTO, BorderDTO] | undefined
-    ) : ReadonlyJsonObject {
-
-        if (isBorderDTO(value)) {
-            return {
-                border: BorderEntity.create(value).getCssStyles()
-            };
-        }
-
-        if (isArray(value)) {
-            return {
-                borderStyle: map(
-                    value,
-                    (item: BorderDTO) : string => (BorderEntity.createFromDTO(item).getStyle() ?? BorderStyle.NONE),
-                ).join(' '),
-                borderWidth: map(
-                    value,
-                    (item: BorderDTO) : string => (BorderEntity.createFromDTO(item).getWidth() ?? SizeEntity.createZero()).getCssStyles(),
-                ).join(' '),
-                borderColor: map(
-                    value,
-                    (item: BorderDTO) : string => (BorderEntity.createFromDTO(item).getColor() ?? ColorEntity.createTransparent()).getCssStyles(),
-                ).join(' '),
-            };
-        }
-
-        return {};
-
     }
 
     /**
@@ -563,7 +383,7 @@ export class StyleEntity
             return this.setMargin(
                 dto
                 ? SizeBoxEntity.create().setRight(currentDTO).setBottom(currentDTO).setLeft(currentDTO).setTop(dto)
-                : SizeBoxEntity.create().setRight(currentDTO).setBottom(currentDTO).setLeft(currentDTO)
+                : SizeBoxEntity.create().setRight(currentDTO).setBottom(currentDTO).setLeft(currentDTO).setTop(undefined)
             );
         }
         return this.setMargin( dto ? SizeBoxEntity.create().setTop(dto) : SizeBoxEntity.create() );
@@ -580,7 +400,7 @@ export class StyleEntity
             return this.setMargin(
                 dto
                 ? SizeBoxEntity.create().setTop(currentDTO).setBottom(currentDTO).setLeft(currentDTO).setRight(dto)
-                : SizeBoxEntity.create().setTop(currentDTO).setBottom(currentDTO).setLeft(currentDTO)
+                : SizeBoxEntity.create().setTop(currentDTO).setBottom(currentDTO).setLeft(currentDTO).setRight(undefined)
             );
         }
         return this.setMargin( dto ? SizeBoxEntity.create().setRight(dto) : SizeBoxEntity.create() );
@@ -597,7 +417,7 @@ export class StyleEntity
             return this.setMargin(
                 dto
                 ? SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setLeft(currentDTO).setBottom(dto)
-                : SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setLeft(currentDTO)
+                : SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setLeft(currentDTO).setBottom(dto)
             );
         }
         return this.setMargin( dto ? SizeBoxEntity.create().setBottom(dto) : SizeBoxEntity.create() );
@@ -614,7 +434,7 @@ export class StyleEntity
             return this.setMargin(
                 dto
                 ? SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setBottom(currentDTO).setLeft(dto)
-                : SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setBottom(currentDTO)
+                : SizeBoxEntity.create().setTop(currentDTO).setRight(currentDTO).setBottom(currentDTO).setLeft(dto)
             );
         }
         return this.setMargin( dto ? SizeBoxEntity.create().setLeft(dto) : SizeBoxEntity.create() );
@@ -623,7 +443,7 @@ export class StyleEntity
 
     public getTopPadding () : Size | undefined {
         const padding = this.getPadding();
-        if (isSizeBox(padding)) {
+        if (isSizeBoxEntity(padding)) {
             return padding.getTop();
         }
         return padding;

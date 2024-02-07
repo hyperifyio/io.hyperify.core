@@ -8,6 +8,8 @@ import {
 import { BackgroundDTO } from "../background/BackgroundDTO";
 import { ColorDTO } from "../color/ColorDTO";
 import { ColorEntity } from "../color/ColorEntity";
+import { SizeEntity } from "../size/SizeEntity";
+import { SizeBoxEntity } from "../sizeBox/SizeBoxEntity";
 import { TextDecorationEntity } from "../textDecoration/TextDecorationEntity";
 import { BoxSizing } from "../types/BoxSizing";
 import { TextAlign } from "../types/TextAlign";
@@ -605,13 +607,58 @@ describe('StyleEntity', () => {
             });
         });
 
-        describe('.getPadding', () => {
+        describe.only('.getPadding', () => {
 
-            it('can set padding by number', () => {
+            it.only('can get padding by number', () => {
                 expect(entity.getPadding()?.getDTO()).toEqual(
                     expect.objectContaining({
                         value: 10,
                         unit: UnitType.PX,
+                    })
+                )
+            });
+
+            it('can set padding by box', () => {
+
+                entity = StyleEntity.create({
+                    padding: {
+                        top: {
+                            value: 10,
+                            unit: UnitType.PX,
+                        },
+                        right: {
+                            value: 20,
+                            unit: UnitType.PX,
+                        },
+                        bottom: {
+                            value: 30,
+                            unit: UnitType.PX,
+                        },
+                        left: {
+                            value: 40,
+                            unit: UnitType.PX,
+                        },
+                    }
+                });
+
+                expect(entity.getPadding()?.getDTO()).toEqual(
+                    expect.objectContaining({
+                        top: {
+                            value: 10,
+                            unit: UnitType.PX,
+                        },
+                        right: {
+                            value: 20,
+                            unit: UnitType.PX,
+                        },
+                        bottom: {
+                            value: 30,
+                            unit: UnitType.PX,
+                        },
+                        left: {
+                            value: 40,
+                            unit: UnitType.PX,
+                        },
                     })
                 )
             });
