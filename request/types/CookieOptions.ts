@@ -1,25 +1,20 @@
 // Copyright (c) 2023-2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { CookieLike } from "./CookieLike";
 import { SameSite } from "../../types/SameSite";
 import { CookieOptionsLike } from "./CookieOptionsLike";
 
-export class Cookie implements CookieLike {
+export class CookieOptions implements CookieOptionsLike {
 
-    private _name : string;
     private _path : string | undefined;
-    private _value : string | undefined;
     private _domain : string | undefined;
     private _expires : string | undefined;
     private _httpOnly : boolean | undefined;
-    private _partitioned : boolean | undefined;
     private _secure : boolean | undefined;
+    private _partitioned : boolean | undefined;
     private _maxAge : number | undefined;
     private _sameSite : SameSite | undefined;
 
     private constructor (
-        name        : string,
-        value       : string | undefined,
         path        : string | undefined,
         domain      : string | undefined,
         expires     : string | undefined,
@@ -30,25 +25,27 @@ export class Cookie implements CookieLike {
         sameSite    : SameSite | undefined,
     ) {
         this._path = path;
-        this._name = name;
-        this._value = value;
         this._domain = domain;
         this._expires = expires;
         this._httpOnly = httpOnly;
         this._secure = secure;
-        this._partitioned = partitioned;
         this._maxAge = maxAge;
         this._sameSite = sameSite;
+        this._partitioned = partitioned;
     }
 
+    /**
+     * Creates a new CookieOptions using values from an existing one if provided.
+     *
+     * This is essentially a clone operation if an argument is provided. E.g. changes in the original
+     * will not affect the new one.
+     *
+     * @param options
+     */
     public static create (
-        name       : string,
-        value      : string | undefined = undefined,
-        options   ?: CookieOptionsLike | undefined,
-    ) : CookieLike {
-        return new Cookie(
-            name,
-            value,
+        options ?: CookieOptionsLike,
+    ) : CookieOptionsLike {
+        return new CookieOptions(
             options ? options.getPath() : undefined,
             options ? options.getDomain() : undefined,
             options ? options.getExpires() : undefined,
@@ -59,26 +56,6 @@ export class Cookie implements CookieLike {
             options ? options.getSameSite() : undefined,
         );
     }
-
-    public getName (): string {
-        return this._name;
-    }
-
-    public setName (name: string): this {
-        this._name = name;
-        return this;
-    }
-
-
-    public getValue (): string | undefined {
-        return this._value;
-    }
-
-    public setValue (value: string | undefined): this {
-        this._value = value;
-        return this;
-    }
-
 
     public getDomain (): string | undefined {
         return this._domain;
