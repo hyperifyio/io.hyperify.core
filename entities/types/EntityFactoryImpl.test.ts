@@ -8,7 +8,6 @@ import {
     it,
 } from "@jest/globals";
 import "../../../testing/jest/matchers/index";
-import { factory } from "ts-jest/dist/transformers/hoist-jest";
 import { BaseEntity } from "./BaseEntity";
 import { DTO } from "./DTO";
 import { Entity } from "./Entity";
@@ -591,12 +590,12 @@ describe('EntityFactoryImpl', () => {
                 toJSON () { return {}; },
 
                 getAge () { return 30; },
-                setAge (age: string) { return this; },
-                age (age: string) { return this; },
+                setAge (_age: string) { return this; },
+                age (_age: string) { return this; },
 
                 getName () { return 'John'; },
-                setName (name: string) { return this; },
-                name (name: string) { return this; },
+                setName (_name: string) { return this; },
+                name (_name: string) { return this; },
 
             }) ).toBe(true);
         });
@@ -609,12 +608,12 @@ describe('EntityFactoryImpl', () => {
                 toJSON () { return {}; },
 
                 getAge () { return 30; },
-                setAge (age: string) { return this; },
-                age (age: string) { return this; },
+                setAge (_age: string) { return this; },
+                age (_age: string) { return this; },
 
                 getName () { return 'John'; },
                 // Missing setName
-                name (name: string) { return this; },
+                name (_name: string) { return this; },
 
             }) ).toBe(false);
         });
@@ -625,12 +624,12 @@ describe('EntityFactoryImpl', () => {
                 // Missing getEntityType, getDTO, valueOf and toJSON
 
                 getAge () { return 30; },
-                setAge (age: string) { return this; },
-                age (age: string) { return this; },
+                setAge (_age: string) { return this; },
+                age (_age: string) { return this; },
 
                 getName () { return 'John'; },
-                setName (name: string) { return this; },
-                name (name: string) { return this; },
+                setName (_name: string) { return this; },
+                name (_name: string) { return this; },
 
             }) ).toBe(false);
         });
@@ -644,12 +643,12 @@ describe('EntityFactoryImpl', () => {
                 toJSON () { return {}; },
 
                 getAge () { return 30; },
-                setAge (age: string) { return this; },
-                age (age: string) { return this; },
+                setAge (_age: string) { return this; },
+                age (_age: string) { return this; },
 
                 getName () { return 'John'; },
-                setName (name: string) { return this; },
-                name (name: string) { return this; },
+                setName (_name: string) { return this; },
+                name (_name: string) { return this; },
 
             }) ).toBe(false);
         });
@@ -686,11 +685,6 @@ describe('EntityFactoryImpl', () => {
             setName (name: string) : this;
             age (age: number) : this;
             name (name: string) : this;
-        }
-
-        interface MyReadonlyEntity extends Entity<MyDTO> {
-            getAge () : number;
-            getName () : string;
         }
 
         let factory : EntityFactoryImpl<MyDTO, MyEntity>;
@@ -1236,7 +1230,7 @@ describe('EntityFactoryImpl', () => {
                 return value instanceof TestEntity;
             }
 
-            public static isDTO (value: unknown) : value is TestDTO {
+            public static isDTO (_value: unknown) : _value is TestDTO {
                 return false;
             }
 

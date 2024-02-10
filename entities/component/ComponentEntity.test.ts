@@ -884,8 +884,7 @@ describe('ComponentEntity', () => {
 
                 it('cannot set a string value', () => {
                     expect( () => entity.setMetaNumber('hello', 'foobar' as unknown as number) ).toThrowError(
-                        TypeError,
-                        expect.stringContaining('Component.setMetaNumber(): The new property value was not a number: foobar')
+                        'Component.setMetaNumber(): The new property value was not a number: foobar'
                     );
                     expect( entity.getMeta() ).toEqual(
                         expect.objectContaining({
@@ -897,8 +896,7 @@ describe('ComponentEntity', () => {
 
                 it('cannot set an undefined value', () => {
                     expect( () => entity.setMetaNumber('hello', undefined as unknown as number) ).toThrowError(
-                        TypeError,
-                        expect.stringContaining('Component.setMetaNumber(): The new property value was not a number: undefined')
+                        'Component.setMetaNumber(): The new property value was not a number: undefined'
                     );
                     expect( entity.getMeta() ).toEqual(
                         expect.objectContaining({
@@ -992,8 +990,7 @@ describe('ComponentEntity', () => {
 
                 it('cannot set a string value', () => {
                     expect( () => entity.setMetaBoolean('hello', 'foobar' as unknown as boolean) ).toThrowError(
-                        TypeError,
-                        expect.stringContaining('Component.setMetaBoolean(): The new property value was not a boolean: foobar')
+                        'Component.setMetaBoolean(): The new property value was not a boolean: foobar'
                     );
                     expect( entity.getMeta() ).toEqual(
                         expect.objectContaining({
@@ -1005,8 +1002,7 @@ describe('ComponentEntity', () => {
 
                 it('cannot set an undefined value', () => {
                     expect( () => entity.setMetaBoolean('hello', undefined as unknown as boolean) ).toThrowError(
-                        TypeError,
-                        expect.stringContaining('Component.setMetaBoolean(): The new property value was not a boolean: undefined')
+                        'Component.setMetaBoolean(): The new property value was not a boolean: undefined'
                     );
                     expect( entity.getMeta() ).toEqual(
                         expect.objectContaining({
@@ -1132,9 +1128,8 @@ describe('ComponentEntity', () => {
                 });
 
                 it('cannot set a string value', () => {
-                    expect( () => entity.setMetaArray('payload', 'foobar' as unknown as string[]) ).toThrowError(
-                        TypeError,
-                        expect.stringContaining('Component.setMetaArray(): The new property value was not an array: foobar')
+                    expect( () => entity.setMetaArray('payload', 'foobar' as unknown as string[]) ).toThrow(
+                        'Component.setMetaArray(): The new property value was not an array: foobar'
                     );
                     expect( entity.getMeta() ).toEqual(
                         expect.objectContaining({
@@ -1148,8 +1143,7 @@ describe('ComponentEntity', () => {
 
                 it('cannot set an undefined value', () => {
                     expect( () => entity.setMetaArray('hello', undefined as unknown as string[]) ).toThrowError(
-                        TypeError,
-                        expect.stringContaining('Component.setMetaArray(): The new property value was not an array: undefined')
+                        'Component.setMetaArray(): The new property value was not an array: undefined'
                     );
                     expect( entity.getMeta() ).toEqual(
                         expect.objectContaining({
@@ -1260,9 +1254,8 @@ describe('ComponentEntity', () => {
                 });
 
                 it('cannot set a string value', () => {
-                    expect( () => entity.setMetaObject('payload', 'foobar' as unknown as {}) ).toThrowError(
-                        TypeError,
-                        expect.stringContaining('Component.setMetaObject(): The new property value was not an array: foobar')
+                    expect( () => entity.setMetaObject('payload', 'foobar' as unknown as {}) ).toThrow(
+                        'Component.setMetaObject(): The new property value was not an object: foobar'
                     );
                     expect( entity.getMeta() ).toEqual(
                         expect.objectContaining({
@@ -1276,8 +1269,7 @@ describe('ComponentEntity', () => {
 
                 it('cannot set an undefined value', () => {
                     expect( () => entity.setMetaObject('hello', undefined as unknown as {}) ).toThrowError(
-                        TypeError,
-                        expect.stringContaining('Component.setMetaObject(): The new property value was not an array: undefined')
+                        'Component.setMetaObject(): The new property value was not an object: undefined'
                     );
                     expect( entity.getMeta() ).toEqual(
                         expect.objectContaining({

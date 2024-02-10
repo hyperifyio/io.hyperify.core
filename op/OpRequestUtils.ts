@@ -1,5 +1,6 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { LogUtils } from "../LogUtils";
 import { TestCallbackNonStandardOf } from "../types/TestCallback";
 import { ExplainCallback } from "../types/ExplainCallback";
 import { JsonAny, parseJson } from "../Json";
@@ -84,7 +85,7 @@ export class OpRequestUtils {
         );
         if (!isDTO(dto)) {
             LOG.debug(`'${path}': invalid response = `, dto);
-            throw new TypeError(`'${path}': Response was not ${dtoName}: ${explainDTO(dto)}`);
+            throw new TypeError(`'${path}': Response was not ${dtoName}: ${explainDTO(dto)}: ${LogUtils.stringifyValue(dto)}`);
         }
         return dto;
     }

@@ -21,10 +21,7 @@ jest.mock('../../LogService', () => ({
 
 // @ts-ignore
 import "../../../testing/jest/matchers/index";
-import { debug } from "node:util";
-import { Simulate } from "react-dom/test-utils";
 import { ContextLogger } from "../../logger/context/ContextLogger";
-import { Logger } from "../../types/Logger";
 import { addDestroyService } from './addDestroyService';
 import { autowired } from './autowired';
 import { LogLevel } from "../../types/LogLevel";
@@ -36,7 +33,6 @@ import { AutowireUtils } from "./utils/AutowireUtils";
 import { DestroyService } from "./services/DestroyService";
 import { LogService } from "../../LogService";
 import { find } from "../../functions/find";
-import error = Simulate.error;
 
 jest.mock('../../ProcessUtils', () => ({
     ProcessUtils: {

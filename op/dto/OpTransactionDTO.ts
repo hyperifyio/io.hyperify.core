@@ -106,7 +106,7 @@ export interface OpTransactionDTO {
     /**
      * Booking date
      */
-    readonly bookingDate: string;
+    readonly bookingDate: string | null;
 
     /**
      * Creditor account BIC
@@ -175,7 +175,7 @@ export function createOpTransactionDTO (
     rfReference: string | null,
     valueDate: string,
     debtorName: string,
-    bookingDate: string,
+    bookingDate: string | null,
     creditorBic: string | null,
     paymentDate: string,
     creditorName: string,
@@ -254,7 +254,7 @@ export function isOpTransactionDTO (value: unknown) : value is OpTransactionDTO 
         && isStringOrNull(value?.rfReference)
         && isString(value?.valueDate)
         && isString(value?.debtorName)
-        && isString(value?.bookingDate)
+        && isStringOrNull(value?.bookingDate)
         && isStringOrNull(value?.creditorBic)
         && isString(value?.paymentDate)
         && isString(value?.creditorName)
@@ -309,7 +309,7 @@ export function explainOpTransactionDTO (value: any) : string {
             , explainProperty("rfReference", explainStringOrNull(value?.rfReference))
             , explainProperty("valueDate", explainString(value?.valueDate))
             , explainProperty("debtorName", explainString(value?.debtorName))
-            , explainProperty("bookingDate", explainString(value?.bookingDate))
+            , explainProperty("bookingDate", explainStringOrNull(value?.bookingDate))
             , explainProperty("creditorBic", explainStringOrNull(value?.creditorBic))
             , explainProperty("paymentDate", explainString(value?.paymentDate))
             , explainProperty("creditorName", explainString(value?.creditorName))

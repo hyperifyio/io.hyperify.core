@@ -8,7 +8,6 @@ import {
 import { BackgroundDTO } from "../background/BackgroundDTO";
 import { ColorDTO } from "../color/ColorDTO";
 import { ColorEntity } from "../color/ColorEntity";
-import { TextDecorationEntity } from "../textDecoration/TextDecorationEntity";
 import { BoxSizing } from "../types/BoxSizing";
 import { TextAlign } from "../types/TextAlign";
 import { TextDecorationStyle } from "../types/TextDecorationStyle";

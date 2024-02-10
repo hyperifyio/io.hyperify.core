@@ -444,6 +444,7 @@ export class EntityFactoryImpl<
         T extends BaseEntity<D, T>,
     > (
         propertyName : string,
+        // @ts-ignore
         type: EntityType<any, any> | VariableType,
     ): GetterMethod<D, T, EntityVariableValue> {
         return function scalarGetterMethod (
@@ -470,6 +471,7 @@ export class EntityFactoryImpl<
         T extends BaseEntity<D, T>,
     > (
         propertyName : string,
+        // @ts-ignore
         type: EnumType<any>,
     ): GetterMethod<D, T, EntityVariableValue> {
         return function enumGetterMethod (
@@ -1336,6 +1338,13 @@ export class EntityFactoryImpl<
             private static _isDTO : IsDTOTestFunction<D> = isDtoInitializer();
             private static _defaultDto : D = createDefaultDtoInitializer();
 
+            /**
+             * Always returns `true`, since this type will automatically initialize if used.
+             */
+            public static isInitialized () : boolean {
+                return this._initialized;
+            }
+
             public static create () : FinalType {
                 return new FinalType();
             }
@@ -1827,6 +1836,5 @@ export class EntityFactoryImpl<
         return FinalType as unknown as EntityType<D, T>;
 
     }
-
 
 }
