@@ -107,7 +107,7 @@ export class OpTransactionEntity extends Entity {
     public debtorName ?: string;
 
     @Column("booking_date", 'DATETIME')
-    public bookingDate ?: string;
+    public bookingDate ?: string | null;
 
     @Column("creditor_bic")
     public creditorBic ? : string | null;
@@ -171,7 +171,7 @@ export class OpTransactionEntity extends Entity {
             entity.rfReference ?? null,
             entity.valueDate,
             entity.debtorName,
-            entity.bookingDate,
+            entity.bookingDate ?? null,
             entity.creditorBic ?? null,
             entity.paymentDate,
             entity.creditorName,

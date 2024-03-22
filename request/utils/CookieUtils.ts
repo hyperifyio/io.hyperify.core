@@ -66,11 +66,19 @@ export class CookieUtils {
         const partitioned = cookie.getPartitioned();
         const expires = cookie.getExpires();
         CookieUtils.assertCookieName(name);
-        CookieUtils.assertCookieValue(value);
-        CookieUtils.assertCookiePath(path);
-        CookieUtils.assertCookieDomain(domain);
-        CookieUtils.assertCookieExpires(expires);
-        return `${name}=${value}${
+        if (value !== undefined) {
+            CookieUtils.assertCookieValue( value );
+        }
+        if (path !== undefined) {
+            CookieUtils.assertCookiePath(path);
+        }
+        if (domain !== undefined) {
+            CookieUtils.assertCookieDomain( domain );
+        }
+        if (expires !== undefined) {
+            CookieUtils.assertCookieExpires( expires );
+        }
+        return `${name}=${value ? value : ''}${
             path !== undefined ? `; Path=${path}` : ''
         }${
             domain !== undefined ? `; Domain=${domain}` : ''
