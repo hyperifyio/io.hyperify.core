@@ -9,7 +9,10 @@ export enum ProductFeatureId {
 
     SUPPORT_1H_M        = "SUPPORT_1H_M",
     BACKUP_RESTORE_1H_M = "BACKUP_RESTORE_1H_M",
-    UPGRADE_1VPS_M        = "UPGRADE_1VPS_M",
+    DB_MYSQL_M          = "DB_MYSQL_M",
+    DB_PSQL_M           = "DB_PSQL_M",
+    UPGRADE_1VPS_M      = "UPGRADE_1VPS_M",
+    USER_M              = "USER_M",
 
     DISK_TYPE       = "DISK_TYPE",
     DISK_SIZE       = "DISK_SIZE",
