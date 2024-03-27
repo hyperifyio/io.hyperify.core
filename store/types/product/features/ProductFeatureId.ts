@@ -1,6 +1,12 @@
 // Copyright (c) 2022-2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { explainEnum, isEnum, parseEnum, stringifyEnum } from "../../../../types/Enum";
+import {
+    explainNot,
+    explainOk,
+    explainOr,
+} from "../../../../types/explain";
+import { isUndefined } from "../../../../types/undefined";
 
 export enum ProductFeatureId {
     WP        = "WP",
@@ -43,18 +49,27 @@ export enum ProductFeatureId {
     CPU_AMOUNT      = "CPU_AMOUNT"
 }
 
-export function isProductFeatureId (value: any): value is ProductFeatureId {
+export function isProductFeatureId (value: unknown) : value is ProductFeatureId {
     return isEnum(ProductFeatureId, value);
 }
 
-export function explainProductFeatureId (value : any) : string {
+export function explainProductFeatureId (value : unknown) : string {
     return explainEnum("ProductFeatureId", ProductFeatureId, isProductFeatureId, value);
 }
 
-export function stringifyProductFeatureId (value: ProductFeatureId): string {
+export function stringifyProductFeatureId (value : ProductFeatureId) : string {
     return stringifyEnum(ProductFeatureId, value);
 }
 
-export function parseProductFeatureId (value: any): ProductFeatureId | undefined {
+export function parseProductFeatureId (value: any) : ProductFeatureId | undefined {
     return parseEnum(ProductFeatureId, value) as ProductFeatureId | undefined;
 }
+
+export function isProductFeatureIdOrUndefined (value: unknown): value is ProductFeatureId | undefined {
+    return isUndefined(value) || isProductFeatureId(value);
+}
+
+export function explainProductFeatureIdOrUndefined (value: unknown): string {
+    return isProductFeatureIdOrUndefined(value) ? explainOk() : explainNot(explainOr(['ProductFeatureId', 'undefined']));
+}
+
