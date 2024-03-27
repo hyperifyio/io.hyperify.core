@@ -12,6 +12,8 @@ export enum ProductType {
     WEB_HOTEL_EXTRA      = "WEB_HOTEL_EXTRA",
     EMAIL_EXTRA          = "EMAIL_EXTRA",
     SHELL_EXTRA          = "SHELL_EXTRA",
+    ATLAS                = "ATLAS",
+    ATLAS_EXTRA          = "ATLAS_EXTRA",
     WEB_HOTEL            = "WEB_HOTEL",
     DOMAIN_TRANSFER      = "DOMAIN_TRANSFER",
     DOMAIN               = "DOMAIN",
