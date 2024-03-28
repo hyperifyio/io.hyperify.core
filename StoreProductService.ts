@@ -1,6 +1,7 @@
 // Copyright (c) 2022-2023. Sendanor <info@sendanor.fi>. All rights reserved.
 // Copyright (c) 2022-2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { ReadonlyJsonObject } from "./Json";
 import { Product } from "./store/types/product/Product";
 import { ProductType } from "./store/types/product/ProductType";
 import { filter } from "./functions/filter";
@@ -40,6 +41,7 @@ export class StoreProductService {
     private static _initialized : boolean = false;
     private static _loading     : boolean = false;
     private static _allProducts : readonly Product[] = [];
+    private static _statistics  : ReadonlyJsonObject = {};
 
     // @ts-ignore @todo Should write unit test for this
     private static setApiUrl (value: string) {
@@ -86,6 +88,13 @@ export class StoreProductService {
         return map(this._allProducts, (item) => item);
     }
 
+    public static getStatistics () : ReadonlyJsonObject {
+        if ( !this._initialized && !this._loading ) {
+            this.refreshProducts();
+        }
+        return this._statistics;
+    }
+
     public static getProductsByType (type: ProductType) : Product[] {
         return filter(
             this.getAllProducts(),
@@ -98,6 +107,11 @@ export class StoreProductService {
         try {
             const response: StoreIndexDTO = await StoreClientService.getStoreIndex(this._apiUrl);
             this._allProducts = response?.products?.items ?? [];
+            if (response.statistics) {
+                this._statistics = response.statistics;
+            } else {
+                this._statistics = {};
+            }
             this._initialized = true;
             this._observer.triggerEvent(StoreProductServiceEvent.UPDATED);
         } catch (err) {
