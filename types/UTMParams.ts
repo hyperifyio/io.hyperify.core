@@ -85,7 +85,17 @@ export function explainUTMParams (value: any) : string {
 }
 
 export function stringifyUTMParams (value : UTMParams) : string {
-    return `UTMParams(${value})`;
+    return `${value.time}${
+        value?.source ? `,source=${value?.source}` : ''
+    }${
+        value?.medium ? `,medium=${value?.medium}` : ''
+    }${
+        value?.campaign ? `,campaign=${value?.campaign}` : ''
+    }${
+        value?.term ? `,term=${value?.term}` : ''
+    }${
+        value?.content ? `,content=${value?.content}` : ''
+    }`;
 }
 
 export function parseUTMParams (value: unknown) : UTMParams | undefined {
