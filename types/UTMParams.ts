@@ -1,5 +1,7 @@
 // Copyright (c) 2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { filter } from "../functions/filter";
+import { isArray } from "./Array";
 import {
     explain,
     explainNot,
@@ -108,4 +110,22 @@ export function isEqualUTMParams( a : UTMParams, b : UTMParams) : boolean {
         && a.term === b.term
         && a.content === b.content
     );
+}
+
+export function parseUTMParamsArray ( a : unknown, expirationTime: number ) : UTMParams[] | undefined {
+    if (!isArray(a)) return undefined;
+    return filter(
+        a,
+        ( item : unknown ) : boolean => isUTMParams( item ) && !isUTMParamsExpired(item, expirationTime)
+    ) as unknown as UTMParams[];
+}
+
+export function isUTMParamsExpired (item: UTMParams, expirationTime: number) : boolean {
+    const now : number = Date.now();
+    if (!item.time) {
+        return true;
+    }
+    const time : number = new Date(item.time).getTime();
+    const duration : number = now - time;
+    return duration >= expirationTime;
 }
