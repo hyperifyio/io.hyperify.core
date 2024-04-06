@@ -21,19 +21,19 @@ import {
 } from "../../types/String";
 import { isUndefined } from "../../types/undefined";
 
-export interface PostFeedResponseDTO {
+export interface FacebookPostFeedResponseDTO {
     readonly id: string;
 }
 
-export function createPostFeedResponseDTO (
+export function createFacebookPostFeedResponseDTO (
     id : string
-) : PostFeedResponseDTO {
+) : FacebookPostFeedResponseDTO {
     return {
         id
     };
 }
 
-export function isPostFeedResponseDTO (value: unknown) : value is PostFeedResponseDTO {
+export function isFacebookPostFeedResponseDTO ( value: unknown) : value is FacebookPostFeedResponseDTO {
     return (
         isRegularObject(value)
         && hasNoOtherKeysInDevelopment(value, [
@@ -43,7 +43,7 @@ export function isPostFeedResponseDTO (value: unknown) : value is PostFeedRespon
     );
 }
 
-export function explainPostFeedResponseDTO (value: any) : string {
+export function explainFacebookPostFeedResponseDTO ( value: any) : string {
     return explain(
         [
             explainRegularObject(value),
@@ -55,19 +55,19 @@ export function explainPostFeedResponseDTO (value: any) : string {
     );
 }
 
-export function stringifyPostFeedResponseDTO (value : PostFeedResponseDTO) : string {
+export function stringifyFacebookPostFeedResponseDTO ( value : FacebookPostFeedResponseDTO) : string {
     return `PostFeedResponseDTO(${value})`;
 }
 
-export function parsePostFeedResponseDTO (value: unknown) : PostFeedResponseDTO | undefined {
-    if (isPostFeedResponseDTO(value)) return value;
+export function parseFacebookPostFeedResponseDTO ( value: unknown) : FacebookPostFeedResponseDTO | undefined {
+    if (isFacebookPostFeedResponseDTO(value)) return value;
     return undefined;
 }
 
-export function isPostFeedResponseDTOOrUndefined (value: unknown): value is PostFeedResponseDTO | undefined {
-    return isUndefined(value) || isPostFeedResponseDTO(value);
+export function isFacebookPostFeedResponseDTOOrUndefined ( value: unknown): value is FacebookPostFeedResponseDTO | undefined {
+    return isUndefined(value) || isFacebookPostFeedResponseDTO(value);
 }
 
-export function explainPostFeedResponseDTOOrUndefined (value: unknown): string {
-    return isPostFeedResponseDTOOrUndefined(value) ? explainOk() : explainNot(explainOr(['PostFeedResponseDTO', 'undefined']));
+export function explainFacebookPostFeedResponseDTOOrUndefined ( value: unknown): string {
+    return isFacebookPostFeedResponseDTOOrUndefined(value) ? explainOk() : explainNot(explainOr(['PostFeedResponseDTO', 'undefined']));
 }

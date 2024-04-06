@@ -5,24 +5,27 @@ import { RequestClientImpl } from "../RequestClientImpl";
 import {
     FACEBOOK_ME_FEED_PATH,
     getFacebookAuthorizationURL,
+    getFacebookDialogOAuthUrl,
     getFacebookGraphApiMyAccounts,
 } from "./facebook-constants";
 import { FacebookGraphClient } from "./FacebookGraphClient";
 import {
-    AccountListDTO,
-    explainAccountListDTO,
-    isAccountListDTO,
-} from "./types/AccountListDTO";
+    FacebookAccountListDTO,
+    explainFacebookAccountListDTO,
+    isFacebookAccountListDTO,
+} from "./types/FacebookAccountListDTO";
+import { FacebookResponseType } from "./types/FacebookResponseType";
+import { FacebookScope } from "./types/FacebookScope";
 import {
-    explainPostFeedResponseDTO,
-    isPostFeedResponseDTO,
-    PostFeedResponseDTO,
-} from "./types/PostFeedResponseDTO";
+    explainFacebookPostFeedResponseDTO,
+    isFacebookPostFeedResponseDTO,
+    FacebookPostFeedResponseDTO,
+} from "./types/FacebookPostFeedResponseDTO";
 import {
-    explainUserAccessTokenDTO,
-    isUserAccessTokenDTO,
-    UserAccessTokenDTO,
-} from "./types/UserAccessTokenDTO";
+    explainFacebookUserAccessTokenDTO,
+    isFacebookUserAccessTokenDTO,
+    FacebookUserAccessTokenDTO,
+} from "./types/FacebookUserAccessTokenDTO";
 import { createHmac } from 'crypto';
 
 /**
@@ -73,14 +76,42 @@ export class FacebookGraphClientImpl implements FacebookGraphClient {
     }
 
     /**
+     * Returns scopes required for posting to Facebook Page.
+     */
+    public static getPagePostScopes () : FacebookScope[] {
+        return [
+            FacebookScope.pages_manage_engagement,
+            FacebookScope.pages_manage_posts,
+            FacebookScope.pages_manage_metadata,
+            FacebookScope.pages_read_engagement,
+            FacebookScope.pages_show_list,
+        ];
+    }
+
+    /**
      * @inheritDoc
      */
-    public async getUserAccessToken (redirectURI: string, code: string): Promise<UserAccessTokenDTO> {
+    public getAuthorizationURL (
+        redirectURI: string,
+        scopes : readonly string[],
+    ) : string {
+        return getFacebookDialogOAuthUrl(
+            this._appId,
+            redirectURI,
+            scopes.join(','),
+            FacebookResponseType.CODE,
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public async getUserAccessToken (redirectURI: string, code: string): Promise<FacebookUserAccessTokenDTO> {
         const response = await this._client.getJson(
             getFacebookAuthorizationURL(this._appId, this._appSecret, redirectURI, code)
         );
-        if (!isUserAccessTokenDTO(response)) {
-            throw new TypeError(`Response was not UserAccessTokenDTO: ${explainUserAccessTokenDTO(response)}`)
+        if (!isFacebookUserAccessTokenDTO(response)) {
+            throw new TypeError(`Response was not UserAccessTokenDTO: ${explainFacebookUserAccessTokenDTO(response)}`)
         }
         return response;
     }
@@ -88,13 +119,13 @@ export class FacebookGraphClientImpl implements FacebookGraphClient {
     /**
      * @inheritDoc
      */
-    public async getAccounts (userAccessToken: string): Promise<AccountListDTO> {
+    public async getAccounts (userAccessToken: string): Promise<FacebookAccountListDTO> {
         const appSecretProof = this._generateAppSecretProof(userAccessToken);
         const response = await this._client.getJson(
             getFacebookGraphApiMyAccounts(userAccessToken, appSecretProof)
         );
-        if (!isAccountListDTO(response)) {
-            throw new TypeError(`Response was not AccountListDTO: ${explainAccountListDTO(response)}`)
+        if (!isFacebookAccountListDTO(response)) {
+            throw new TypeError(`Response was not AccountListDTO: ${explainFacebookAccountListDTO(response)}`)
         }
         return response;
     }
@@ -102,7 +133,7 @@ export class FacebookGraphClientImpl implements FacebookGraphClient {
     /**
      * @inheritDoc
      */
-    public async postMessage (pageToken: string, message: string): Promise<PostFeedResponseDTO> {
+    public async postMessage (pageToken: string, message: string): Promise<FacebookPostFeedResponseDTO> {
         const appSecretProof = this._generateAppSecretProof(pageToken);
         const response = await this._client.postJson(
             FACEBOOK_ME_FEED_PATH,
@@ -112,8 +143,8 @@ export class FacebookGraphClientImpl implements FacebookGraphClient {
                 appsecret_proof: appSecretProof,
             }
         );
-        if (!isPostFeedResponseDTO(response)) {
-            throw new TypeError(`Response was not PostFeedResponseDTO: ${explainPostFeedResponseDTO(response)}`)
+        if (!isFacebookPostFeedResponseDTO(response)) {
+            throw new TypeError(`Response was not PostFeedResponseDTO: ${explainFacebookPostFeedResponseDTO(response)}`)
         }
         return response;
     }

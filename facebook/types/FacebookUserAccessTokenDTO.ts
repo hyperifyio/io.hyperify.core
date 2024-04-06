@@ -25,17 +25,17 @@ import {
 } from "../../types/String";
 import { isUndefined } from "../../types/undefined";
 
-export interface UserAccessTokenDTO {
+export interface FacebookUserAccessTokenDTO {
     readonly access_token: string;
     readonly token_type: string;
     readonly expires_in: number;
 }
 
-export function createUserAccessTokenDTO (
+export function createFacebookUserAccessTokenDTO (
     access_token : string,
     token_type : string,
     expires_in : number,
-) : UserAccessTokenDTO {
+) : FacebookUserAccessTokenDTO {
     return {
         access_token,
         token_type,
@@ -43,7 +43,7 @@ export function createUserAccessTokenDTO (
     };
 }
 
-export function isUserAccessTokenDTO (value: unknown) : value is UserAccessTokenDTO {
+export function isFacebookUserAccessTokenDTO ( value: unknown) : value is FacebookUserAccessTokenDTO {
     return (
         isRegularObject(value)
         && hasNoOtherKeysInDevelopment(value, [
@@ -57,7 +57,7 @@ export function isUserAccessTokenDTO (value: unknown) : value is UserAccessToken
     );
 }
 
-export function explainUserAccessTokenDTO (value: any) : string {
+export function explainFacebookUserAccessTokenDTO ( value: any) : string {
     return explain(
         [
             explainRegularObject(value),
@@ -73,20 +73,20 @@ export function explainUserAccessTokenDTO (value: any) : string {
     );
 }
 
-export function stringifyUserAccessTokenDTO (value : UserAccessTokenDTO) : string {
+export function stringifyFacebookUserAccessTokenDTO ( value : FacebookUserAccessTokenDTO) : string {
     return `UserAccessTokenDTO(${value})`;
 }
 
-export function parseUserAccessTokenDTO (value: unknown) : UserAccessTokenDTO | undefined {
-    if (isUserAccessTokenDTO(value)) return value;
+export function parseFacebookUserAccessTokenDTO ( value: unknown) : FacebookUserAccessTokenDTO | undefined {
+    if (isFacebookUserAccessTokenDTO(value)) return value;
     return undefined;
 }
 
-export function isUserAccessTokenDTOOrUndefined (value: unknown): value is UserAccessTokenDTO | undefined {
-    return isUndefined(value) || isUserAccessTokenDTO(value);
+export function isFacebookUserAccessTokenDTOOrUndefined ( value: unknown): value is FacebookUserAccessTokenDTO | undefined {
+    return isUndefined(value) || isFacebookUserAccessTokenDTO(value);
 }
 
-export function explainUserAccessTokenDTOOrUndefined (value: unknown): string {
-    return isUserAccessTokenDTOOrUndefined(value) ? explainOk() : explainNot(explainOr(['UserAccessTokenDTO', 'undefined']));
+export function explainFacebookUserAccessTokenDTOOrUndefined ( value: unknown): string {
+    return isFacebookUserAccessTokenDTOOrUndefined(value) ? explainOk() : explainNot(explainOr(['UserAccessTokenDTO', 'undefined']));
 }
 

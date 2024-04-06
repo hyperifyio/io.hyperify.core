@@ -21,7 +21,7 @@ import {
 } from "../../types/String";
 import { isUndefined } from "../../types/undefined";
 
-export interface AccountDTO {
+export interface FacebookAccountDTO {
     readonly access_token: string;
     readonly id: string;
 }
@@ -29,14 +29,14 @@ export interface AccountDTO {
 export function createAccountDTO (
     access_token : string,
     id           : string,
-) : AccountDTO {
+) : FacebookAccountDTO {
     return {
         access_token,
         id,
     };
 }
 
-export function isAccountDTO (value: unknown) : value is AccountDTO {
+export function isAccountDTO (value: unknown) : value is FacebookAccountDTO {
     return (
         isRegularObject(value)
         && hasNoOtherKeysInDevelopment(value, [
@@ -62,16 +62,16 @@ export function explainAccountDTO (value: any) : string {
     );
 }
 
-export function stringifyAccountDTO (value : AccountDTO) : string {
+export function stringifyAccountDTO (value : FacebookAccountDTO) : string {
     return `AccountDTO(${value})`;
 }
 
-export function parseAccountDTO (value: unknown) : AccountDTO | undefined {
+export function parseAccountDTO (value: unknown) : FacebookAccountDTO | undefined {
     if (isAccountDTO(value)) return value;
     return undefined;
 }
 
-export function isAccountDTOOrUndefined (value: unknown): value is AccountDTO | undefined {
+export function isAccountDTOOrUndefined (value: unknown): value is FacebookAccountDTO | undefined {
     return isUndefined(value) || isAccountDTO(value);
 }
 

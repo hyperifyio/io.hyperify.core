@@ -3,24 +3,24 @@
 import { jest } from '@jest/globals';
 import { RequestClient } from "../RequestClient";
 import { FacebookGraphClientImpl } from "./FacebookGraphClientImpl";
-import { AccountListDTO } from "./types/AccountListDTO";
-import { PostFeedResponseDTO } from "./types/PostFeedResponseDTO";
-import { UserAccessTokenDTO } from "./types/UserAccessTokenDTO";
+import { FacebookAccountListDTO } from "./types/FacebookAccountListDTO";
+import { FacebookPostFeedResponseDTO } from "./types/FacebookPostFeedResponseDTO";
+import { FacebookUserAccessTokenDTO } from "./types/FacebookUserAccessTokenDTO";
 
 // Mock data
-const mockUserAccessTokenDTO: UserAccessTokenDTO = {
+const mockUserAccessTokenDTO: FacebookUserAccessTokenDTO = {
     access_token: "mock_access_token",
     token_type: "bearer",
     expires_in: 3600
 };
 
-const mockAccountListDTO: AccountListDTO = {
+const mockAccountListDTO: FacebookAccountListDTO = {
     data: [
         { access_token: "mock_page_access_token", id: "mock_page_id" }
     ]
 };
 
-const mockPostFeedResponseDTO: PostFeedResponseDTO = {
+const mockPostFeedResponseDTO: FacebookPostFeedResponseDTO = {
     id: "mock_post_id"
 };
 
@@ -117,6 +117,38 @@ describe('FacebookGraphClientImpl', () => {
             expect(mockRequestClient.postJson).toBeCalledTimes(1);
         });
 
+    });
+
+    describe('getPagePostScopes', () => {
+        it('should return the correct set of scopes for posting to a Facebook Page', () => {
+            const expectedScopes = [
+                "pages_manage_engagement",
+                "pages_manage_posts",
+                "pages_manage_metadata",
+                "pages_read_engagement",
+                "pages_show_list",
+            ];
+
+            const scopes = FacebookGraphClientImpl.getPagePostScopes();
+
+            expect(scopes).toEqual(expect.arrayContaining(expectedScopes));
+            expect(scopes.length).toBe(expectedScopes.length);
+        });
+    });
+
+    describe('getAuthorizationURL', () => {
+        it('should return a correctly formatted authorization URL', () => {
+            const redirectURI = 'https://example.com/callback';
+            const scopes = ["public_profile", "email"]; // Simplified for demonstration
+            const responseType = "code"; // Assuming responseType is a constant in this context
+
+            const authorizationURL = facebookClient.getAuthorizationURL(redirectURI, scopes);
+
+            // You might need to adjust this expected URL based on the actual implementation of getFacebookDialogOAuthUrl()
+            const expectedURL = `https://www.facebook.com/dialog/oauth?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectURI)}&scope=${encodeURIComponent(scopes.join(','))}&response_type=${responseType}`;
+
+            expect(authorizationURL).toBe(expectedURL);
+        });
     });
 
 });
