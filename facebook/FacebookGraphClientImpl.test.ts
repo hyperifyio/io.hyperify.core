@@ -5,10 +5,10 @@ import { RequestClient } from "../RequestClient";
 import { FacebookGraphClientImpl } from "./FacebookGraphClientImpl";
 import { FacebookAccountListDTO } from "./types/FacebookAccountListDTO";
 import { FacebookPostFeedResponseDTO } from "./types/FacebookPostFeedResponseDTO";
-import { FacebookUserAccessTokenDTO } from "./types/FacebookUserAccessTokenDTO";
+import { FacebookAccessTokenDTO } from "./types/FacebookAccessTokenDTO";
 
 // Mock data
-const mockUserAccessTokenDTO: FacebookUserAccessTokenDTO = {
+const mockUserAccessTokenDTO: FacebookAccessTokenDTO = {
     access_token: "mock_access_token",
     token_type: "bearer",
     expires_in: 3600

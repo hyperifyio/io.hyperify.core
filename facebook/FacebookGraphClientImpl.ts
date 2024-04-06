@@ -22,10 +22,10 @@ import {
     FacebookPostFeedResponseDTO,
 } from "./types/FacebookPostFeedResponseDTO";
 import {
-    explainFacebookUserAccessTokenDTO,
-    isFacebookUserAccessTokenDTO,
-    FacebookUserAccessTokenDTO,
-} from "./types/FacebookUserAccessTokenDTO";
+    explainFacebookAccessTokenDTO,
+    isFacebookAccessTokenDTO,
+    FacebookAccessTokenDTO,
+} from "./types/FacebookAccessTokenDTO";
 import { createHmac } from 'crypto';
 
 /**
@@ -44,6 +44,10 @@ export class FacebookGraphClientImpl implements FacebookGraphClient {
         appId: string,
         appSecret: string,
     ) {
+
+        if (!appId) throw new TypeError('FacebookGraphClientImpl requires appId');
+        if (!appSecret) throw new TypeError('FacebookGraphClientImpl requires appSecret');
+
         this._client = client;
         this._appId = appId;
         this._appSecret = appSecret;
@@ -106,12 +110,12 @@ export class FacebookGraphClientImpl implements FacebookGraphClient {
     /**
      * @inheritDoc
      */
-    public async getUserAccessToken (redirectURI: string, code: string): Promise<FacebookUserAccessTokenDTO> {
+    public async getUserAccessToken (redirectURI: string, code: string): Promise<FacebookAccessTokenDTO> {
         const response = await this._client.getJson(
             getFacebookAuthorizationURL(this._appId, this._appSecret, redirectURI, code)
         );
-        if (!isFacebookUserAccessTokenDTO(response)) {
-            throw new TypeError(`Response was not UserAccessTokenDTO: ${explainFacebookUserAccessTokenDTO(response)}`)
+        if (!isFacebookAccessTokenDTO(response)) {
+            throw new TypeError(`Response was not UserAccessTokenDTO: ${explainFacebookAccessTokenDTO(response)}`)
         }
         return response;
     }
@@ -125,7 +129,7 @@ export class FacebookGraphClientImpl implements FacebookGraphClient {
             getFacebookGraphApiMyAccounts(userAccessToken, appSecretProof)
         );
         if (!isFacebookAccountListDTO(response)) {
-            throw new TypeError(`Response was not AccountListDTO: ${explainFacebookAccountListDTO(response)}`)
+            throw new TypeError(`Response was not FacebookAccountListDTO: ${explainFacebookAccountListDTO(response)}`)
         }
         return response;
     }

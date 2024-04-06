@@ -3,7 +3,7 @@
 import { FacebookAccountListDTO } from "./types/FacebookAccountListDTO";
 import { FacebookScope } from "./types/FacebookScope";
 import { FacebookPostFeedResponseDTO } from "./types/FacebookPostFeedResponseDTO";
-import { FacebookUserAccessTokenDTO } from "./types/FacebookUserAccessTokenDTO";
+import { FacebookAccessTokenDTO } from "./types/FacebookAccessTokenDTO";
 
 /**
  * Facebook Graph API client library implementation.
@@ -27,7 +27,7 @@ export interface FacebookGraphClient {
      * @param code The authorization code provided by Facebook OAuth service
      * @param redirectURI The redirect URL used for the authorization code. This must be same as provided in .getAuthorizationURL().
      */
-    getUserAccessToken (redirectURI: string, code: string): Promise<FacebookUserAccessTokenDTO>;
+    getUserAccessToken (redirectURI: string, code: string): Promise<FacebookAccessTokenDTO>;
 
     /**
      * Fetch a list of accounts with account access tokens.

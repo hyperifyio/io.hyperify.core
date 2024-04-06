@@ -5,10 +5,10 @@ import {
     isArrayOf,
 } from "../../types/Array";
 import {
-    FacebookAccountDTO,
+    FacebookPageDTO,
     explainAccountDTO,
     isAccountDTO,
-} from "./FacebookAccountDTO";
+} from "./FacebookPageDTO";
 import {
     explain,
     explainNot,
@@ -25,16 +25,24 @@ import {
     isRegularObject,
 } from "../../types/RegularObject";
 import { isUndefined } from "../../types/undefined";
+import {
+    explainFacebookPagingDTO,
+    FacebookPagingDTO,
+    isFacebookPagingDTO,
+} from "./FacebookPagingDTO";
 
 export interface FacebookAccountListDTO {
-    readonly data: readonly FacebookAccountDTO[];
+    readonly data   : readonly FacebookPageDTO[];
+    readonly paging : FacebookPagingDTO;
 }
 
 export function createFacebookAccountListDTO (
-    data : readonly FacebookAccountDTO[],
+    data : readonly FacebookPageDTO[],
+    paging : FacebookPagingDTO,
 ) : FacebookAccountListDTO {
     return {
         data,
+        paging,
     };
 }
 
@@ -43,8 +51,10 @@ export function isFacebookAccountListDTO ( value: unknown) : value is FacebookAc
         isRegularObject(value)
         && hasNoOtherKeysInDevelopment(value, [
             'data',
+            'paging',
         ])
-        && isArrayOf<FacebookAccountDTO>(value?.data, isAccountDTO)
+        && isArrayOf<FacebookPageDTO>(value?.data, isAccountDTO)
+        && isFacebookPagingDTO(value?.paging)
     );
 }
 
@@ -54,8 +64,10 @@ export function explainFacebookAccountListDTO ( value: any) : string {
             explainRegularObject(value),
             explainNoOtherKeysInDevelopment(value, [
                 'data',
+                'paging',
             ])
-            , explainProperty("data", explainArrayOf<FacebookAccountDTO>("AccountDTO", explainAccountDTO, value?.data, isAccountDTO))
+            , explainProperty("data", explainArrayOf<FacebookPageDTO>("AccountDTO", explainAccountDTO, value?.data, isAccountDTO))
+            , explainProperty("paging", explainFacebookPagingDTO(value?.paging))
         ]
     );
 }
