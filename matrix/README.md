@@ -14,7 +14,7 @@ library. It runs on the browser as well as on the NodeJS LTS v8 and up.
 
 ### It doesn't have many runtime dependencies
 
-This library expects [@heusalagroup/fi.hg.core](https://github.com/heusalagroup/fi.hg.core) to be located 
+This library expects [@hyperifyio/io.hyperify.core](https://github.com/hyperifyio/io.hyperify.core) to be located 
 in the relative path `../ts` and only required dependency it has is for [Lodash 
 library](https://lodash.com/).
 
@@ -30,11 +30,11 @@ Recommended way to initialize your project is like this:
 ```
 mkdir -p src/fi/hg
 
-git submodule add git@github.com:heusalagroup/fi.hg.core.git src/fi/hg/core
-git config -f .gitmodules submodule.src/fi/hg/core.branch main
+git submodule add git@github.com:hyperifyio/io.hyperify.core.git src/io/hyperify/core
+git config -f .gitmodules submodule.src/io/hyperify/core.branch main
 
-git submodule add git@github.com:heusalagroup/fi.hg.matrix.git src/fi/hg/matrix
-git config -f .gitmodules submodule.src/fi/hg/matrix.branch main
+git submodule add git@github.com:heusalagroup/fi.hg.matrix.git src/io/hyperify/matrix
+git config -f .gitmodules submodule.src/io/hyperify/matrix.branch main
 ```
 
 Only required dependency is to [the Lodash library](https://lodash.com/):

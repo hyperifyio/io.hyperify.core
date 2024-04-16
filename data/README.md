@@ -36,30 +36,30 @@ Run the installation commands from your project's root directory. Usually it's
 where your `package.json` is located.
 
 For these sample commands we expect your source files to be located in `./src` 
-and we'll use `./src/fi/hg/NAME` for location for our sub modules.
+and we'll use `./src/io/hyperify/NAME` for location for our sub modules.
 
 ### The core library (includes memory-only support)
 
 ```shell
 mkdir -p src/fi/hg
-git submodule add git@github.com:heusalagroup/fi.hg.core.git src/fi/hg/core
-git config -f .gitmodules submodule.src/fi/hg/core.branch main
+git submodule add git@github.com:hyperifyio/io.hyperify.core.git src/io/hyperify/core
+git config -f .gitmodules submodule.src/io/hyperify/core.branch main
 npm install --save-dev lodash @types/lodash reflect-metadata @types/node
 ```
 
 ### For PostgreSQL support
 
 ```shell
-git submodule add git@github.com:heusalagroup/fi.hg.pg.git src/fi/hg/pg
-git config -f .gitmodules submodule.src/fi/hg/pg.branch main
+git submodule add git@github.com:heusalagroup/fi.hg.pg.git src/io/hyperify/pg
+git config -f .gitmodules submodule.src/io/hyperify/pg.branch main
 npm install --save pg @types/pg
 ```
 
 ### For MySQL support
 
 ```shell
-git submodule add git@github.com:heusalagroup/fi.hg.mysql.git src/fi/hg/mysql
-git config -f .gitmodules submodule.src/fi/hg/mysql.branch main
+git submodule add git@github.com:heusalagroup/fi.hg.mysql.git src/io/hyperify/mysql
+git config -f .gitmodules submodule.src/io/hyperify/mysql.branch main
 npm install --save mysql @types/mysql
 ```
 

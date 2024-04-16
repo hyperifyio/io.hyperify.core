@@ -1,9 +1,9 @@
 
 Moved import paths:
 
- * Moved annotations as: `import { NAME } from "./fi/hg/core/Request"` -> `./fi/hg/core/request/NAME.ts`
- * Moved utils under `./fi/hg/core/request/utils/NAME.ts`
- * Moved types under `./fi/hg/core/request/types/NAME.ts`
+ * Moved annotations as: `import { NAME } from "./io/hyperify/core/Request"` -> `./io/hyperify/core/request/NAME.ts`
+ * Moved utils under `./io/hyperify/core/request/utils/NAME.ts`
+ * Moved types under `./io/hyperify/core/request/types/NAME.ts`
 
 Renamed methods:
 

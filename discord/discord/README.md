@@ -20,8 +20,8 @@ This project evolves directly to our git repository in an agile software develop
 
 ```
 mkdir -p src/fi/hg
-git submodule add git@github.com:heusalagroup/fi.hg.discord.git src/fi/hg/discord
-git config -f .gitmodules submodule.src/fi/hg/discord.branch main
+git submodule add git@github.com:heusalagroup/fi.hg.discord.git src/io/hyperify/discord
+git config -f .gitmodules submodule.src/io/hyperify/discord.branch main
 ```
 
 You may want to do that, too, in order to take full advance of the TypeScript language.

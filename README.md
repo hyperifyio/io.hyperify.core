@@ -86,14 +86,14 @@ usage, including commercial applications. For full details, refer to the
 
 Run the installation commands from your project's root directory. Usually it's where your `package.json` is located.
 
-For these sample commands we expect your source files to be located in `./src` and we'll use `./src/fi/hg/core` for location for our submodule.
+For these sample commands we expect your source files to be located in `./src` and we'll use `./src/io/hyperify/core` for location for our submodule.
 
 Setup git submodule:
 
 ```shell
 mkdir -p src/fi/hg
-git submodule add git@github.com:heusalagroup/fi.hg.core.git src/fi/hg/core
-git config -f .gitmodules submodule.src/fi/hg/core.branch main
+git submodule add git@github.com:hyperifyio/io.hyperify.core.git src/io/hyperify/core
+git config -f .gitmodules submodule.src/io/hyperify/core.branch main
 ```
 
 Next install our required dependencies (newest [lodash library](https://lodash.com/) and [reflect-metadata library](https://www.npmjs.com/package/reflect-metadata)):
@@ -162,7 +162,7 @@ It wouldn't be possible to use compile time optimizations and other ENV based fe
 Our simple wrapper for `console` which allows naming the log context.
 
 ```typescript
-import LogService from "./src/fi/hg/core/LogService";
+import LogService from "./src/io/hyperify/core/LogService";
 
 const LOG = LogService.createLogger("FooService");
 
@@ -180,7 +180,7 @@ This is a simple observer implementation for implementing synchronous in-process
 You'll use it like this:
 
 ```typescript
-import Observer from "./src/fi/hg/core/Observer";
+import Observer from "./src/io/hyperify/core/Observer";
 
 enum FooEvent {
     CHANGED = "FooService:changed",
@@ -234,7 +234,7 @@ import Request, {
     RequestHeader, 
     RequestParam,
     Headers
-} from "./src/fi/hg/core/Request";
+} from "./src/io/hyperify/core/Request";
 
 export interface ListDTO<T> {
     pageNumber: number;
@@ -322,7 +322,7 @@ For the actual server implementing REST API, see next chapter.
 This project also includes a simple and pure NodeJS implementation for the REST server implementing [our Request annotated controllers](#request):
 
 ```typescript
-import RequestServer from "./fi/hg/core/RequestServer";
+import RequestServer from "./io/hyperify/core/RequestServer";
 const server = new RequestServer("http://0.0.0.0:3000");
 server.attachController(UserController);
 server.start();
@@ -343,7 +343,7 @@ It's available from [@heusalagroup/fi.hg.repository](https://github.com/heusalag
 This utility class includes a simple implementation for runtime `.env` file support.
 
 ```typescript
-import ProcessUtils from "./fi/hg/core/ProcessUtils";
+import ProcessUtils from "./io/hyperify/core/ProcessUtils";
 
 // Must be first import to define environment variables before anything else
 ProcessUtils.initEnvFromDefaultFiles();
@@ -360,7 +360,7 @@ The `shutdownHandler` will be called only once.
 If an exception is thrown, the `errorHandler` will be called with the exception.
 
 ```typescript
-import ProcessUtils from "./fi/hg/core/ProcessUtils";
+import ProcessUtils from "./io/hyperify/core/ProcessUtils";
 
 const server = new Server();
 
@@ -380,6 +380,6 @@ This project was originally under Sendanor's organization in Github.
 If that's the case for your local submodule, fix your git's remote:
 
 ```shell
-git remote set-url origin git@github.com:heusalagroup/fi.hg.core.git
+git remote set-url origin git@github.com:hyperifyio/io.hyperify.core.git
 ```
 
