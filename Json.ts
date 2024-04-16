@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import { LogUtils } from "./LogUtils";
 import { isBoolean } from "./types/Boolean";
 import { isNull } from "./types/Null";
 import { map } from "./functions/map";
@@ -182,11 +183,11 @@ export function explainReadonlyJsonObjectOrNullOrUndefined (value: any) : string
 }
 
 export function explainReadonlyJsonObject (value: any) : string {
-    return isReadonlyJsonObject(value) ? explainOk() : explainNot('ReadonlyJsonObject');
+    return isReadonlyJsonObject(value) ? explainOk() : explainNot(`ReadonlyJsonObject: ${LogUtils.stringifyValue(value)}`);
 }
 
 export function explainReadonlyJsonArray (value: any) : string {
-    return isReadonlyJsonArray(value) ? explainOk() : explainNot('ReadonlyJsonArray');
+    return isReadonlyJsonArray(value) ? explainOk() : explainNot(`ReadonlyJsonArray: ${LogUtils.stringifyValue(value)}`);
 }
 
 export function parseReadonlyJsonObject (value : any) : ReadonlyJsonObject | undefined {
