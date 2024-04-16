@@ -74,7 +74,7 @@
     "src"
   ],
   "exclude": [
-    "src/hg/core/Repository.ts",
-    "src/hg/core/repository"
+    "src/io/hyperify/core/Repository.ts",
+    "src/io/hyperify/core/repository"
   ]
 }
