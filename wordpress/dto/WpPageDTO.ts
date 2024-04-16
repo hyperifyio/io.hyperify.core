@@ -4,7 +4,14 @@ import { explainWpPageStatus, isWpPageStatus, WpPageStatus } from "./WpPageStatu
 import { explainString, explainStringOrNull, isString, isStringOrNull } from "../../types/String";
 import { explainRegularObject, isRegularObject } from "../../types/RegularObject";
 import { explainNoOtherKeysInDevelopment, hasNoOtherKeysInDevelopment } from "../../types/OtherKeys";
-import { explainReadonlyJsonArray, explainReadonlyJsonObject, isReadonlyJsonArray, isReadonlyJsonObject, ReadonlyJsonArray, ReadonlyJsonObject } from "../../Json";
+import {
+    explainReadonlyJsonAny,
+    explainReadonlyJsonObject,
+    isReadonlyJsonAny,
+    isReadonlyJsonObject,
+    ReadonlyJsonArray,
+    ReadonlyJsonObject,
+} from "../../Json";
 import { explain, explainProperty } from "../../types/explain";
 import { explainWpRenderedDTO, isWpRenderedDTO, WpRenderedDTO } from "./WpRenderedDTO";
 import { explainNumber, isNumber } from "../../types/Number";
@@ -86,7 +93,7 @@ export function isWpPageDTO (value:any): value is WpPageDTO {
         && isString(value?.comment_status)
         && isString(value?.ping_status)
         && isNumber(value?.menu_order)
-        && isReadonlyJsonArray(value?.meta)
+        && isReadonlyJsonAny(value?.meta)
         && isString(value?.template)
         && isString(value?.link)
         && isString(value?.slug)
@@ -139,7 +146,7 @@ export function explainWpPageDTO (value: any) : string {
             , explainProperty("comment_status", explainString(value?.comment_status))
             , explainProperty("ping_status", explainString(value?.ping_status))
             , explainProperty("menu_order", explainNumber(value?.menu_order))
-            , explainProperty("meta", explainReadonlyJsonArray(value?.meta))
+            , explainProperty("meta", explainReadonlyJsonAny(value?.meta))
             , explainProperty("template", explainString(value?.template))
             , explainProperty("link", explainString(value?.link))
             , explainProperty("slug", explainString(value?.slug))

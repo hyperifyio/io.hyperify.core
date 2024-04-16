@@ -6,7 +6,14 @@ import { explainRegularObject, isRegularObject } from "../../types/RegularObject
 import { explainNoOtherKeysInDevelopment, hasNoOtherKeysInDevelopment } from "../../types/OtherKeys";
 import { explainWpRenderedDTO, isWpRenderedDTO, WpRenderedDTO } from "./WpRenderedDTO";
 import { explainNumber, isNumber } from "../../types/Number";
-import { explainReadonlyJsonArray, explainReadonlyJsonObject, isReadonlyJsonArray, isReadonlyJsonObject, ReadonlyJsonArray, ReadonlyJsonObject } from "../../Json";
+import {
+    explainReadonlyJsonAny,
+    explainReadonlyJsonObject,
+    isReadonlyJsonAny,
+    isReadonlyJsonObject,
+    ReadonlyJsonAny,
+    ReadonlyJsonObject,
+} from "../../Json";
 import { explain, explainProperty } from "../../types/explain";
 import { explainBoolean, isBoolean } from "../../types/Boolean";
 import { explainNumberArray, isNumberArray } from "../../types/NumberArray";
@@ -35,7 +42,7 @@ export interface WpPostDTO {
      * @fixme Add correct typing before using this property!
      * @deprecated (just so that IDE highlights and you read above comment)
      */
-    readonly meta : ReadonlyJsonArray;
+    readonly meta : ReadonlyJsonAny;
 
     readonly template : string;
     readonly date_gmt : string | null;
@@ -97,7 +104,7 @@ export function isWpPostDTO (value:any): value is WpPostDTO {
         && isString(value?.modified_gmt)
         && isString(value?.link)
         && isString(value?.ping_status)
-        && isReadonlyJsonArray(value?.meta)
+        && isReadonlyJsonAny(value?.meta)
         && isString(value?.template)
         && isStringOrNull(value?.date_gmt)
         && isString(value?.format)
@@ -154,7 +161,7 @@ export function explainWpPostDTO (value: any) : string {
             , explainProperty("featured_media", explainNumber(value?.featured_media))
             , explainProperty("comment_status", explainString(value?.comment_status))
             , explainProperty("ping_status", explainString(value?.ping_status))
-            , explainProperty("meta", explainReadonlyJsonArray(value?.meta))
+            , explainProperty("meta", explainReadonlyJsonAny(value?.meta))
             , explainProperty("template", explainString(value?.template))
             , explainProperty("date_gmt", explainStringOrNull(value?.date_gmt))
             , explainProperty("format", explainString(value?.format))
