@@ -14,14 +14,14 @@ export enum SimpleRepositoryType {
     /**
      * Matrix state event repository.
      *
-     * @See [MatrixCrudRepository](https://github.com/heusalagroup/fi.hg.matrix/blob/main/MatrixCrudRepository.ts)
+     * @See [MatrixCrudRepository](https://github.com/hyperifyio/io.hyperify.matrix/blob/main/MatrixCrudRepository.ts)
      */
     MATRIX = "MATRIX",
 
     /**
      * PostgreSQL and MySQL supports through SimpleRepositoryAdapter
      *
-     * @See [SimpleRepositoryAdapter](https://github.com/heusalagroup/fi.hg.repository/blob/main/adapters/simple/SimpleRepositoryAdapter.ts)
+     * @See [SimpleRepositoryAdapter](https://github.com/hyperifyio/io.hyperify.repository/blob/main/adapters/simple/SimpleRepositoryAdapter.ts)
      */
     REPOSITORY_ADAPTER = "REPOSITORY_ADAPTER",
 

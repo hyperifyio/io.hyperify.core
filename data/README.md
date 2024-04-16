@@ -10,9 +10,9 @@ Code under this core library does not require any external dependencies.
 
 See also:
 
-* [`fi.hg.pg`](https://github.com/heusalagroup/fi.hg.pg) -- The PostgreSQL
+* [`io.hyperify.pg`](https://github.com/hyperifyio/io.hyperify.pg) -- The PostgreSQL
   persister
-* [`fi.hg.mysql`](https://github.com/heusalagroup/fi.hg.mysql) -- The MySQL
+* [`io.hyperify.mysql`](https://github.com/hyperifyio/io.hyperify.mysql) -- The MySQL
   persister
 
 ### It doesn't have any runtime dependencies
@@ -50,7 +50,7 @@ npm install --save-dev lodash @types/lodash reflect-metadata @types/node
 ### For PostgreSQL support
 
 ```shell
-git submodule add git@github.com:heusalagroup/fi.hg.pg.git src/io/hyperify/pg
+git submodule add git@github.com:hyperifyio/io.hyperify.pg.git src/io/hyperify/pg
 git config -f .gitmodules submodule.src/io/hyperify/pg.branch main
 npm install --save pg @types/pg
 ```
@@ -58,7 +58,7 @@ npm install --save pg @types/pg
 ### For MySQL support
 
 ```shell
-git submodule add git@github.com:heusalagroup/fi.hg.mysql.git src/io/hyperify/mysql
+git submodule add git@github.com:hyperifyio/io.hyperify.mysql.git src/io/hyperify/mysql
 git config -f .gitmodules submodule.src/io/hyperify/mysql.branch main
 npm install --save mysql @types/mysql
 ```

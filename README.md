@@ -334,7 +334,7 @@ See also our [`ProcessUtils`](#processutils) for best practices implementing com
 
 We also provide a Spring Data inspired annotation mechanism for entities and `CrudRepository` implementation. 
 
-It's available from [@heusalagroup/fi.hg.repository](https://github.com/heusalagroup/fi.hg.repository).
+It's available from [@hyperifyio/io.hyperify.repository](https://github.com/hyperifyio/io.hyperify.repository).
 
 ## ProcessUtils
 

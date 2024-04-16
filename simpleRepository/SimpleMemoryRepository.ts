@@ -23,7 +23,7 @@ import { explainNot, explainOk } from "../types/explain";
  * Intended to be used for development purposes.
  *
  * See also
- * [MatrixCrudRepository](https://github.com/heusalagroup/fi.hg.matrix/blob/main/MatrixCrudRepository.ts)
+ * [MatrixCrudRepository](https://github.com/hyperifyio/io.hyperify.matrix/blob/main/MatrixCrudRepository.ts)
  */
 export class SimpleMemoryRepository<T extends SimpleStoredRepositoryItem> implements SimpleRepository<T> {
 

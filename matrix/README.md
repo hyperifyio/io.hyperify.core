@@ -1,6 +1,6 @@
 **Join our [Discord](https://discord.gg/UBTrHxA78f) to discuss about our software!**
 
-# @heusalagroup/fi.hg.matrix
+# @hyperifyio/io.hyperify.matrix
 
 Our lightweight Matrix.org library written in TypeScript.
 
@@ -33,7 +33,7 @@ mkdir -p src/fi/hg
 git submodule add git@github.com:hyperifyio/io.hyperify.core.git src/io/hyperify/core
 git config -f .gitmodules submodule.src/io/hyperify/core.branch main
 
-git submodule add git@github.com:heusalagroup/fi.hg.matrix.git src/io/hyperify/matrix
+git submodule add git@github.com:hyperifyio/io.hyperify.matrix.git src/io/hyperify/matrix
 git config -f .gitmodules submodule.src/io/hyperify/matrix.branch main
 ```
 

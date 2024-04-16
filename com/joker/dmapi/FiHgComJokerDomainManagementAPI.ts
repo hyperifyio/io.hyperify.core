@@ -15,7 +15,7 @@ import { JokerComApiProfileDTO } from "./types/JokerComApiProfileDTO";
 /**
  * Joker.com DMAPI client interface
  *
- * @see https://github.com/heusalagroup/fi.hg.node for NodeJS implementation
+ * @see https://github.com/hyperifyio/io.hyperify.node for NodeJS implementation
  */
 export interface FiHgComJokerDomainManagementAPI {
 
