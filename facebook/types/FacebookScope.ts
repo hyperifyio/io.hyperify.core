@@ -19,6 +19,8 @@ export enum FacebookScope {
     pages_manage_metadata   = "pages_manage_metadata",
     pages_read_engagement   = "pages_read_engagement",
     pages_show_list         = "pages_show_list",
+    ads_management          = "ads_management",
+    ads_read                = "ads_read",
 }
 
 export function isFacebookScope (value: unknown) : value is FacebookScope {

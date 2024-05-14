@@ -13,6 +13,8 @@ export const getFacebookGraphApiMyAccounts = (userAccessToken: string, appSecret
 
 export const FACEBOOK_ME_FEED_PATH = `${FACEBOOK_GRAPH_API_BASE_URL}/me/feed`;
 
+export const FACEBOOK_ME_AD_ACCOUNTS_PATH = `${FACEBOOK_GRAPH_API_BASE_URL}/me/adaccounts`;
+
 export const FACEBOOK_OAUTH_DIALOG_URL = 'https://www.facebook.com/dialog/oauth';
 
 export const getFacebookDialogOAuthUrl = (client_id: string, redirect_uri: string, scope: string, response_type: string): string => `${FACEBOOK_OAUTH_DIALOG_URL}?client_id=${q(client_id)}&redirect_uri=${q(redirect_uri)}&scope=${q(scope)}&response_type=${q(response_type)}`

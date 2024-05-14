@@ -3,6 +3,7 @@
 import { RequestClient } from "../RequestClient";
 import { RequestClientImpl } from "../RequestClientImpl";
 import {
+    FACEBOOK_ME_AD_ACCOUNTS_PATH,
     FACEBOOK_ME_FEED_PATH,
     getFacebookAuthorizationURL,
     getFacebookDialogOAuthUrl,
@@ -14,6 +15,11 @@ import {
     explainFacebookAccountListDTO,
     isFacebookAccountListDTO,
 } from "./types/FacebookAccountListDTO";
+import {
+    explainFacebookAdAccountListDTO,
+    FacebookAdAccountListDTO,
+    isFacebookAdAccountListDTO,
+} from "./types/FacebookAdAccountListDTO";
 import { FacebookResponseType } from "./types/FacebookResponseType";
 import { FacebookScope } from "./types/FacebookScope";
 import {
@@ -93,6 +99,16 @@ export class FacebookGraphClientImpl implements FacebookGraphClient {
     }
 
     /**
+     * Returns scopes required for advertising management.
+     */
+    public static getAdScopes () : FacebookScope[] {
+        return [
+            FacebookScope.ads_read,
+            FacebookScope.ads_management,
+        ];
+    }
+
+    /**
      * @inheritDoc
      */
     public getAuthorizationURL (
@@ -149,6 +165,21 @@ export class FacebookGraphClientImpl implements FacebookGraphClient {
         );
         if (!isFacebookPostFeedResponseDTO(response)) {
             throw new TypeError(`Response was not PostFeedResponseDTO: ${explainFacebookPostFeedResponseDTO(response)}`)
+        }
+        return response;
+    }
+
+    public async getAdAccounts (userAccessToken: string) : Promise<FacebookAdAccountListDTO> {
+        const appSecretProof = this._generateAppSecretProof(userAccessToken);
+        const response = await this._client.postJson(
+            FACEBOOK_ME_AD_ACCOUNTS_PATH,
+            {
+                access_token: userAccessToken,
+                appsecret_proof: appSecretProof,
+            }
+        );
+        if (!isFacebookAdAccountListDTO(response)) {
+            throw new TypeError(`Response was not FacebookAdAccountListDTO: ${explainFacebookAdAccountListDTO(response)}`)
         }
         return response;
     }

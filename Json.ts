@@ -208,6 +208,14 @@ export function isReadonlyJsonArray<T extends ReadonlyJsonAny = ReadonlyJsonAny>
     return isArrayOf<T>(value, createOr(isReadonlyJsonAny, isUndefined));
 }
 
+export function isReadonlyJsonArrayOrUndefined (value : any) : value is ReadonlyJsonArrayOf<ReadonlyJsonAny> | undefined {
+    return isUndefined(value) || isReadonlyJsonArray(value);
+}
+
+export function explainReadonlyJsonArrayOrUndefined (value: any) : string {
+    return isReadonlyJsonArrayOrUndefined(value) ? explainOk() : explainNot(explainOr(['undefined', 'ReadonlyJsonArray']));
+}
+
 export function isReadonlyJsonArrayOf<T extends ReadonlyJsonAny = ReadonlyJsonAny> (
     value    : any,
     isItemOf : TestCallbackNonStandard = isReadonlyJsonAny

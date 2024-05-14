@@ -1,6 +1,7 @@
 // Copyright (c) 2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { FacebookAccountListDTO } from "./types/FacebookAccountListDTO";
+import { FacebookAdAccountListDTO } from "./types/FacebookAdAccountListDTO";
 import { FacebookScope } from "./types/FacebookScope";
 import { FacebookPostFeedResponseDTO } from "./types/FacebookPostFeedResponseDTO";
 import { FacebookAccessTokenDTO } from "./types/FacebookAccessTokenDTO";
@@ -43,5 +44,15 @@ export interface FacebookGraphClient {
      * @param pageToken The feed (page) access token to authorize the request
      */
     postMessage(pageToken: string, message: string): Promise<FacebookPostFeedResponseDTO>;
+
+    getAdAccounts (userAccessToken: string) : Promise<FacebookAdAccountListDTO>;
+
+    /**
+     * Fetch a list of ongoing ad campaigns.
+     *
+     * @param userAccessToken The user access token to authorize this request
+     * @param adAccountId The ad account
+     */
+    //getOngoingAds(userAccessToken: string, adAccountId: string): Promise<FacebookAdCampaignDTO[]>;
 
 }
