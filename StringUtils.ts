@@ -20,6 +20,7 @@ import { isString } from "./types/String";
 import { isFunction } from "./types/Function";
 import { keys } from "./functions/keys";
 import { every } from "./functions/every";
+import { split } from "lodash";
 
 const ACCEPTED_KEYWORD_CHARACTERS = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm._1234567890';
 const ACCEPTED_START_KEYWORD_CHARACTERS = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm._';
@@ -330,6 +331,16 @@ export class StringUtils {
     ) : string {
         if (maxLength < suffix.length) throw new TypeError('StringUtils.truncateLongString: maxLength must be greater than length of the suffix');
         return value.length <= maxLength ? value : value.substring(0, maxLength-3) + suffix;
+    }
+
+     /**
+     * Remove all whitespace characters from a string.
+     * 
+     * @param input The input string
+     * @returns The input string with all whitespace characters removed
+     */
+     public static removeSpaces(input: string): string {
+        return split(input, /\s+/).join('');
     }
 
 }
