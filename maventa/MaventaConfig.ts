@@ -1,11 +1,11 @@
-import dotenv from 'dotenv';
+import { ProcessUtils } from '../ProcessUtils';
 
-dotenv.config();
+ProcessUtils.initEnvFromDefaultFiles();
 
 const isTesting = process.env.IS_TESTING === 'true';
 
-const config = {
-  baseUrl: isTesting ? 'ax-stage.maventa.com' : 'ax.maventa.com',
+const MaventaConfig = {
+  baseUrl: isTesting ? 'https://ax-stage.maventa.com' : 'ax.maventa.com',
   clientId: process.env.CLIENT_ID!,
   clientSecret: process.env.CLIENT_SECRET!,
   scope: process.env.SCOPE!,
@@ -13,4 +13,4 @@ const config = {
   companyEDI: process.env.COMPANY_EDI!,
 };
 
-export default config;
+export { MaventaConfig };
