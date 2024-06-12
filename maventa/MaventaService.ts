@@ -1,9 +1,7 @@
-// Type Guard for MaventaInvoice
 function isMaventaInvoice(data: any): data is MaventaInvoice {
   return data && typeof data === 'object' && 'id' in data && 'status' in data;
 }
 
-// Adjusting MaventaService to use type guards
 import { HttpService } from '../HttpService';
 import { getAccessToken } from './MaventaAuth';
 import { MaventaConfig as config } from './MaventaConfig';
