@@ -3,16 +3,38 @@ function isMaventaInvoice(data: any): data is MaventaInvoice {
 }
 
 import { HttpService } from '../HttpService';
-import { getAccessToken } from './MaventaAuth';
 import { MaventaConfig as config } from './MaventaConfig';
 import { MaventaInvoice } from './types/MaventaInvoice';
+import { MaventaTokenResponse } from './types/MaventaTokenResponse';
 
 export class MaventaService {
+
+  private static async _getAccessToken(): Promise<string> {
+    const postData = new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: config.clientId,
+      client_secret: config.clientSecret,
+      scope: config.scope,
+      vendor_api_key: config.vendorApiKey,
+    }).toString();
+
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': Buffer.byteLength(postData).toString(),
+    };
+
+    const url = `${config.baseUrl}/oauth2/token`;
+    const result = await HttpService.postText(url, postData, headers);
+    if (!result) throw new Error("Failed to retrieve access token");
+    const response: MaventaTokenResponse = JSON.parse(result);
+    return response.access_token;
+  }
+
   public static async listInvoices(): Promise<MaventaInvoice[]> {
-    const token = await getAccessToken();
+    const token = await MaventaService._getAccessToken();
     const headers = {
       'Authorization': `Bearer ${token}`,
-      'Accept': 'application/json',
+      'Accept': 'from json',
       'User-Api-Key': config.clientSecret,
       'Company-UUID': config.clientId,
     };
@@ -29,7 +51,7 @@ export class MaventaService {
   }
 
   public static async sendInvoiceToMyCompany(): Promise<MaventaInvoice> {
-    const token = await getAccessToken();
+    const token = await MaventaService._getAccessToken();
     const url = `${config.baseUrl}/v1/invoices`;
     const headers = {
       'Authorization': `Bearer ${token}`,
