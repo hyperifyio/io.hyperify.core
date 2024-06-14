@@ -1,9 +1,7 @@
-interface MaventaFile {
-    id: string;
-    filename: string;
-    type: string;
-    mimetype: string;
-    href: string;
+export interface MaventaFile {
+    readonly id: string;
+    readonly filename: string;
+    readonly type: string;
+    readonly mimetype: string;
+    readonly href: string;
 }
-
-export { MaventaFile }

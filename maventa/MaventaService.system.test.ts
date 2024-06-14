@@ -1,32 +1,59 @@
+// MaventaService.system.test.ts
+
+import { ProcessUtils } from "../ProcessUtils";
+ProcessUtils.initEnvFromDefaultFiles();
+
 import { MaventaService } from './MaventaService';
-import { MaventaConfig } from './MaventaConfig';
+import { LogLevel } from "../types/LogLevel";
+import { RequestClientImpl } from "../RequestClientImpl";
+import { HttpService } from "../HttpService";
 import { HgNode } from '../../node/HgNode';
+import { MaventaConfig } from './types/MaventaConfig';
+import { DEFAULT_MAVENTA_BASE_URL_TEST, DEFAULT_MAVENTA_SCOPE } from "./maventa-constants";
 
-describe('MaventaService System Tests', () => {
+const MAVENTA_BASE_URL = DEFAULT_MAVENTA_BASE_URL_TEST;
+const CLIENT_ID = process.env.CLIENT_ID ?? '';
+const CLIENT_SECRET = process.env.CLIENT_SECRET ?? '';
+const SCOPE = DEFAULT_MAVENTA_SCOPE;
+const VENDOR_API_KEY = process.env.VENDOR_API_KEY ?? '';
+const COMPANY_EDI = process.env.COMPANY_EDI ?? '';
 
-  beforeAll(() => {
-    HgNode.initialize();
-    console.log('Running system tests against:', MaventaConfig.baseUrl);
-  });
+RequestClientImpl.setLogLevel(LogLevel.NONE);
+HttpService.setLogLevel(LogLevel.NONE);
 
-  it('should fetch real invoices from the Maventa API', async () => {
-    const invoices = await MaventaService.listInvoices();
-    console.log('Fetched invoices:', invoices);
+console.log('MaventaService system tests loaded');
 
-    expect(invoices).toBeInstanceOf(Array);
-    if (invoices.length > 0) {
-      console.log(`Displaying details of the first invoice:`);
-      console.log(`Invoice ID: ${invoices[0].id}`);
-      console.log(`Invoice Status: ${invoices[0].status}`);
-      console.log(`Invoice Amount: ${invoices[0].sum}`);
+(CLIENT_ID && CLIENT_SECRET && VENDOR_API_KEY && COMPANY_EDI ? describe : describe.skip)('system', () => {
 
-      expect(invoices[0]).toHaveProperty('id');
-      expect(invoices[0]).toHaveProperty('status');
-      expect(invoices[0].id).toBeDefined();
-      expect(invoices[0].status).toBeDefined();
-    } else {
-      console.log('No invoices found.');
-    }
-  });
+    describe('MaventaService', () => {
+        let service: MaventaService;
+        let config: MaventaConfig;
+
+        beforeAll(() => {
+            HgNode.initialize();
+        });
+
+        beforeEach(() => {
+            config = {
+                baseUrl: MAVENTA_BASE_URL,
+                clientId: CLIENT_ID,
+                clientSecret: CLIENT_SECRET,
+                scope: SCOPE,
+                vendorApiKey: VENDOR_API_KEY,
+                companyEDI: COMPANY_EDI
+            };
+            service = new MaventaService(config);
+        });
+
+        describe('#listInvoices', () => {
+            it('should fetch real invoices from the Maventa API', async () => {
+                const invoices = await service.listInvoices();
+                expect(Array.isArray(invoices)).toBe(true);
+                expect(invoices.length).toBeGreaterThan(0);
+                expect(invoices[0]).toHaveProperty('id');
+                expect(invoices[0]).toHaveProperty('status');
+            });
+        });
+    });
 
 });

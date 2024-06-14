@@ -1,8 +1,6 @@
-interface MaventaSender {
-    eia: string | null;
-    bid: string | null;
-    name: string;
-    country: string;
+export interface MaventaSender {
+    readonly eia: string | null;
+    readonly bid: string | null;
+    readonly name: string;
+    readonly country: string;
 }
-
-export { MaventaSender }

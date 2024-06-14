@@ -1,9 +1,7 @@
-interface MaventaAction {
-    type: string;
-    channel: string;
-    message: string | null;
-    key: string | null;
-    happened_at: string;
+export interface MaventaAction {
+    readonly type: string;
+    readonly channel: string;
+    readonly message: string | null;
+    readonly key: string | null;
+    readonly happened_at: string;
 }
-
-export { MaventaAction }
