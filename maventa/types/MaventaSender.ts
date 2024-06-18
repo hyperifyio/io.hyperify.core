@@ -3,4 +3,4 @@ export interface MaventaSender {
     readonly bid: string | null;
     readonly name: string;
     readonly country: string;
-}
+};

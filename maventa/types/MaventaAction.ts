@@ -4,4 +4,4 @@ export interface MaventaAction {
     readonly message: string | null;
     readonly key: string | null;
     readonly happened_at: string;
-}
+};

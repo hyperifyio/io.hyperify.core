@@ -10,6 +10,7 @@ import { HttpService } from "../HttpService";
 import { HgNode } from '../../node/HgNode';
 import { MaventaConfig } from './types/MaventaConfig';
 import { DEFAULT_MAVENTA_BASE_URL_TEST, DEFAULT_MAVENTA_SCOPE } from "./maventa-constants";
+import { isArray } from "../types/Array";
 
 const MAVENTA_BASE_URL = DEFAULT_MAVENTA_BASE_URL_TEST;
 const CLIENT_ID = process.env.CLIENT_ID ?? '';
@@ -48,7 +49,7 @@ console.log('MaventaService system tests loaded');
         describe('#listInvoices', () => {
             it('should fetch real invoices from the Maventa API', async () => {
                 const invoices = await service.listInvoices();
-                expect(Array.isArray(invoices)).toBe(true);
+                expect(isArray(invoices)).toBe(true);
                 expect(invoices.length).toBeGreaterThan(0);
                 expect(invoices[0]).toHaveProperty('id');
                 expect(invoices[0]).toHaveProperty('status');

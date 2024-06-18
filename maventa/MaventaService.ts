@@ -18,7 +18,7 @@ export class MaventaService {
       vendorApiKey: config.vendorApiKey || process.env.VENDOR_API_KEY!,
       companyEDI: config.companyEDI || process.env.COMPANY_EDI!,
     };
-  }
+  };
 
   private async _getAccessToken(): Promise<string> {
     if (this._token) return this._token;
@@ -42,7 +42,7 @@ export class MaventaService {
     const response: MaventaTokenResponse = JSON.parse(result);
     this._token = response.access_token;
     return this._token;
-  }
+  };
 
   public async listInvoices(): Promise<MaventaInvoice[]> {
     const token = await this._getAccessToken();
@@ -60,7 +60,7 @@ export class MaventaService {
     const invoices = response.filter(isMaventaInvoice);
     if (invoices.length !== response.length) {
       throw new Error("Some items in the response did not match the expected invoice format");
-    }
+    };
     return invoices;
-  }
-}
+  };
+};

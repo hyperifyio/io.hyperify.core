@@ -4,4 +4,4 @@ export interface MaventaFile {
     readonly type: string;
     readonly mimetype: string;
     readonly href: string;
-}
+};

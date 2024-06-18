@@ -5,4 +5,4 @@ export interface MaventaConfig {
   readonly scope: string;
   readonly vendorApiKey: string;
   readonly companyEDI: string;
-}
+};
