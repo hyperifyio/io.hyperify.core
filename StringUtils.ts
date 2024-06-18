@@ -20,7 +20,7 @@ import { isString } from "./types/String";
 import { isFunction } from "./types/Function";
 import { keys } from "./functions/keys";
 import { every } from "./functions/every";
-import { split } from "lodash";
+import { split } from "./functions/split";
 
 const ACCEPTED_KEYWORD_CHARACTERS = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm._1234567890';
 const ACCEPTED_START_KEYWORD_CHARACTERS = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm._';
