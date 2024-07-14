@@ -1,13 +1,16 @@
-// Copyright (c) 2020-2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2020-2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { isNull } from "lodash";
 import { default as _isString } from "lodash/isString";
 import { default as _isSymbol } from "lodash/isSymbol";
-import { replaceAll } from "../functions/replaceAll";
-import { isUndefined } from "./undefined";
-import { explainNot, explainOk, explainOr } from "./explain";
-import { isNull } from "lodash";
-import { isNumber } from "./Number";
+import {
+    explainNot,
+    explainOk,
+    explainOr,
+} from "./explain";
 import { isFunction } from "./Function";
+import { isNumber } from "./Number";
+import { isUndefined } from "./undefined";
 
 /**
  *
@@ -261,19 +264,3 @@ export function parseNonEmptyString (value: any): string | undefined {
     return `${value}`;
 }
 
-/**
- * Returns the string with each line prefixed with another string.
- *
- * @param value The value
- * @param prefix The prefix string
- */
-export function prefixLines (
-    value: string,
-    prefix: string
-) : string {
-    return `${prefix}${replaceAll(
-        value,
-        "\n",
-        `\n${prefix}`
-    )}`;
-}

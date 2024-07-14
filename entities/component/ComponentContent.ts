@@ -1,5 +1,6 @@
 // Copyright (c) 2023-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
+import { prefixLines } from "../../functions/prefixLines";
 import {
     explainArrayOf,
     isArrayOf,
@@ -9,7 +10,6 @@ import {
     explainOk,
     explainOr,
 } from "../../types/explain";
-import { prefixLines } from "../../types/String";
 import { isUndefined } from "../../types/undefined";
 import { Component } from "./Component";
 import {

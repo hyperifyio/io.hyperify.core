@@ -5,7 +5,7 @@ import { default as _isString } from "lodash/isString";
 import { default as _every } from "lodash/every";
 import { default as _filter } from "lodash/filter";
 import { map } from "../functions/map";
-import { prefixLines } from "./String";
+import { prefixLines } from "../functions/prefixLines";
 
 /**
  * Returned from explain functions when the value is OK.

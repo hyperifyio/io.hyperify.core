@@ -1,6 +1,6 @@
 // Copyright (c) 2020-2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { isString } from "../types/String";
+import { default as _isString } from "lodash/isString";
 
 /**
  * Replaces all occurrences of a string in the input string.
@@ -13,9 +13,9 @@ import { isString } from "../types/String";
  * @throws {TypeError} If `value`, `from`, or `to` are not strings.
  */
 export function replaceAll (value: string, from: string, to: string): string {
-    if ( !isString(from) ) throw new TypeError('replaceAll: from is required');
-    if ( !isString(value) ) throw new TypeError('replaceAll: value is not a string');
-    if ( !isString(to) ) throw new TypeError('replaceAll: to is not a string');
+    if ( !_isString(from) ) throw new TypeError('replaceAll: from is required');
+    if ( !_isString(value) ) throw new TypeError('replaceAll: value is not a string');
+    if ( !_isString(to) ) throw new TypeError('replaceAll: to is not a string');
     if ( from === '' ) return [ '', ...value.split(''), '' ].join(to);
     let ret = '';
     let p = 0;
