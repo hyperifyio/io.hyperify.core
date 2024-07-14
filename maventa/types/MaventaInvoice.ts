@@ -48,9 +48,7 @@ import {
     MaventaRecipient,
 } from "./MaventaRecipient";
 import {
-    explainMaventaRevisionObject,
     explainMaventaRevisionObjectOrUndefined,
-    isMaventaRevisionObject,
     isMaventaRevisionObjectOrUndefined,
     MaventaRevisionObject,
 } from "./MaventaRevisionObject";
