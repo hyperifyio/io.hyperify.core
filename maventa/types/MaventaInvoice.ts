@@ -49,7 +49,9 @@ import {
 } from "./MaventaRecipient";
 import {
     explainMaventaRevisionObject,
+    explainMaventaRevisionObjectOrUndefined,
     isMaventaRevisionObject,
+    isMaventaRevisionObjectOrUndefined,
     MaventaRevisionObject,
 } from "./MaventaRevisionObject";
 import {
@@ -77,7 +79,7 @@ export interface MaventaInvoice {
   readonly comment: string | null;
   readonly files: readonly MaventaFile[];
   readonly actions: readonly MaventaAction[];
-  readonly revision: MaventaRevisionObject;
+  readonly revision ?: MaventaRevisionObject;
 }
 
 export function isMaventaInvoice (value: unknown) : value is MaventaInvoice {
@@ -122,7 +124,7 @@ export function isMaventaInvoice (value: unknown) : value is MaventaInvoice {
         && isStringOrNull(value?.comment)
         && isArrayOf<MaventaFile>(value?.files, isMaventaFile)
         && isArrayOf<MaventaAction>(value?.actions, isMaventaAction)
-        && isMaventaRevisionObject(value?.revision)
+        && isMaventaRevisionObjectOrUndefined(value?.revision)
     );
 }
 
@@ -169,7 +171,7 @@ export function explainMaventaInvoice (value: any) : string {
             , explainProperty("comment", explainStringOrNull(value?.comment))
             , explainProperty("files", explainArrayOf<MaventaFile>("MaventaFile", explainMaventaFile, value?.files, isMaventaFile))
             , explainProperty("actions", explainArrayOf<MaventaAction>("MaventaAction", explainMaventaAction, value?.actions, isMaventaAction))
-            , explainProperty("revision", explainMaventaRevisionObject(value?.revision))
+            , explainProperty("revision", explainMaventaRevisionObjectOrUndefined(value?.revision))
         ]
     );
 }
