@@ -25,19 +25,25 @@ import { isUndefined } from "../../types/undefined";
 
 export interface MaventaRecipient {
     readonly name: string;
-    readonly country: string;
+    readonly country: string | null;
     readonly operator: string | null;
+    readonly eia: string | null;
+    readonly bid: string | null;
 }
 
 export function createMaventaRecipient (
     name : string,
-    country : string,
+    country : string | null,
     operator : string | null,
+    eia : string | null,
+    bid : string | null,
 ) : MaventaRecipient {
     return {
         name,
         country,
         operator,
+        eia,
+        bid,
     };
 }
 
@@ -48,10 +54,14 @@ export function isMaventaRecipient (value: unknown) : value is MaventaRecipient 
             'name',
             'country',
             'operator',
+            'eia',
+            'bid',
         ])
         && isString(value?.name)
-        && isString(value?.country)
+        && isStringOrNull(value?.country)
         && isStringOrNull(value?.operator)
+        && isStringOrNull(value?.eia)
+        && isStringOrNull(value?.bid)
     );
 }
 
@@ -63,10 +73,14 @@ export function explainMaventaRecipient (value: any) : string {
                 'name',
                 'country',
                 'operator',
+                'eia',
+                'bid',
             ])
             , explainProperty("name", explainString(value?.name))
-            , explainProperty("country", explainString(value?.country))
+            , explainProperty("country", explainStringOrNull(value?.country))
             , explainProperty("operator", explainStringOrNull(value?.operator))
+            , explainProperty("eia", explainStringOrNull(value?.eia))
+            , explainProperty("bid", explainStringOrNull(value?.bid))
         ]
     );
 }

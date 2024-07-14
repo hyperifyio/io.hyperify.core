@@ -2,19 +2,23 @@
 
 import { AuthorizationUtils } from "../AuthorizationUtils";
 import { HttpService } from '../HttpService';
+import { LogService } from "../LogService";
 import { explainArrayOf } from "../types/Array";
 import { isString } from "../types/String";
-import { MaventaService } from "./MaventaService";
-import {
-    MaventaInvoice,
-    isMaventaInvoice,
-    explainMaventaInvoice,
-} from './types/MaventaInvoice';
-import { MaventaTokenResponse } from './types/MaventaTokenResponse';
 import {
     DEFAULT_MAVENTA_BASE_URL,
     DEFAULT_MAVENTA_SCOPE,
 } from './maventa-constants';
+import { MaventaService } from "./MaventaService";
+import { MaventaDirection } from "./types/MaventaDirection";
+import {
+    explainMaventaInvoice,
+    isMaventaInvoice,
+    MaventaInvoice,
+} from './types/MaventaInvoice';
+import { MaventaTokenResponse } from './types/MaventaTokenResponse';
+
+const LOG = LogService.createLogger( 'MaventaServiceImpl' );
 
 /**
  * Maventa REST API Client.
@@ -57,10 +61,49 @@ export class MaventaServiceImpl implements MaventaService {
         );
     }
 
+    public async listSentInvoices(): Promise<MaventaInvoice[]> {
+        return this._listInvoices(
+            MaventaDirection.SENT,
+            undefined,
+            undefined,
+        );
+    }
+
     /**
      * @inheritDoc
      */
-    public async listInvoices(): Promise<MaventaInvoice[]> {
+    public async listInboundInvoices(
+        received_at_start : Date,
+        received_at_end : Date,
+    ): Promise<MaventaInvoice[]> {
+        return this._listInvoices(
+            MaventaDirection.RECEIVED,
+            received_at_start.toISOString(),
+            received_at_end.toISOString(),
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public async getInvoice(
+        id: string,
+    ): Promise<MaventaInvoice | undefined> {
+        return this._getInvoice(id);
+    }
+
+    /**
+     *
+     * @param direction
+     * @param received_at_start
+     * @param received_at_end
+     * @private
+     */
+    private async _listInvoices(
+        direction: MaventaDirection,
+        received_at_start ?: string,
+        received_at_end ?: string,
+    ): Promise<MaventaInvoice[]> {
 
         const token = await this._getAccessToken();
 
@@ -71,7 +114,13 @@ export class MaventaServiceImpl implements MaventaService {
             'Company-UUID': this._clientId,
         };
 
-        const url = `${this._baseUrl}/v1/invoices`;
+        const params = [
+            ...(direction         ? [`direction=${q(direction)}`]                 : []),
+            ...(received_at_start ? [`received_at_start=${q(received_at_start)}`] : []),
+            ...(received_at_end   ? [`received_at_end=${q(received_at_end)}`]     : []),
+        ];
+
+        const url = `${this._baseUrl}/v1/invoices?${params.join('&')}`;
         const response = await HttpService.getJson(url, headers);
         if (!response || !Array.isArray(response)) {
             throw new Error("Failed to list invoices or wrong format");
@@ -80,9 +129,37 @@ export class MaventaServiceImpl implements MaventaService {
         const invoices = response.filter(isMaventaInvoice);
         if (invoices.length !== response.length) {
             const invalidInvoices = response.filter((item: MaventaInvoice) => !isMaventaInvoice(item));
+            LOG.debug(`invalidInvoices = `, invalidInvoices);
             throw new Error(`Some items in the response did not match the expected invoice format: ${explainArrayOf<MaventaInvoice>("MaventaInvoice", explainMaventaInvoice, invalidInvoices, isMaventaInvoice)}`);
         }
+
         return invoices;
+    }
+
+    /**
+     *
+     * @param id
+     * @private
+     */
+    private async _getInvoice(
+        id: string,
+    ): Promise<MaventaInvoice | undefined> {
+        const token = await this._getAccessToken();
+        const headers = {
+            'Authorization': AuthorizationUtils.createBearerHeader(token),
+            'Accept': 'application/json',
+            'User-Api-Key': this._clientSecret,
+            'Company-UUID': this._clientId,
+        };
+        const url = `${this._baseUrl}/v1/invoice/${q(id)}`;
+        const response = await HttpService.getJson(url, headers);
+        if (!response) {
+            throw new Error("Failed to list invoices or wrong format");
+        }
+        if (!isMaventaInvoice(response)) {
+            throw new Error(`The response did not match the expected invoice format: ${explainMaventaInvoice(response)}`);
+        }
+        return response;
     }
 
     /**
@@ -149,4 +226,8 @@ export class MaventaServiceImpl implements MaventaService {
         return this._token;
     }
 
+}
+
+function q (value: string) : string {
+    return encodeURIComponent(value);
 }

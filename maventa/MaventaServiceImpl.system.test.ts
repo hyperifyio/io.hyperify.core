@@ -41,9 +41,9 @@ console.log('MaventaService system tests loaded');
             );
         });
 
-        describe('#listInvoices', () => {
+        describe('#listSentInvoices', () => {
             it('should fetch real invoices from the Maventa API', async () => {
-                const invoices = await service.listInvoices();
+                const invoices = await service.listSentInvoices();
                 expect(isArray(invoices)).toBe(true);
                 expect(invoices.length).toBeGreaterThan(0);
                 expect(invoices[0]).toHaveProperty('id');
