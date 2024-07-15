@@ -1,6 +1,7 @@
 // Copyright (c) 2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { MaventaInvoice } from "./types/MaventaInvoice";
+import { MaventaReturnFormat } from "./types/MaventaReturnFormat";
 
 export interface MaventaService {
 
@@ -24,9 +25,11 @@ export interface MaventaService {
      * Get invoice
      *
      * @param id
+     * @param returnFormat
      */
     getInvoice(
         id : string,
+        returnFormat ?: MaventaReturnFormat | undefined,
     ): Promise<MaventaInvoice|undefined>
 
 }

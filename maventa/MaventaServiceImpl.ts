@@ -16,6 +16,7 @@ import {
     isMaventaInvoice,
     MaventaInvoice,
 } from './types/MaventaInvoice';
+import { MaventaReturnFormat } from "./types/MaventaReturnFormat";
 import { MaventaTokenResponse } from './types/MaventaTokenResponse';
 
 const LOG = LogService.createLogger( 'MaventaServiceImpl' );
@@ -88,8 +89,9 @@ export class MaventaServiceImpl implements MaventaService {
      */
     public async getInvoice(
         id: string,
+        returnFormat : MaventaReturnFormat = MaventaReturnFormat.PEPPOLBIS30,
     ): Promise<MaventaInvoice | undefined> {
-        return this._getInvoice(id);
+        return this._getInvoice(id, returnFormat ?? MaventaReturnFormat.PEPPOLBIS30);
     }
 
     /**
@@ -139,10 +141,12 @@ export class MaventaServiceImpl implements MaventaService {
     /**
      *
      * @param id
+     * @param return_format
      * @private
      */
     private async _getInvoice(
         id: string,
+        return_format: MaventaReturnFormat,
     ): Promise<MaventaInvoice | undefined> {
         const token = await this._getAccessToken();
         const headers = {
@@ -151,7 +155,12 @@ export class MaventaServiceImpl implements MaventaService {
             'User-Api-Key': this._clientSecret,
             'Company-UUID': this._clientId,
         };
-        const url = `${this._baseUrl}/v1/invoice/${q(id)}`;
+
+        const params = [
+            ...(return_format         ? [`return_format=${q(return_format)}`]                 : []),
+        ];
+
+        const url = `${this._baseUrl}/v1/invoices/${q(id)}?${params.join('&')}`;
         const response = await HttpService.getJson(url, headers);
         if (!response) {
             throw new Error("Failed to list invoices or wrong format");
