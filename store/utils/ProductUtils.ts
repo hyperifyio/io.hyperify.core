@@ -17,7 +17,6 @@ import { ProductFeatureCategoryMappingType } from "../types/product/features/Pro
 import { getProductFeatureCategoryTitleTranslationToken, getProductFeatureTitleTranslationToken } from "../constants/storeTranslation";
 import { LogService } from "../../LogService";
 import { LogLevel } from "../../types/LogLevel";
-import { CompositeProductSelection } from "../types/product/CompositeProductSelection";
 import { CompositeProductOption } from "../types/product/CompositeProductOption";
 import { isNumber } from "../../types/Number";
 
@@ -110,57 +109,6 @@ export class ProductUtils {
             (a: ProductPriceType[], item: ProductTableItemModel) => uniq([ ...a, ...item.priceTypeOptions ]),
             []
         );
-    }
-
-    /**
-     * This will calculate the best product combination from provided
-     * preferred options.
-     *
-     * @param model The composite product model
-     * @param options Preferred options to use when calculating best combination
-     * @param products All the available products to use to combine the derived product
-     */
-    public static calculateCompositeProductFromOptions (
-        model    : Product,
-        // @ts-ignore
-        options  : {readonly [key: string]: string|number|boolean},
-        // @ts-ignore
-        products : readonly Product[]
-    ) : Product {
-
-        const compositeSelections : readonly CompositeProductSelection[] | undefined = model?.composite;
-
-        // Check if this is a composite product
-        if (!compositeSelections) {
-            LOG.warn(`Warning! This model doesn't seem to be a composite product. Passing the product on without any changes.`);
-            return model;
-        }
-
-        // let enabledProductIds : ProductIdListWithAmount = [];
-        //
-        // const matchingProductLists : readonly ProductIdListWithAmount[] = map(
-        //     compositeSelections,
-        //     (item: CompositeProductSelection) : ProductIdListWithAmount => {
-        //         const featureId = item.featureId;
-        //         const featureOptions : readonly CompositeProductOption[] = item.options;
-        //         const preferredValue : string|number|boolean | undefined = has(options, featureId) ? options[featureId] : undefined;
-        //         if (!isNumber(preferredValue)) {
-        //             LOG.warn('Warning! calculateCompositeProductFromOptions: Only number values implemented. Ignored selection.');
-        //             return [];
-        //         }
-        //         const option = ProductUtils.getBestMatchingNumericCompositeProductOption(
-        //             preferredValue,
-        //             featureOptions
-        //         );
-        //         if (!option) {
-        //             LOG.warn('Warning! calculateCompositeProductFromOptions: No matching options found. Ignored selection');
-        //             return [];
-        //         }
-        //         return option.products;
-        //     }
-        // );
-
-        return model;
     }
 
     public static getBestMatchingNumericCompositeProductOption (
