@@ -4,26 +4,46 @@ import { explainProductFeatureCategory, isProductFeatureCategory, ProductFeature
 import { explainProductFeatureId, isProductFeatureId, ProductFeatureId } from "./ProductFeatureId";
 import { explain, explainOr, explainProperty } from "../../../../types/explain";
 import { isBoolean, explainBoolean } from "../../../../types/Boolean";
-import { explainString, isString } from "../../../../types/String";
+import {
+    explainString,
+    explainStringOrUndefined,
+    isString,
+    isStringOrUndefined,
+} from "../../../../types/String";
 import { explainNumber, isNumber } from "../../../../types/Number";
 import { explainRegularObject, isRegularObject } from "../../../../types/RegularObject";
 import { explainNoOtherKeys, hasNoOtherKeys } from "../../../../types/OtherKeys";
 
 export interface ProductFeature {
+
     readonly id       : ProductFeatureId;
     readonly category : ProductFeatureCategory;
     readonly value    : string | number | boolean;
+
+    readonly productFeatureId ?: string;
+    readonly productGroupId   ?: string;
+    readonly updated          ?: string;
+    readonly created          ?: string;
+
 }
 
 export function createProductFeature (
     id       : ProductFeatureId,
     category : ProductFeatureCategory,
-    value    : string | number | boolean
+    value    : string | number | boolean,
+    productFeatureId ?: string,
+    productGroupId   ?: string,
+    updated          ?: string,
+    created          ?: string,
 ) : ProductFeature {
     return {
         id,
         category,
-        value
+        value,
+        productFeatureId,
+        productGroupId,
+        updated,
+        created,
     };
 }
 
@@ -33,8 +53,16 @@ export function isProductFeature (value: any): value is ProductFeature {
         && hasNoOtherKeys(value, [
             'id',
             'category',
-            'value'
+            'value',
+            'productFeatureId',
+            'productGroupId',
+            'updated',
+            'created',
         ])
+        && isStringOrUndefined(value?.productFeatureId)
+        && isStringOrUndefined(value?.productGroupId)
+        && isStringOrUndefined(value?.updated)
+        && isStringOrUndefined(value?.created)
         && isProductFeatureId(value?.id)
         && isProductFeatureCategory(value?.category)
         && ( isString(value?.value) || isNumber(value?.value) || isBoolean(value?.value) )
@@ -48,8 +76,16 @@ export function explainProductFeature (value: any) : string {
             explainNoOtherKeys(value, [
                 'id',
                 'category',
-                'value'
+                'value',
+                'productFeatureId',
+                'productGroupId',
+                'updated',
+                'created',
             ]),
+            explainProperty("productFeatureId", explainStringOrUndefined(value?.productFeatureId)),
+            explainProperty("productGroupId", explainStringOrUndefined(value?.productGroupId)),
+            explainProperty("updated", explainStringOrUndefined(value?.updated)),
+            explainProperty("created", explainStringOrUndefined(value?.created)),
             explainProperty("id", explainProductFeatureId(value?.id)),
             explainProperty("category", explainProductFeatureCategory(value?.category)),
             explainProperty(
@@ -58,7 +94,7 @@ export function explainProductFeature (value: any) : string {
                     [
                         explainString(value?.value),
                         explainNumber(value?.value),
-                        explainBoolean(value?.value)
+                        explainBoolean(value?.value),
                     ]
                 )
             )
