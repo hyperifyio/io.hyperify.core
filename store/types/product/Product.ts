@@ -8,7 +8,12 @@ import { explainProductType, isProductType, ProductType } from "./ProductType";
 import { explainProductFeature, isProductFeature, ProductFeature } from "./features/ProductFeature";
 import { ProductPrice, isProductPrice, explainProductPrice } from "./ProductPrice";
 import { explain, explainProperty } from "../../../types/explain";
-import { explainString, isString } from "../../../types/String";
+import {
+    explainString,
+    explainStringOrUndefined,
+    isString,
+    isStringOrUndefined,
+} from "../../../types/String";
 import {
     explainNumberOrUndefined,
     isNumberOrUndefined,
@@ -20,32 +25,69 @@ import { explainArrayOf, isArrayOf } from "../../../types/Array";
 /**
  * In the legacy database this will be a row in `product_group` table.
  *
- * See {@see ProductPrice} for `product` table!
+ * See also {@see ProductPrice} for `product` table!
  */
 export interface Product {
 
     /**
-     * This is the `slug` property in the database.
+     * Repository property: `product_group.slug`
      */
     readonly id              : string;
 
+    /**
+     * Repository property: `product_group.type`
+     */
     readonly type            : ProductType;
 
     /**
-     * This is the `name` property in the database.
+     * Repository property: `product_group.name`
      */
     readonly title           : string;
 
     /**
-     * This is the `description` property in the database.
+     * Repository property: `product_group.description`
      */
     readonly summary         : string;
 
+    /**
+     * Repository property: `product_group.stockSold`
+     */
     readonly stockSold      ?: number;
+
+    /**
+     * Repository property: `product_group.stockAmount`
+     */
     readonly stockAmount    ?: number;
+
+    /**
+     * Repository property: `product_group.stockEnabled`
+     */
     readonly stockEnabled   ?: boolean;
+
+    /**
+     * Repository property: `product_group.onHold`
+     */
     readonly onHold         ?: boolean;
+
+    /**
+     * Repository property: `product_group.published`
+     */
     readonly published      ?: boolean;
+
+    /**
+     * Repository property: `product_group.productGroupId`
+     */
+    readonly productGroupId ?: string;
+
+    /**
+     * Repository property: `product_group.updated`
+     */
+    readonly updated ?: string;
+
+    /**
+     * Repository property: `product_group.creation`
+     */
+    readonly created ?: string;
 
     /**
      * Prices come from from `product` table, mapped by the `slug` property.
@@ -63,10 +105,14 @@ export function createProduct (
     summary      : string,
     features     : readonly ProductFeature[],
     prices       : readonly ProductPrice[],
+    stockSold    : number,
     stockAmount  : number,
     stockEnabled : boolean,
     onHold       : boolean,
     published    : boolean,
+    productGroupId ?: string | undefined,
+    created        ?: string | undefined,
+    updated        ?: string | undefined,
 ) : Product {
     return {
         id,
@@ -75,10 +121,14 @@ export function createProduct (
         summary,
         features,
         prices,
+        stockSold,
         stockAmount,
         stockEnabled,
         onHold,
         published,
+        productGroupId,
+        created,
+        updated,
     };
 }
 
@@ -97,6 +147,9 @@ export function isProduct (value: any): value is Product {
             'stockEnabled',
             'onHold',
             'published',
+            'productGroupId',
+            'updated',
+            'created',
         ])
         && isString(value?.id)
         && isProductType(value?.type)
@@ -109,6 +162,9 @@ export function isProduct (value: any): value is Product {
         && isBooleanOrUndefined(value?.stockEnabled)
         && isBooleanOrUndefined(value?.onHold)
         && isBooleanOrUndefined(value?.published)
+        && isStringOrUndefined(value?.productGroupId)
+        && isStringOrUndefined(value?.created)
+        && isStringOrUndefined(value?.updated)
     );
 }
 
@@ -128,6 +184,9 @@ export function explainProduct (value: any) : string {
                 'stockEnabled',
                 'onHold',
                 'published',
+                'productGroupId',
+                'updated',
+                'created',
             ]),
             explainProperty("isArrayOf", explainString(value?.isArrayOf)),
             explainProperty("type", explainProductType(value?.type)),
@@ -140,6 +199,9 @@ export function explainProduct (value: any) : string {
             explainProperty("stockEnabled", explainBooleanOrUndefined(value?.stockEnabled)),
             explainProperty("onHold", explainBooleanOrUndefined(value?.onHold)),
             explainProperty("published", explainBooleanOrUndefined(value?.published)),
+            explainProperty("productGroupId", explainStringOrUndefined(value?.productGroupId)),
+            explainProperty("updated", explainStringOrUndefined(value?.updated)),
+            explainProperty("created", explainStringOrUndefined(value?.created)),
         ]
     );
 }

@@ -18,9 +18,6 @@ import { explainNoOtherKeys, hasNoOtherKeys } from "../../../types/OtherKeys";
  */
 export interface ProductPrice {
 
-    /** Must be a number like `1234[.5678]`. In the legacy database it will be stored in the `product`.`number` field which is `decimal(20,10)`. */
-    readonly id              ?: string;
-
     readonly sum              : number;
     readonly vatPercent       : number;
     readonly type             : ProductPriceType;
@@ -28,6 +25,10 @@ export interface ProductPrice {
     readonly discountPercent ?: number;
     readonly discountFrom    ?: string;
     readonly discountTo      ?: string;
+
+    /** Must be a number like `1234[.5678]`. In the legacy database it will be stored in the `product`.`number` field which is `decimal(20,10)`. */
+    readonly id              ?: string;
+
     readonly stockSold       ?: number;
     readonly stockAmount     ?: number;
     readonly stockEnabled    ?: boolean;
@@ -43,7 +44,14 @@ export function createProductPrice (
     buyUrl          ?: string,
     discountPercent ?: number,
     discountFrom    ?: string,
-    discountTo      ?: string
+    discountTo      ?: string,
+    id              ?: string,
+    stockSold       ?: number,
+    stockAmount     ?: number,
+    stockEnabled    ?: boolean,
+    onHold          ?: boolean,
+    published       ?: boolean,
+    expenseSum      ?: number,
 ): ProductPrice {
     return {
         sum,
@@ -52,7 +60,14 @@ export function createProductPrice (
         buyUrl,
         discountPercent,
         discountFrom,
-        discountTo
+        discountTo,
+        id,
+        stockSold,
+        stockAmount,
+        stockEnabled,
+        onHold,
+        published,
+        expenseSum,
     };
 }
 

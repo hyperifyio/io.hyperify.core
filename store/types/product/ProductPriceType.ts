@@ -5,22 +5,22 @@ import { explainNot, explainOk, explainOr } from "../../../types/explain";
 import { isUndefined } from "../../../types/undefined";
 
 export enum ProductPriceType {
-    ONCE     = "ONCE",
-    HOURLY   = "HOURLY",
-    DAILY    = "DAILY",
-    WEEKLY   = "WEEKLY",
-    BIWEEKLY   = "BIWEEKLY",
-    MONTHLY  = "MONTHLY",
-    BIMONTHLY  = "BIMONTHLY",
-    QUARTERLY  = "QUARTERLY",
+    ONCE      = "ONCE",
+    HOURLY    = "HOURLY",
+    DAILY     = "DAILY",
+    WEEKLY    = "WEEKLY",
+    BIWEEKLY  = "BIWEEKLY",
+    MONTHLY   = "MONTHLY",
+    BIMONTHLY = "BIMONTHLY",
+    QUARTERLY = "QUARTERLY",
     SEASONAL  = "SEASONAL",
     BIANNUAL  = "BIANNUAL",
-    YEARLY   = "YEARLY",
+    YEARLY    = "YEARLY",
     YEARS_2   = "YEARS_2",
-    YEARS_3  = "YEARS_3",
-    YEARS_4  = "YEARS_4",
-    YEARS_5  = "YEARS_5",
-    YEARS_10 = "YEARS_10"
+    YEARS_3   = "YEARS_3",
+    YEARS_4   = "YEARS_4",
+    YEARS_5   = "YEARS_5",
+    YEARS_10  = "YEARS_10"
 }
 
 export function isProductPriceType (value: any): value is ProductPriceType {

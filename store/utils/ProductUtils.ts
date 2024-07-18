@@ -1,4 +1,5 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2022-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { ProductTableItemDataModel } from "../types/product/ProductTableItemDataModel";
 import { filter } from "../../functions/filter";
@@ -32,7 +33,7 @@ export class ProductUtils {
         title: string,
         description : string,
         selectedPriceType : ProductPriceType,
-        productList: Product[]
+        productList: readonly Product[]
     ) : ProductTableItemModel[] {
         return [
             {
@@ -78,7 +79,7 @@ export class ProductUtils {
     public static createProductTableItemDataModelList (
         categoryList : ProductFeatureCategory[],
         featureIdMap : ProductFeatureCategoryMappingType,
-        productList  : Product[]
+        productList  : readonly Product[]
     ) : ProductTableItemDataModel[] {
         return map(
             categoryList,

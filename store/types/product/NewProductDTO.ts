@@ -9,6 +9,7 @@ import { hasNoOtherKeysInDevelopment } from "../../../types/OtherKeys";
 export interface NewProductDTO {
     readonly productGroupId    : string;
     readonly priceTypeId       : string;
+    readonly slug              : string;
     readonly number            : number;
     readonly name              : string;
     readonly description       : string;
@@ -19,6 +20,7 @@ export interface NewProductDTO {
     readonly isPublic          : boolean;
     readonly stockEnabled      : boolean;
     readonly stockAmount       : number;
+    readonly stockSold         : number;
 }
 
 export function createNewProductDTO (
@@ -33,13 +35,16 @@ export function createNewProductDTO (
     onHold            : boolean,
     isPublic          : boolean,
     stockEnabled      : boolean,
-    stockAmount       : number
+    stockAmount       : number,
+    stockSold         : number,
+    slug              : string,
 ): NewProductDTO {
     return {
         productGroupId,
         priceTypeId,
         number,
         name,
+        slug,
         description,
         expensePrice,
         price,
@@ -47,7 +52,8 @@ export function createNewProductDTO (
         onHold,
         isPublic,
         stockEnabled,
-        stockAmount
+        stockSold,
+        stockAmount,
     };
 }
 
@@ -66,7 +72,9 @@ export function isNewProductDTO (value: any): value is NewProductDTO {
             'onHold',
             'isPublic',
             'stockEnabled',
-            'stockAmount'
+            'stockAmount',
+            'stockSold',
+            'slug',
         ])
         && isString(value?.productGroupId)
         && isString(value?.priceTypeId)
@@ -80,6 +88,8 @@ export function isNewProductDTO (value: any): value is NewProductDTO {
         && isBoolean(value?.isPublic)
         && isBoolean(value?.stockEnabled)
         && isNumber(value?.stockAmount)
+        && isNumber(value?.stockSold)
+        && isString(value?.slug)
     );
 }
 

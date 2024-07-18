@@ -1,4 +1,4 @@
-// Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2022-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { isBoolean } from "../../../types/Boolean";
 import { isString } from "../../../types/String";
@@ -19,9 +19,10 @@ export interface ProductDTO {
     readonly price             : number;
     readonly vatPercent        : number;
     readonly onHold            : boolean;
-    readonly isPublic          : boolean;
+    readonly published         : boolean;
     readonly stockEnabled      : boolean;
     readonly stockAmount       : number;
+    readonly stockSold         : number;
 }
 
 export function createProductDTO (
@@ -37,9 +38,10 @@ export function createProductDTO (
     price             : number,
     vatPercent        : number,
     onHold            : boolean,
-    isPublic          : boolean,
+    published          : boolean,
     stockEnabled      : boolean,
-    stockAmount       : number
+    stockAmount       : number,
+    stockSold         : number,
 ): ProductDTO {
     return {
         productId,
@@ -54,9 +56,10 @@ export function createProductDTO (
         price,
         vatPercent,
         onHold,
-        isPublic,
+        published,
         stockEnabled,
-        stockAmount
+        stockAmount,
+        stockSold,
     };
 }
 
@@ -76,9 +79,10 @@ export function isProductDTO (value: any): value is ProductDTO {
             'price',
             'vatPercent',
             'onHold',
-            'isPublic',
+            'published',
             'stockEnabled',
-            'stockAmount'
+            'stockAmount',
+            'stockSold',
         ])
         && isString(value?.productId)
         && isString(value?.productGroupId)
@@ -92,9 +96,10 @@ export function isProductDTO (value: any): value is ProductDTO {
         && isNumber(value?.price)
         && isNumber(value?.vatPercent)
         && isBoolean(value?.onHold)
-        && isBoolean(value?.isPublic)
+        && isBoolean(value?.published)
         && isBoolean(value?.stockEnabled)
         && isNumber(value?.stockAmount)
+        && isNumber(value?.stockSold)
     );
 }
 
