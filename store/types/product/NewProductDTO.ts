@@ -1,4 +1,4 @@
-// Copyright (c) 2022-2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2022-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { isBoolean } from "../../../types/Boolean";
 import { isString } from "../../../types/String";
@@ -9,51 +9,60 @@ import { hasNoOtherKeysInDevelopment } from "../../../types/OtherKeys";
 export interface NewProductDTO {
     readonly productGroupId    : string;
     readonly priceTypeId       : string;
-    readonly slug              : string;
     readonly number            : number;
+    readonly slug              : string;
     readonly name              : string;
     readonly description       : string;
     readonly expensePrice      : number;
+    readonly discountPercent   : number;
+    readonly discountFrom      : string;
+    readonly discountTo        : string;
     readonly price             : number;
     readonly vatPercent        : number;
-    readonly onHold            : boolean;
-    readonly isPublic          : boolean;
-    readonly stockEnabled      : boolean;
-    readonly stockAmount       : number;
     readonly stockSold         : number;
+    readonly stockAmount       : number;
+    readonly stockEnabled      : boolean;
+    readonly onHold            : boolean;
+    readonly published         : boolean;
 }
 
 export function createNewProductDTO (
-    productGroupId    : string,
-    priceTypeId       : string,
-    number            : number,
-    name              : string,
-    description       : string,
-    expensePrice      : number,
-    price             : number,
-    vatPercent        : number,
-    onHold            : boolean,
-    isPublic          : boolean,
-    stockEnabled      : boolean,
-    stockAmount       : number,
-    stockSold         : number,
-    slug              : string,
+    productGroupId  : string,
+    priceTypeId     : string,
+    number          : number,
+    slug            : string,
+    name            : string,
+    description     : string,
+    expensePrice    : number,
+    discountPercent : number,
+    discountFrom    : string,
+    discountTo      : string,
+    price           : number,
+    vatPercent      : number,
+    stockSold       : number,
+    stockAmount     : number,
+    stockEnabled    : boolean,
+    onHold          : boolean,
+    published       : boolean,
 ): NewProductDTO {
     return {
         productGroupId,
         priceTypeId,
         number,
-        name,
         slug,
+        name,
         description,
         expensePrice,
+        discountPercent,
+        discountFrom,
+        discountTo,
         price,
         vatPercent,
-        onHold,
-        isPublic,
-        stockEnabled,
         stockSold,
         stockAmount,
+        stockEnabled,
+        onHold,
+        published,
     };
 }
 
@@ -64,32 +73,38 @@ export function isNewProductDTO (value: any): value is NewProductDTO {
             'productGroupId',
             'priceTypeId',
             'number',
+            'slug',
             'name',
             'description',
             'expensePrice',
+            'discountPercent',
+            'discountFrom',
+            'discountTo',
             'price',
             'vatPercent',
-            'onHold',
-            'isPublic',
-            'stockEnabled',
-            'stockAmount',
             'stockSold',
-            'slug',
+            'stockAmount',
+            'stockEnabled',
+            'onHold',
+            'published',
         ])
         && isString(value?.productGroupId)
         && isString(value?.priceTypeId)
         && isNumber(value?.number)
+        && isString(value?.slug)
         && isString(value?.name)
         && isString(value?.description)
         && isNumber(value?.expensePrice)
+        && isNumber(value?.discountPercent)
+        && isString(value?.discountFrom)
+        && isString(value?.discountTo)
         && isNumber(value?.price)
         && isNumber(value?.vatPercent)
-        && isBoolean(value?.onHold)
-        && isBoolean(value?.isPublic)
-        && isBoolean(value?.stockEnabled)
-        && isNumber(value?.stockAmount)
         && isNumber(value?.stockSold)
-        && isString(value?.slug)
+        && isNumber(value?.stockAmount)
+        && isBoolean(value?.stockEnabled)
+        && isBoolean(value?.onHold)
+        && isBoolean(value?.published)
     );
 }
 

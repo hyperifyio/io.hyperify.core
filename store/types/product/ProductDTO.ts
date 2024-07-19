@@ -13,35 +13,43 @@ export interface ProductDTO {
     readonly updated           : string;
     readonly creation          : string;
     readonly number            : number;
+    readonly slug              : string;
     readonly name              : string;
     readonly description       : string;
     readonly expensePrice      : number;
+    readonly discountPercent   : number;
+    readonly discountFrom      : string;
+    readonly discountTo        : string;
     readonly price             : number;
     readonly vatPercent        : number;
+    readonly stockSold         : number;
+    readonly stockAmount       : number;
+    readonly stockEnabled      : boolean;
     readonly onHold            : boolean;
     readonly published         : boolean;
-    readonly stockEnabled      : boolean;
-    readonly stockAmount       : number;
-    readonly stockSold         : number;
 }
 
 export function createProductDTO (
-    productId         : string,
-    productGroupId    : string,
-    priceTypeId       : string,
-    updated           : string,
-    creation          : string,
-    number            : number,
-    name              : string,
-    description       : string,
-    expensePrice      : number,
-    price             : number,
-    vatPercent        : number,
-    onHold            : boolean,
-    published          : boolean,
-    stockEnabled      : boolean,
-    stockAmount       : number,
-    stockSold         : number,
+    productId        : string,
+    productGroupId   : string,
+    priceTypeId      : string,
+    updated          : string,
+    creation         : string,
+    number           : number,
+    slug             : string,
+    name             : string,
+    description      : string,
+    expensePrice     : number,
+    discountPercent  : number,
+    discountFrom     : string,
+    discountTo       : string,
+    price            : number,
+    vatPercent       : number,
+    stockSold        : number,
+    stockAmount      : number,
+    stockEnabled     : boolean,
+    onHold           : boolean,
+    published        : boolean,
 ): ProductDTO {
     return {
         productId,
@@ -50,16 +58,20 @@ export function createProductDTO (
         updated,
         creation,
         number,
+        slug,
         name,
         description,
         expensePrice,
+        discountPercent,
+        discountFrom,
+        discountTo,
         price,
         vatPercent,
+        stockSold,
+        stockAmount,
+        stockEnabled,
         onHold,
         published,
-        stockEnabled,
-        stockAmount,
-        stockSold,
     };
 }
 
@@ -73,16 +85,20 @@ export function isProductDTO (value: any): value is ProductDTO {
             'updated',
             'creation',
             'number',
+            'slug',
             'name',
             'description',
             'expensePrice',
+            'discountPercent',
+            'discountFrom',
+            'discountTo',
             'price',
             'vatPercent',
+            'stockSold',
+            'stockAmount',
+            'stockEnabled',
             'onHold',
             'published',
-            'stockEnabled',
-            'stockAmount',
-            'stockSold',
         ])
         && isString(value?.productId)
         && isString(value?.productGroupId)
@@ -90,16 +106,20 @@ export function isProductDTO (value: any): value is ProductDTO {
         && isString(value?.updated)
         && isString(value?.creation)
         && isNumber(value?.number)
+        && isString(value?.slug)
         && isString(value?.name)
         && isString(value?.description)
         && isNumber(value?.expensePrice)
+        && isNumber(value?.discountPercent)
+        && isString(value?.discountFrom)
+        && isString(value?.discountTo)
         && isNumber(value?.price)
         && isNumber(value?.vatPercent)
+        && isNumber(value?.stockSold)
+        && isNumber(value?.stockAmount)
+        && isBoolean(value?.stockEnabled)
         && isBoolean(value?.onHold)
         && isBoolean(value?.published)
-        && isBoolean(value?.stockEnabled)
-        && isNumber(value?.stockAmount)
-        && isNumber(value?.stockSold)
     );
 }
 
