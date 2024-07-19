@@ -188,7 +188,7 @@ export function explainProduct (value: any) : string {
                 'updated',
                 'created',
             ]),
-            explainProperty("isArrayOf", explainString(value?.isArrayOf)),
+            explainProperty("id", explainString(value?.id)),
             explainProperty("type", explainProductType(value?.type)),
             explainProperty("title", explainString(value?.title)),
             explainProperty("summary", explainString(value?.summary)),
