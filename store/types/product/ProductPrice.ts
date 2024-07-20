@@ -54,10 +54,10 @@ export function createProductPrice (
     expenseSum      ?: number,
 ): ProductPrice {
     return {
-        sum,
-        vatPercent,
         type,
+        vatPercent,
         buyUrl,
+        sum,
         discountPercent,
         discountFrom,
         discountTo,
