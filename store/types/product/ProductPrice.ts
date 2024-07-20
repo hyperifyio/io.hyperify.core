@@ -56,11 +56,11 @@ export function createProductPrice (
     return {
         type,
         vatPercent,
-        buyUrl,
         sum,
         discountPercent,
         discountFrom,
         discountTo,
+        buyUrl,
         id,
         stockSold,
         stockAmount,
