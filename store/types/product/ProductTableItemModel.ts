@@ -8,7 +8,6 @@ export interface ProductTableItemModel {
   readonly id: number;
   readonly title: string;
   readonly description: string;
-  readonly buttonTo: string | undefined;
   readonly gb: number;
   readonly price: number;
   readonly priceVatPercent: number;
