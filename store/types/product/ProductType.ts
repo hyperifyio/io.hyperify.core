@@ -28,7 +28,7 @@ export enum ProductType {
     WP                   = "WP",
     NET                  = "NET",
     WEBRTC               = "WEBRTC",
-    STOCK                = "STOCK"
+    STOCK                = "STOCK",
 }
 
 export function isProductType (value: unknown) : value is ProductType {
