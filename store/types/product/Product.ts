@@ -1,13 +1,29 @@
 // Copyright (c) 2022-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import {
+    explainArrayOf,
+    isArrayOf,
+} from "../../../types/Array";
+import {
     explainBooleanOrUndefined,
     isBooleanOrUndefined,
 } from "../../../types/Boolean";
-import { explainProductType, isProductType, ProductType } from "./ProductType";
-import { explainProductFeature, isProductFeature, ProductFeature } from "./features/ProductFeature";
-import { ProductPrice, isProductPrice, explainProductPrice } from "./ProductPrice";
-import { explain, explainProperty } from "../../../types/explain";
+import {
+    explain,
+    explainProperty,
+} from "../../../types/explain";
+import {
+    explainNumberOrUndefined,
+    isNumberOrUndefined,
+} from "../../../types/Number";
+import {
+    explainNoOtherKeys,
+    hasNoOtherKeys,
+} from "../../../types/OtherKeys";
+import {
+    explainRegularObject,
+    isRegularObject,
+} from "../../../types/RegularObject";
 import {
     explainString,
     explainStringOrUndefined,
@@ -15,12 +31,20 @@ import {
     isStringOrUndefined,
 } from "../../../types/String";
 import {
-    explainNumberOrUndefined,
-    isNumberOrUndefined,
-} from "../../../types/Number";
-import { explainRegularObject, isRegularObject } from "../../../types/RegularObject";
-import { explainNoOtherKeys, hasNoOtherKeys } from "../../../types/OtherKeys";
-import { explainArrayOf, isArrayOf } from "../../../types/Array";
+    explainProductFeature,
+    isProductFeature,
+    ProductFeature,
+} from "./features/ProductFeature";
+import {
+    explainProductPrice,
+    isProductPrice,
+    ProductPrice,
+} from "./ProductPrice";
+import {
+    explainProductType,
+    isProductType,
+    ProductType,
+} from "./ProductType";
 
 /**
  * In the legacy database this will be a row in `product_group` table.
