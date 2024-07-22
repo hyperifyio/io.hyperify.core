@@ -7,9 +7,26 @@ import { CurrencyRates } from "./types/CurrencyRates";
 export class CurrencyUtils {
 
     public static stringifySum (
-        sum : number
+        sum : number,
     ) : string {
         return (Math.round(sum*100)/100).toFixed(2);
+    }
+
+    /**
+     * This call will print the price in the short format if possible, e.g. "250.00" will be "250"
+     * @param sum
+     */
+    public static stringifyToShortSum (
+        sum : number,
+    ) : string {
+        let str = this.stringifySum(sum);
+        if (str.endsWith('.00')) {
+            return str.substring(0, str.length - '.00'.length);
+        }
+        if (str.endsWith('0')) {
+            return str.substring(0, str.length - '0'.length);
+        }
+        return str;
     }
 
     public static getSum (
