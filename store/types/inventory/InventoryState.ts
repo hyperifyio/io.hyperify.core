@@ -1,6 +1,11 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
-import { explainEnum } from "../../../types/Enum";
+import {
+    explainEnum,
+    isEnum,
+    parseEnum,
+    stringifyEnum,
+} from "../../../types/Enum";
 import { explainNot, explainOk, explainOr } from "../../../types/explain";
 import { isUndefined } from "../../../types/undefined";
 
@@ -54,46 +59,20 @@ export enum InventoryState {
 
 }
 
-export function isInventoryState (value: any): value is InventoryState {
-    switch (value) {
-        case InventoryState.UNINITIALIZED:
-        case InventoryState.DRAFT:
-        case InventoryState.WAITING_APPROVAL:
-        case InventoryState.CHANGING:
-        case InventoryState.READY:
-        case InventoryState.ERROR:
-            return true;
-        default:
-            return false;
-    }
+export function isInventoryState (value: unknown) : value is InventoryState {
+    return isEnum(InventoryState, value);
 }
 
-export function explainInventoryState (value : any) : string {
+export function explainInventoryState (value : unknown) : string {
     return explainEnum("InventoryState", InventoryState, isInventoryState, value);
 }
 
-export function stringifyInventoryState (value: InventoryState): string {
-    switch (value) {
-        case InventoryState.UNINITIALIZED   : return 'UNINITIALIZED';
-        case InventoryState.DRAFT   : return 'DRAFT';
-        case InventoryState.WAITING_APPROVAL  : return 'WAITING_APPROVAL';
-        case InventoryState.CHANGING  : return 'CHANGING';
-        case InventoryState.READY     : return 'READY';
-        case InventoryState.ERROR     : return 'ERROR';
-    }
-    throw new TypeError(`Unsupported InventoryState value: ${value}`);
+export function stringifyInventoryState (value : InventoryState) : string {
+    return stringifyEnum(InventoryState, value);
 }
 
-export function parseInventoryState (value: any): InventoryState | undefined {
-    switch (`${value}`.toUpperCase()) {
-        case 'UNINITIALIZED'  : return InventoryState.UNINITIALIZED;
-        case 'DRAFT'  : return InventoryState.DRAFT;
-        case 'WAITING_APPROVAL' : return InventoryState.WAITING_APPROVAL;
-        case 'CHANGING' : return InventoryState.CHANGING;
-        case 'READY'    : return InventoryState.READY;
-        case 'ERROR'    : return InventoryState.ERROR;
-        default     : return undefined;
-    }
+export function parseInventoryState (value: any) : InventoryState | undefined {
+    return parseEnum(InventoryState, value) as InventoryState | undefined;
 }
 
 export function isInventoryStateOrUndefined (value: unknown): value is InventoryState | undefined {
