@@ -1,10 +1,9 @@
-// Copyright (c) 2021-2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2021-2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { isProductOrUndefined, Product } from "./Product";
 import { isProductPriceOrUndefined, ProductPrice } from "./ProductPrice";
 import { ButtonStyle, isButtonStyleOrUndefined } from "../../../frontend/button/ButtonStyle";
 import { isString, isStringOrUndefined } from "../../../types/String";
-import { isNumber, isNumberOrUndefined } from "../../../types/Number";
 import { isRegularObject } from "../../../types/RegularObject";
 import { hasNoOtherKeys } from "../../../types/OtherKeys";
 
@@ -17,7 +16,6 @@ export interface ProductModel {
     readonly icon          : any;
     readonly title         : string;
     readonly description   : string;
-    readonly price         : number;
     readonly route        ?: string;
     readonly buttonLabel  ?: string;
     readonly product      ?: Product;
@@ -30,7 +28,6 @@ export function createProductModel (
     icon: any,
     title: string,
     description: string,
-    price: number,
     route ?: string,
     buttonLabel ?: string,
     product ?: Product,
@@ -42,7 +39,6 @@ export function createProductModel (
         icon,
         title,
         description,
-        price,
         route,
         buttonLabel,
         product,
@@ -59,7 +55,6 @@ export function isProductModel (value: any): value is ProductModel {
             'icon',
             'title',
             'description',
-            'price',
             'route',
             'buttonLabel',
             'product',
@@ -69,8 +64,7 @@ export function isProductModel (value: any): value is ProductModel {
         && isString(value?.id)
         && isString(value?.title)
         && isString(value?.description)
-        && isNumber(value?.price)
-        && isNumber(value?.buttonLabel)
+        && isString(value?.buttonLabel)
         && isStringOrUndefined(value?.route)
         && isProductOrUndefined(value?.product)
         && isProductPriceOrUndefined(value?.productPrice)
@@ -86,7 +80,6 @@ export function isPartialProductModel (value: any): value is Partial<ProductMode
             'icon',
             'title',
             'description',
-            'price',
             'route',
             'buttonLabel',
             'product',
@@ -96,7 +89,6 @@ export function isPartialProductModel (value: any): value is Partial<ProductMode
         && isStringOrUndefined(value?.id)
         && isStringOrUndefined(value?.title)
         && isStringOrUndefined(value?.description)
-        && isNumberOrUndefined(value?.price)
         && isStringOrUndefined(value?.route)
         && isStringOrUndefined(value?.buttonLabel)
         && isProductOrUndefined(value?.product)
