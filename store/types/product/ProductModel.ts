@@ -1,5 +1,6 @@
 // Copyright (c) 2021-2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { isUndefined } from "../../../types/undefined";
 import { isProductOrUndefined, Product } from "./Product";
 import { isProductPriceOrUndefined, ProductPrice } from "./ProductPrice";
 import { ButtonStyle, isButtonStyleOrUndefined } from "../../../frontend/button/ButtonStyle";
@@ -15,7 +16,12 @@ export interface ProductModel {
     readonly id            : string;
     readonly icon          : any;
     readonly title         : string;
-    readonly description   : string;
+
+    /**
+     * @type {string | react.ReactNode}
+     */
+    readonly description   : string | any;
+
     readonly route        ?: string;
     readonly buttonLabel  ?: string;
     readonly product      ?: Product;
@@ -23,11 +29,23 @@ export interface ProductModel {
     readonly buttonStyle  ?: ButtonStyle;
 }
 
+/**
+ *
+ * @param id
+ * @param icon
+ * @param title
+ * @param description {string | react.ReactNode}
+ * @param route
+ * @param buttonLabel
+ * @param product
+ * @param productPrice
+ * @param buttonStyle
+ */
 export function createProductModel (
     id: string,
     icon: any,
     title: string,
-    description: string,
+    description: string | any,
     route ?: string,
     buttonLabel ?: string,
     product ?: Product,
@@ -63,7 +81,7 @@ export function isProductModel (value: any): value is ProductModel {
         ])
         && isString(value?.id)
         && isString(value?.title)
-        && isString(value?.description)
+        && value?.description !== undefined
         && isString(value?.buttonLabel)
         && isStringOrUndefined(value?.route)
         && isProductOrUndefined(value?.product)
@@ -88,7 +106,7 @@ export function isPartialProductModel (value: any): value is Partial<ProductMode
         ])
         && isStringOrUndefined(value?.id)
         && isStringOrUndefined(value?.title)
-        && isStringOrUndefined(value?.description)
+        && !isUndefined(value?.description)
         && isStringOrUndefined(value?.route)
         && isStringOrUndefined(value?.buttonLabel)
         && isProductOrUndefined(value?.product)
