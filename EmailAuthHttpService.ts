@@ -51,6 +51,19 @@ export class EmailAuthHttpService {
         );
     }
 
+    public static async authenticateEmailAddressWithPassword (
+        email     : string,
+        password  : string,
+        language ?: Language
+    ) : Promise<EmailTokenDTO> {
+        const lang : Language = language ?? LanguageService.getCurrentLanguage();
+        const body = createAuthenticateEmailDTO(email, password);
+        return await this._postJson(
+            this._authenticateEmailUrl(lang),
+            body as unknown as ReadonlyJsonAny
+        );
+    }
+
     public static async verifyEmailToken (
         emailToken  : EmailTokenDTO,
         language   ?: Language
