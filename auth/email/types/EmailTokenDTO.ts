@@ -1,5 +1,5 @@
 // Copyright (c) 2022-2023. <info@heusalagroup.fi>. All rights reserved.
-// Copyright (c) 2022-2023. <info@sendanor.fi>. All rights reserved.
+// Copyright (c) 2022-2024. <info@sendanor.fi>. All rights reserved.
 
 import { isBooleanOrUndefined } from "../../../types/Boolean";
 import { isString } from "../../../types/String";
@@ -18,7 +18,7 @@ export function createEmailTokenDTO (
     token     : string,
     email     : string,
     verified ?: boolean | undefined,
-) {
+) : EmailTokenDTO {
     return {
         token,
         email,
