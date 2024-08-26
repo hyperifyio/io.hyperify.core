@@ -1,5 +1,9 @@
-// Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import {
+    explainStringArrayOrNullOrUndefined,
+    isStringArrayOrNullOrUndefined,
+} from "../../types/StringArray";
 import { explainWpPageStatus, isWpPageStatus, WpPageStatus } from "./WpPageStatus";
 import { explainString, explainStringOrNull, isString, isStringOrNull } from "../../types/String";
 import { explainRegularObject, isRegularObject } from "../../types/RegularObject";
@@ -46,6 +50,7 @@ export interface WpPageDTO {
      * @deprecated (just so that IDE highlights and you read above comment)
      */
     readonly _links : ReadonlyJsonObject;
+    readonly class_list : readonly string[];
 
 }
 
@@ -74,7 +79,8 @@ export function isWpPageDTO (value:any): value is WpPageDTO {
             'template',
             'link',
             'slug',
-            '_links'
+            '_links',
+            'class_list',
         ])
         && isWpRenderedDTO(value?.title)
         && isWpRenderedDTO(value?.content)
@@ -98,6 +104,7 @@ export function isWpPageDTO (value:any): value is WpPageDTO {
         && isString(value?.link)
         && isString(value?.slug)
         && isReadonlyJsonObject(value?._links)
+        && isStringArrayOrNullOrUndefined(value?.class_list)
     )
 }
 
@@ -127,7 +134,8 @@ export function explainWpPageDTO (value: any) : string {
                 'template',
                 'link',
                 'slug',
-                '_links'
+                '_links',
+                'class_list',
             ])
             , explainProperty("title", explainWpRenderedDTO(value?.title))
             , explainProperty("content", explainWpRenderedDTO(value?.content))
@@ -151,6 +159,7 @@ export function explainWpPageDTO (value: any) : string {
             , explainProperty("link", explainString(value?.link))
             , explainProperty("slug", explainString(value?.slug))
             , explainProperty("_links", explainReadonlyJsonObject(value?._links))
+            , explainProperty("class_list", explainStringArrayOrNullOrUndefined(value?.class_list))
         ]
     );
 }

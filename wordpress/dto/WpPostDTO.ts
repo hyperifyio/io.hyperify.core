@@ -1,5 +1,12 @@
 // Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import {
+    explainStringArrayOrNullOrUndefined,
+    explainStringArrayOrUndefined,
+    isStringArray,
+    isStringArrayOrNullOrUndefined,
+    isStringArrayOrUndefined,
+} from "../../types/StringArray";
 import { explainWpPageStatus, isWpPageStatus, WpPageStatus } from "./WpPageStatus";
 import { explainString, explainStringOrNull, isString, isStringOrNull } from "../../types/String";
 import { explainRegularObject, isRegularObject } from "../../types/RegularObject";
@@ -37,6 +44,7 @@ export interface WpPostDTO {
     readonly featured_media : number;
     readonly comment_status : string;
     readonly ping_status : string;
+    readonly class_list ?: readonly string[];
 
     /**
      * @fixme Add correct typing before using this property!
@@ -87,7 +95,8 @@ export function isWpPostDTO (value:any): value is WpPostDTO {
             'categories',
             'tags',
             '_links',
-            'slug'
+            'slug',
+            'class_list',
         ])
         && isWpRenderedDTO(value?.title)
         && isWpRenderedDTO(value?.content)
@@ -113,6 +122,7 @@ export function isWpPostDTO (value:any): value is WpPostDTO {
         && isNumberArray(value?.tags)
         && isNumberArray(value?.categories)
         && isReadonlyJsonObject(value?._links)
+        && isStringArrayOrNullOrUndefined(value?.class_list)
     )
 }
 
@@ -144,7 +154,8 @@ export function explainWpPostDTO (value: any) : string {
                 'categories',
                 'tags',
                 '_links',
-                'slug'
+                'slug',
+                'class_list',
             ])
             , explainProperty("title", explainWpRenderedDTO(value?.title))
             , explainProperty("content", explainWpRenderedDTO(value?.content))
@@ -170,6 +181,7 @@ export function explainWpPostDTO (value: any) : string {
             , explainProperty("categories", explainNumberArray(value?.categories))
             , explainProperty("tags", explainNumberArray(value?.tags))
             , explainProperty("_links", explainReadonlyJsonObject(value?._links))
+            , explainProperty("class_list", explainStringArrayOrNullOrUndefined(value?.class_list))
         ]
     );
 }
