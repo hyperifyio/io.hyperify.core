@@ -1,4 +1,4 @@
-// Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2022-2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import {
     isReadonlyJsonObjectOrUndefined,
@@ -6,10 +6,12 @@ import {
 } from "../../../Json";
 import { isProductListDTO, ProductListDTO } from "../product/ProductListDTO";
 import { isUndefined } from "../../../types/undefined";
+import { StoreInventoryStatisticsDTO } from "./StoreInventoryStatisticsDTO";
 
 export interface StoreIndexDTO {
     readonly products ?: ProductListDTO;
     readonly statistics ?: ReadonlyJsonObject;
+    readonly inventory ?: StoreInventoryStatisticsDTO;
 }
 
 export function isStoreIndexDTO (value: any): value is StoreIndexDTO {
