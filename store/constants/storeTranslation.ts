@@ -1,7 +1,10 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { DiskUsageType } from "../types/product/features/DiskUsageType";
+import { PHPVersion } from "../types/product/features/PHPVersion";
 import { ProductFeatureCategory } from "../types/product/features/ProductFeatureCategory";
 import { ProductFeatureId } from "../types/product/features/ProductFeatureId";
+import { WebServer } from "../types/product/features/WebServer";
 import { ProductPriceType } from "../types/product/ProductPriceType";
 import { DiskType } from "../types/product/features/DiskType";
 import { ProductType } from "../types/product/ProductType";
@@ -76,7 +79,19 @@ export function getVirtualizationTypeFeatureTranslation (value: VirtualizationTy
 }
 
 export function getOperatingSystemFeatureTranslation (value: OperatingSystem): string {
-    return `operatingSystem.${value}`;
+    return `operatingSystem.${ value }`;
+}
+
+export function getDiskUsageFeatureTranslation (value: DiskUsageType): string {
+    return `diskUsage.${ value }`;
+}
+
+export function getWebServerTranslation (value: WebServer): string {
+    return `webServer.${value}`;
+}
+
+export function getPHPSoftwareTranslation (value: PHPVersion): string {
+    return `php.${value}`;
 }
 
 export function getDiskRaidTypeFeatureTranslation (raidType: RaidType): string {
