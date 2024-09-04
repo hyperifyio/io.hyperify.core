@@ -1,36 +1,34 @@
-// Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2022-2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import {
+    explainReadonlyJsonAny,
+    isReadonlyJsonAny,
+    ReadonlyJsonAny,
+} from "../../../../Json";
 import { explainProductFeatureCategory, isProductFeatureCategory, ProductFeatureCategory } from "./ProductFeatureCategory";
 import { explainProductFeatureId, isProductFeatureId, ProductFeatureId } from "./ProductFeatureId";
-import { explain, explainOr, explainProperty } from "../../../../types/explain";
-import { isBoolean, explainBoolean } from "../../../../types/Boolean";
+import { explain, explainProperty } from "../../../../types/explain";
 import {
-    explainString,
     explainStringOrUndefined,
-    isString,
     isStringOrUndefined,
 } from "../../../../types/String";
-import { explainNumber, isNumber } from "../../../../types/Number";
 import { explainRegularObject, isRegularObject } from "../../../../types/RegularObject";
 import { explainNoOtherKeys, hasNoOtherKeys } from "../../../../types/OtherKeys";
 
 export interface ProductFeature {
-
-    readonly id       : ProductFeatureId;
-    readonly category : ProductFeatureCategory;
-    readonly value    : string | number | boolean;
-
+    readonly id                : ProductFeatureId;
+    readonly category          : ProductFeatureCategory;
+    readonly value             : ReadonlyJsonAny;
     readonly productFeatureId ?: string;
     readonly productGroupId   ?: string;
     readonly updated          ?: string;
     readonly created          ?: string;
-
 }
 
 export function createProductFeature (
-    id       : ProductFeatureId,
-    category : ProductFeatureCategory,
-    value    : string | number | boolean,
+    id                : ProductFeatureId,
+    category          : ProductFeatureCategory,
+    value             : ReadonlyJsonAny,
     productFeatureId ?: string,
     productGroupId   ?: string,
     updated          ?: string,
@@ -65,7 +63,7 @@ export function isProductFeature (value: any): value is ProductFeature {
         && isStringOrUndefined(value?.created)
         && isProductFeatureId(value?.id)
         && isProductFeatureCategory(value?.category)
-        && ( isString(value?.value) || isNumber(value?.value) || isBoolean(value?.value) )
+        && isReadonlyJsonAny(value?.value)
     );
 }
 
@@ -82,22 +80,13 @@ export function explainProductFeature (value: any) : string {
                 'updated',
                 'created',
             ]),
+            explainProperty("id", explainProductFeatureId(value?.id)),
+            explainProperty("category", explainProductFeatureCategory(value?.category)),
+            explainProperty("value", explainReadonlyJsonAny(value?.value)),
             explainProperty("productFeatureId", explainStringOrUndefined(value?.productFeatureId)),
             explainProperty("productGroupId", explainStringOrUndefined(value?.productGroupId)),
             explainProperty("updated", explainStringOrUndefined(value?.updated)),
             explainProperty("created", explainStringOrUndefined(value?.created)),
-            explainProperty("id", explainProductFeatureId(value?.id)),
-            explainProperty("category", explainProductFeatureCategory(value?.category)),
-            explainProperty(
-                "value",
-                explainOr(
-                    [
-                        explainString(value?.value),
-                        explainNumber(value?.value),
-                        explainBoolean(value?.value),
-                    ]
-                )
-            )
         ]
     );
 }

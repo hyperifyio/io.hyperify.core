@@ -1,4 +1,4 @@
-// Copyright (c) 2022-2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2022-2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { explainEnum, isEnum, parseEnum, stringifyEnum } from "../../../../types/Enum";
 
@@ -11,6 +11,8 @@ export enum ProductFeatureCategory {
     MEMORY  = "MEMORY",
     CPU     = "CPU",
     NETWORK = "NETWORK",
+    WEBSERVER = "WEBSERVER",
+    DOMAINS = "DOMAINS",
     VPS     = "VPS"
 }
 

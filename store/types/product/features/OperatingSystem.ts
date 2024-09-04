@@ -1,4 +1,4 @@
-// Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2022-2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { explainEnum } from "../../../../types/Enum";
 
@@ -6,6 +6,7 @@ export enum OperatingSystem {
     LINUX_UBUNTU_LTS_18_04 = "LINUX_UBUNTU_LTS_18_04",
     LINUX_UBUNTU_LTS_20_04 = "LINUX_UBUNTU_LTS_20_04",
     LINUX_UBUNTU_LTS_22_04 = "LINUX_UBUNTU_LTS_22_04",
+    LINUX_UBUNTU_LTS_24_04 = "LINUX_UBUNTU_LTS_24_04",
     LINUX_DEBIAN_10        = "LINUX_DEBIAN_10",
     LINUX_ARCH             = "LINUX_ARCH",
     LINUX_NIXOS            = "LINUX_NIXOS",

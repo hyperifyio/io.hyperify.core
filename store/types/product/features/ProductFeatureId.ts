@@ -1,4 +1,4 @@
-// Copyright (c) 2022-2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2022-2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { explainEnum, isEnum, parseEnum, stringifyEnum } from "../../../../types/Enum";
 import {
@@ -46,7 +46,27 @@ export enum ProductFeatureId {
     NETWORK_TRAFFIC = "NETWORK_TRAFFIC",
     NETWORK_ZONE    = "NETWORK_ZONE",
     CPU_SHARE       = "CPU_SHARE",
-    CPU_AMOUNT      = "CPU_AMOUNT"
+    CPU_AMOUNT      = "CPU_AMOUNT",
+
+    DOMAIN_COUNT       = "DOMAIN_COUNT",
+    DOMAIN_ALIAS_COUNT = "DOMAIN_ALIAS_COUNT",
+    SUB_DOMAIN_COUNT   = "SUB_DOMAIN_COUNT",
+
+    WEBSERVER_SOFTWARE        = "WEBSERVER_SOFTWARE",
+    PHP_SOFTWARE              = "PHP_SOFTWARE",
+    PHP_MEMORY                = "PHP_MEMORY",
+    SSL_CERTIFICATES          = "SSL_CERTIFICATES",
+    SFTP_ACCOUNT_COUNT        = "SFTP_ACCOUNT_COUNT",
+    SSH_ACCOUNT_COUNT         = "SSH_ACCOUNT_COUNT",
+    HTTP_2_SUPPORT            = "HTTP_2_SUPPORT",
+    HTACCESS_SUPPORT          = "HTACCESS_SUPPORT",
+    PASSWORD_PROTECTED_WEB_FOLDER_SUPPORT  = "PASSWORD_PROTECTED_WEB_FOLDER_SUPPORT",
+    CUSTOM_ERROR_PAGE_SUPPORT = "CUSTOM_ERROR_PAGE_SUPPORT",
+    NODE_JS_SOFTWARE          = "NODE_JS_SOFTWARE",
+    CGI                       = "CGI",
+    PERL_SOFTWARE             = "PERL_SOFTWARE",
+    PYTHON_SOFTWARE           = "PYTHON_SOFTWARE",
+    CRON                      = "CRON",
 }
 
 export function isProductFeatureId (value: unknown) : value is ProductFeatureId {
