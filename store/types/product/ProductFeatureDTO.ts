@@ -1,10 +1,12 @@
 // Copyright (c) 2022-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
-import { isBoolean } from "../../../types/Boolean";
+import {
+    isReadonlyJsonAny,
+    ReadonlyJsonAny,
+} from "../../../Json";
 import {
     isString,
 } from "../../../types/String";
-import { isNumber } from "../../../types/Number";
 import { isRegularObject } from "../../../types/RegularObject";
 import { hasNoOtherKeysInDevelopment } from "../../../types/OtherKeys";
 import {
@@ -23,7 +25,7 @@ export interface ProductFeatureDTO {
     readonly created          : string;
     readonly id               : ProductFeatureId;
     readonly category         : ProductFeatureCategory;
-    readonly value            : string | number | boolean;
+    readonly value            : ReadonlyJsonAny;
 }
 
 export function createProductFeatureDTO (
@@ -33,7 +35,7 @@ export function createProductFeatureDTO (
     created           : string,
     id                : ProductFeatureId,
     category          : ProductFeatureCategory,
-    value             : string | number | boolean,
+    value             : ReadonlyJsonAny,
 ): ProductFeatureDTO {
     return {
         productFeatureId,
@@ -65,7 +67,7 @@ export function isProductFeatureDTO (value: any): value is ProductFeatureDTO {
         && isString(value?.created)
         && isProductFeatureId(value?.id)
         && isProductFeatureCategory(value?.category)
-        && ( isString(value?.value) || isNumber(value?.value) || isBoolean(value?.value) )
+        && isReadonlyJsonAny(value?.value)
     );
 }
 
