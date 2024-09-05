@@ -15,6 +15,7 @@ export enum ProductFeatureCategory {
     DOMAINS = "DOMAINS",
     EMAILS  = "EMAILS",
     EMAIL_ADMIN = "EMAIL_ADMIN",
+    EMAIL_SERVER = "EMAIL_SERVER",
     VPS     = "VPS",
 }
 
