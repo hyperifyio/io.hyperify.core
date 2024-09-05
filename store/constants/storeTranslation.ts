@@ -64,6 +64,9 @@ export const T_COMMON_PIECE = "common.piece";
 export const T_COMMON_PER_DAY_PIECE = "common.piecePerDay";
 export const T_COMMON_VALUE_PIECES = "common.valuePiece";
 export const T_COMMON_VALUE_PIECES_PER_DAY = "common.valuePiecePerDay";
+export const T_COMMON_VALUE_PIECES_PER_SECOND = "common.valuePiecePerSecond";
+export const T_COMMON_VALUE_PIECES_PER_MINUTE = "common.valuePiecePerMinute";
+export const T_COMMON_VALUE_PIECES_PER_HOUR = "common.valuePiecePerHour";
 
 export function getNetworkTypeFeatureTranslation (networkType: NetworkType): string {
     return `networkType.${networkType}`;
