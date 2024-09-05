@@ -1,6 +1,7 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { DiskUsageType } from "../types/product/features/DiskUsageType";
+import { EmailOption } from "../types/product/features/EmailOption";
 import { PHPVersion } from "../types/product/features/PHPVersion";
 import { ProductFeatureCategory } from "../types/product/features/ProductFeatureCategory";
 import { ProductFeatureId } from "../types/product/features/ProductFeatureId";
@@ -98,6 +99,10 @@ export function getWebServerTranslation (value: WebServer): string {
 
 export function getPHPSoftwareTranslation (value: PHPVersion): string {
     return `php.${value}`;
+}
+
+export function getEmailOptionTranslation (value: EmailOption): string {
+    return `emailOption.${value}`;
 }
 
 export function getDiskRaidTypeFeatureTranslation (raidType: RaidType): string {
