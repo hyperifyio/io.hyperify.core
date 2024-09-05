@@ -13,7 +13,9 @@ export enum ProductFeatureCategory {
     NETWORK = "NETWORK",
     WEBSERVER = "WEBSERVER",
     DOMAINS = "DOMAINS",
-    VPS     = "VPS"
+    EMAILS  = "EMAILS",
+    EMAIL_ADMIN = "EMAIL_ADMIN",
+    VPS     = "VPS",
 }
 
 export function isProductFeatureCategory (value: any): value is ProductFeatureCategory {
