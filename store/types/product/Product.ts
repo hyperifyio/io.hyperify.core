@@ -120,6 +120,11 @@ export interface Product {
 
     readonly features        : readonly ProductFeature[];
 
+    /**
+     * Repository property: `product_group.order`
+     */
+    readonly order           ?: number;
+
 }
 
 export function createProduct (
@@ -137,6 +142,7 @@ export function createProduct (
     productGroupId ?: string | undefined,
     created        ?: string | undefined,
     updated        ?: string | undefined,
+    order          ?: number | undefined,
 ) : Product {
     return {
         stockAmount,
@@ -153,6 +159,7 @@ export function createProduct (
         productGroupId,
         created,
         updated,
+        order,
     };
 }
 
@@ -174,6 +181,7 @@ export function isProduct (value: any): value is Product {
             'productGroupId',
             'updated',
             'created',
+            'order',
         ])
         && isString(value?.id)
         && isProductType(value?.type)
@@ -189,6 +197,7 @@ export function isProduct (value: any): value is Product {
         && isStringOrUndefined(value?.productGroupId)
         && isStringOrUndefined(value?.created)
         && isStringOrUndefined(value?.updated)
+        && isNumberOrUndefined(value?.order)
     );
 }
 
@@ -211,6 +220,7 @@ export function explainProduct (value: any) : string {
                 'productGroupId',
                 'updated',
                 'created',
+                'order',
             ]),
             explainProperty("id", explainString(value?.id)),
             explainProperty("type", explainProductType(value?.type)),
@@ -226,6 +236,7 @@ export function explainProduct (value: any) : string {
             explainProperty("productGroupId", explainStringOrUndefined(value?.productGroupId)),
             explainProperty("updated", explainStringOrUndefined(value?.updated)),
             explainProperty("created", explainStringOrUndefined(value?.created)),
+            explainProperty("order", explainNumberOrUndefined(value?.order)),
         ]
     );
 }
