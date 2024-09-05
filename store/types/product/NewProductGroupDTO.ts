@@ -1,7 +1,10 @@
 // Copyright (c) 2022-2024. Sendanor <info@sendanor.fi>. All rights reserved.
 
 import { isBoolean } from "../../../types/Boolean";
-import { isNumber } from "../../../types/Number";
+import {
+    isNumber,
+    isNumberOrUndefined,
+} from "../../../types/Number";
 import {
     isString,
 } from "../../../types/String";
@@ -18,6 +21,7 @@ export interface NewProductGroupDTO {
     readonly stockEnabled    : boolean;
     readonly onHold          : boolean;
     readonly published       : boolean;
+    readonly order          ?: number | undefined;
 }
 
 export function createNewProductGroupDTO (
@@ -30,6 +34,7 @@ export function createNewProductGroupDTO (
     stockEnabled    : boolean,
     onHold          : boolean,
     published       : boolean,
+    order           : number | undefined,
 ): NewProductGroupDTO {
     return {
         slug,
@@ -41,6 +46,7 @@ export function createNewProductGroupDTO (
         stockEnabled,
         onHold,
         published,
+        order,
     };
 }
 
@@ -57,6 +63,7 @@ export function isNewProductGroupDTO (value: any): value is NewProductGroupDTO {
             'stockEnabled',
             'onHold',
             'published',
+            'order',
         ])
         && isString(value?.slug)
         && isString(value?.type)
@@ -67,6 +74,7 @@ export function isNewProductGroupDTO (value: any): value is NewProductGroupDTO {
         && isBoolean(value?.stockEnabled)
         && isBoolean(value?.onHold)
         && isBoolean(value?.published)
+        && isNumberOrUndefined(value?.order)
     );
 }
 

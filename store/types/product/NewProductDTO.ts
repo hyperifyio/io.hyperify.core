@@ -2,7 +2,10 @@
 
 import { isBoolean } from "../../../types/Boolean";
 import { isString } from "../../../types/String";
-import { isNumber } from "../../../types/Number";
+import {
+    isNumber,
+    isNumberOrUndefined,
+} from "../../../types/Number";
 import { isRegularObject } from "../../../types/RegularObject";
 import { hasNoOtherKeysInDevelopment } from "../../../types/OtherKeys";
 
@@ -24,6 +27,7 @@ export interface NewProductDTO {
     readonly stockEnabled      : boolean;
     readonly onHold            : boolean;
     readonly published         : boolean;
+    readonly order            ?: number | undefined;
 }
 
 export function createNewProductDTO (
@@ -44,6 +48,7 @@ export function createNewProductDTO (
     stockEnabled    : boolean,
     onHold          : boolean,
     published       : boolean,
+    order           : number | undefined,
 ): NewProductDTO {
     return {
         productGroupId,
@@ -63,6 +68,7 @@ export function createNewProductDTO (
         stockEnabled,
         onHold,
         published,
+        order,
     };
 }
 
@@ -87,6 +93,7 @@ export function isNewProductDTO (value: any): value is NewProductDTO {
             'stockEnabled',
             'onHold',
             'published',
+            'order',
         ])
         && isString(value?.productGroupId)
         && isString(value?.priceTypeId)
@@ -105,6 +112,7 @@ export function isNewProductDTO (value: any): value is NewProductDTO {
         && isBoolean(value?.stockEnabled)
         && isBoolean(value?.onHold)
         && isBoolean(value?.published)
+        && isNumberOrUndefined(value?.order)
     );
 }
 
