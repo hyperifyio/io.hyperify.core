@@ -15,6 +15,7 @@ import { isUndefined } from "../../../../types/undefined";
 
 export enum EmailOption {
     ADMIN_CONFIGURABLE = "ADMIN_CONFIGURABLE",
+    UNLIMITED = "UNLIMITED",
 }
 
 export function isEmailOption (value: unknown) : value is EmailOption {
