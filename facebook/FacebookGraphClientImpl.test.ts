@@ -17,7 +17,8 @@ const mockUserAccessTokenDTO: FacebookAccessTokenDTO = {
 const mockAccountListDTO: FacebookAccountListDTO = {
     data: [
         { access_token: "mock_page_access_token", id: "mock_page_id" }
-    ]
+    ],
+    paging: {}
 };
 
 const mockPostFeedResponseDTO: FacebookPostFeedResponseDTO = {
