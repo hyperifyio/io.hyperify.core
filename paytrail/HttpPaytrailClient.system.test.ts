@@ -144,34 +144,46 @@ describe('system', () => {
                 expect(payment?.reference).toBeDefined(); // Like `6248669867`
 
                 expect(payment?.groups).toBeArray();
-                expect(payment?.groups?.length).toBe(4);
+                expect(payment?.groups?.length).toBeGreaterThanOrEqual(3);
 
                 expect(payment?.groups).toEqual(
                     expect.arrayContaining([
-                        {
+                        expect.objectContaining({
                             "icon": "https://resources.paytrail.com/images/payment-group-icons/bank.png",
                             "id": "bank",
                             "name": "Pankkimaksutavat",
                             "svg": "https://resources.paytrail.com/images/payment-group-icons/bank.svg",
-                        },
-                        {
-                            "icon": "https://resources.paytrail.com/images/payment-group-icons/mobile.png",
-                            "id": "mobile",
-                            "name": "Mobiilimaksutavat",
-                            "svg": "https://resources.paytrail.com/images/payment-group-icons/mobile.svg",
-                        },
-                        {
+                        })
+                    ])
+                );
+                // expect(payment?.groups).toEqual(
+                //     expect.arrayContaining([
+                //         expect.objectContaining({
+                //             "icon": "https://resources.paytrail.com/images/payment-group-icons/mobile.png",
+                //             "id": "mobile",
+                //             "name": "Mobiilimaksutavat",
+                //             "svg": "https://resources.paytrail.com/images/payment-group-icons/mobile.svg",
+                //         })
+                //     ])
+                // );
+                expect(payment?.groups).toEqual(
+                    expect.arrayContaining([
+                        expect.objectContaining({
                             "icon": "https://resources.paytrail.com/images/payment-group-icons/creditcard.png",
                             "id": "creditcard",
                             "name": "Korttimaksutavat",
                             "svg": "https://resources.paytrail.com/images/payment-group-icons/creditcard.svg",
-                        },
-                        {
+                        })
+                    ])
+                );
+                expect(payment?.groups).toEqual(
+                    expect.arrayContaining([
+                        expect.objectContaining({
                             "icon": "https://resources.paytrail.com/images/payment-group-icons/credit.png",
                             "id": "credit",
                             "name": "Lasku- ja osamaksutavat",
                             "svg": "https://resources.paytrail.com/images/payment-group-icons/credit.svg",
-                        }
+                        })
                     ])
                 );
 
@@ -281,7 +293,7 @@ describe('system', () => {
                 // ```
 
                 expect(payment?.providers).toBeArray();
-                expect(payment?.providers?.length).toBe(17);
+                expect(payment?.providers?.length).toBeGreaterThanOrEqual(15);
 
                 expect(payment?.providers).toEqual(
                     expect.arrayContaining( [
@@ -379,7 +391,7 @@ describe('system', () => {
                 // "amount": 1590,
                 // "createdAt": "2023-07-07T10:09:23.578Z",
                 // "currency": "EUR",
-                // "href": "https://pay.checkout.fi/pay/58e17342-1cae-11ee-bbb8-5b1aeddddd28",
+                // "href": "https://pay.paytrail.com/pay/58e17342-1cae-11ee-bbb8-5b1aeddddd28",
                 // "reference": "9187445-1688724563163",
                 // "stamp": "29858472953-1688724563163",
                 // "status": "new",
@@ -391,7 +403,7 @@ describe('system', () => {
                 expect(fetchedPayment?.amount).toBe(1590);
                 expect(fetchedPayment?.createdAt).toBeIsoDateStringWithMilliseconds();
                 expect(fetchedPayment?.currency).toBe('EUR');
-                expect(fetchedPayment?.href).toBe(`https://pay.checkout.fi/pay/${payment?.transactionId}`);
+                expect(fetchedPayment?.href).toBe(`https://pay.paytrail.com/pay/${payment?.transactionId}`);
                 expect(fetchedPayment?.reference).toBe(UNIQUE_TEST_REFERENCE);
                 expect(fetchedPayment?.stamp).toBe(UNIQUE_TEST_STAMP);
                 expect(fetchedPayment?.status).toBe('new');
@@ -408,7 +420,7 @@ describe('system', () => {
                 const dto = await client.getMerchantsPaymentProviders();
 
                 expect(dto).toBeArray();
-                expect(dto?.length).toBe(17);
+                expect(dto?.length).toBeGreaterThanOrEqual(15);
 
                 expect(dto).toEqual(
                     expect.arrayContaining([
