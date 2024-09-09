@@ -275,7 +275,7 @@ export class EntityUtils {
 
     public static parseDateAsString (input : Date | string | undefined) : string | undefined {
         if ( (isString(input) && trim(input)) === '' || input === undefined ) return undefined;
-        return `${parseIsoDateStringWithMilliseconds(input, true)}`;
+        return parseIsoDateStringWithMilliseconds(input, true);
     }
 
     public static parseMySQLDateAsIsoString (value : any) : string | undefined {
