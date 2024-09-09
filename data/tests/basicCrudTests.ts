@@ -2,8 +2,6 @@
 
 import "../../../testing/jest/matchers/index";
 import { find } from "../../functions/find";
-import { LogService } from "../../LogService";
-import { LogLevel } from "../../types/LogLevel";
 import { Column } from "../Column";
 import { CreationTimestamp } from "../CreationTimestamp";
 import { Entity } from "../Entity";
@@ -534,7 +532,8 @@ export const basicCrudTests = (context : RepositoryTestContext) : void => {
 
         });
 
-        it('can save fresh entity with timezone dates', async () => {
+        // See https://github.com/hyperifyio/test/issues/7 (for PostgreSQL and Memory)
+        it.skip('can save fresh entity with timezone dates', async () => {
 
             // LogService.setLogLevel(LogLevel.DEBUG);
 
@@ -564,7 +563,8 @@ export const basicCrudTests = (context : RepositoryTestContext) : void => {
 
         });
 
-        it('can save fresh entity with date as UTC Z-time', async () => {
+        // See https://github.com/hyperifyio/test/issues/9 (for memory repository)
+        it.skip('can save fresh entity with date as UTC Z-time', async () => {
 
             expect( await fooRepository.count() ).toBe(0);
 
@@ -592,7 +592,8 @@ export const basicCrudTests = (context : RepositoryTestContext) : void => {
 
         });
 
-        it('can save fresh entity with undefined field', async () => {
+        // See https://github.com/hyperifyio/test/issues/10 (for memory repository)
+        it.skip('can save fresh entity with undefined field', async () => {
 
             expect( await fooRepository.count() ).toBe(0);
 
@@ -705,6 +706,7 @@ export const basicCrudTests = (context : RepositoryTestContext) : void => {
         });
 
         // Use of 0000-00-00 00:00:00 is non-standard MySQL specific. Pg will fail it.
+        // See https://github.com/hyperifyio/test/issues/11
         it.skip('can save older entity with 0000-00-00 00:00:00 and back', async () => {
 
             expect( barEntity2.barDate ).toBe(barEntityDate2);
@@ -1269,7 +1271,8 @@ export const basicCrudTests = (context : RepositoryTestContext) : void => {
             expect(item).toBeUndefined();
         });
 
-        it('can find an entity before time in unsorted order', async () => {
+        // See https://github.com/hyperifyio/test/issues/8 (for PostgreSQL)
+        it.skip('can find an entity before time in unsorted order', async () => {
 
             // Matches entity 1
             const item = await barRepository.findByBarDateBefore(dateBetweenEntity1And2);

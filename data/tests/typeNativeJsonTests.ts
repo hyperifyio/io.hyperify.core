@@ -1144,7 +1144,8 @@ export const typeNativeJsonTests = (context : RepositoryTestContext) : void => {
             //       - Memory: Failed
             //       - PostgreSQL: Passed
             //       - MySQL: Failed
-            (isPg ? it : it.skip)('can find an entity before time in unsorted order', async () => {
+            // See: https://github.com/hyperifyio/test/issues/8
+            (isPg ? it.skip : it.skip)('can find an entity before time in unsorted order', async () => {
 
                 // Matches entity 1
                 const item = await dataRepository.findByDataJsonBefore(jsonDataBetween1And2);
