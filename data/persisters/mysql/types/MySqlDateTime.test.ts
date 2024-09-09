@@ -16,6 +16,21 @@ describe('MySqlDateTime', () => {
 
     });
 
+    describe('#parse', () => {
+
+        it('can parse as object correctly', () => {
+            expect( MySqlDateTime.parse("2023-04-23T10:51:32.000Z") ).toBeDefined();
+            expect( MySqlDateTime.parse("Sun Apr 23 2023 10:51:32 GMT+0000 (Coordinated Universal Time)") ).toBeDefined();
+        });
+
+        it('can parse invalid values as undefined', () => {
+            expect( MySqlDateTime.parse("0000-00-00 00:00:00") ).toBe(undefined);
+            expect( MySqlDateTime.parse(null) ).toBe(undefined);
+            expect( MySqlDateTime.parse(undefined) ).toBe(undefined);
+        });
+
+    });
+
     describe('members', () => {
 
         let time : MySqlDateTime;
