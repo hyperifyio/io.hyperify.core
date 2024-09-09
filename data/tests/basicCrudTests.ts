@@ -2,18 +2,20 @@
 
 import "../../../testing/jest/matchers/index";
 import { find } from "../../functions/find";
-import { Repository } from "../types/Repository";
-import { RepositoryTestContext } from "./types/types/RepositoryTestContext";
-import { Persister } from "../types/Persister";
-import { createCrudRepositoryWithPersister } from "../types/CrudRepository";
-import { Sort } from "../Sort";
-import { Table } from "../Table";
+import { LogService } from "../../LogService";
+import { LogLevel } from "../../types/LogLevel";
+import { Column } from "../Column";
+import { CreationTimestamp } from "../CreationTimestamp";
 import { Entity } from "../Entity";
 import { Id } from "../Id";
-import { Column } from "../Column";
+import { Sort } from "../Sort";
+import { Table } from "../Table";
 import { Temporal } from "../Temporal";
+import { createCrudRepositoryWithPersister } from "../types/CrudRepository";
+import { Persister } from "../types/Persister";
+import { Repository } from "../types/Repository";
 import { TemporalType } from "../types/TemporalType";
-import { CreationTimestamp } from "../CreationTimestamp";
+import { RepositoryTestContext } from "./types/types/RepositoryTestContext";
 
 export const basicCrudTests = (context : RepositoryTestContext) : void => {
 
@@ -532,6 +534,64 @@ export const basicCrudTests = (context : RepositoryTestContext) : void => {
 
         });
 
+        it('can save fresh entity with timezone dates', async () => {
+
+            LogService.setLogLevel(LogLevel.DEBUG);
+
+            expect( await fooRepository.count() ).toBe(0);
+
+            const newEntity = new FooEntity({
+                fooName: 'Hello world',
+                fooDate: '2023-05-12T15:42:09+03:00',
+                nonUpdatable: 'hello',
+            });
+
+            const savedItem = await fooRepository.save(newEntity);
+            expect(savedItem).toBeDefined();
+            expect(savedItem.fooId).toBeDefined();
+            expect(savedItem.fooName).toBe('Hello world');
+            expect(savedItem.fooDate).toBe("2023-05-12T12:42:09Z");
+
+            const addedId : string = savedItem?.fooId as string;
+
+            expect( await fooRepository.count() ).toBe(1);
+
+            const foundItem = await fooRepository.findById(addedId);
+            expect(foundItem).toBeDefined();
+            expect(foundItem?.fooId).toBe(addedId);
+            expect(foundItem?.fooName).toBe('Hello world');
+            expect(foundItem?.fooDate).toBe("2023-05-12T12:42:09Z");
+
+        });
+
+        it('can save fresh entity with date as UTC Z-time', async () => {
+
+            expect( await fooRepository.count() ).toBe(0);
+
+            const newEntity = new FooEntity({
+                fooName: 'Hello world',
+                fooDate: "2023-05-12T12:42:09Z",
+                nonUpdatable: 'hello',
+            });
+
+            const savedItem = await fooRepository.save(newEntity);
+            expect(savedItem).toBeDefined();
+            expect(savedItem.fooId).toBeDefined();
+            expect(savedItem.fooName).toBe('Hello world');
+            expect(savedItem.fooDate).toBe("2023-05-12T12:42:09Z");
+
+            const addedId : string = savedItem?.fooId as string;
+
+            expect( await fooRepository.count() ).toBe(1);
+
+            const foundItem = await fooRepository.findById(addedId);
+            expect(foundItem).toBeDefined();
+            expect(foundItem?.fooId).toBe(addedId);
+            expect(foundItem?.fooName).toBe('Hello world');
+            expect(foundItem?.fooDate).toBe("2023-05-12T12:42:09Z");
+
+        });
+
         it('can save fresh entity with undefined field', async () => {
 
             expect( await fooRepository.count() ).toBe(0);
@@ -542,7 +602,7 @@ export const basicCrudTests = (context : RepositoryTestContext) : void => {
             expect(savedItem).toBeDefined();
             expect(savedItem.fooId).toBeDefined();
             expect(savedItem.fooName).toBe('Hello world');
-            expect(savedItem.fooDate).toBeDefined();
+            expect(savedItem.fooDate).toBe(undefined);
 
             expect( await fooRepository.count() ).toBe(1);
 
@@ -589,6 +649,86 @@ export const basicCrudTests = (context : RepositoryTestContext) : void => {
             expect(foundItem).toBeDefined();
             expect(foundItem?.barId).toBe(barEntityId2);
             expect(foundItem?.barName).toBe('Hello world');
+
+        });
+
+        it('can save older entity with date', async () => {
+
+            expect( barEntity2.barDate ).toBe(barEntityDate2);
+
+            expect( await barRepository.count() ).toBe(4);
+
+            barEntity2.barName = 'Hello world';
+            barEntity2.barDate = "2023-05-12T13:42:09Z";
+
+            const savedItem = await barRepository.save(barEntity2);
+            expect(savedItem).toBeDefined();
+            expect(savedItem.barId).toBe(barEntityId2);
+            expect(savedItem.barName).toBe('Hello world');
+            expect(savedItem.barDate).toBe("2023-05-12T13:42:09Z");
+
+            expect( await barRepository.count() ).toBe(4);
+
+            const foundItem = await barRepository.findById(barEntityId2);
+            expect(foundItem).toBeDefined();
+            expect(foundItem?.barId).toBe(barEntityId2);
+            expect(foundItem?.barName).toBe('Hello world');
+            expect(foundItem?.barDate).toBe("2023-05-12T13:42:09Z");
+
+        });
+
+        it('can save older entity with undefined and back', async () => {
+
+            expect( barEntity2.barDate ).toBe(barEntityDate2);
+
+            expect( await barRepository.count() ).toBe(4);
+
+            barEntity2.barName = 'Hello world';
+            barEntity2.barDate = undefined;
+
+            const savedItem = await barRepository.save(barEntity2);
+            expect(savedItem).toBeDefined();
+            expect(savedItem.barId).toBe(barEntityId2);
+            expect(savedItem.barName).toBe('Hello world');
+            expect(savedItem.barDate).toBe(undefined);
+
+            savedItem.barDate = "2023-05-12T13:42:09Z";
+
+            expect( await barRepository.count() ).toBe(4);
+
+            const resavedItem = await barRepository.save(savedItem);
+            expect(resavedItem).toBeDefined();
+            expect(resavedItem?.barId).toBe(barEntityId2);
+            expect(resavedItem?.barName).toBe('Hello world');
+            expect(resavedItem?.barDate).toBe("2023-05-12T13:42:09Z");
+
+        });
+
+        // Use of 0000-00-00 00:00:00 is non-standard MySQL specific. Pg will fail it.
+        it.skip('can save older entity with 0000-00-00 00:00:00 and back', async () => {
+
+            expect( barEntity2.barDate ).toBe(barEntityDate2);
+
+            expect( await barRepository.count() ).toBe(4);
+
+            barEntity2.barName = 'Hello world';
+            barEntity2.barDate = '0000-00-00 00:00:00';
+
+            const savedItem = await barRepository.save(barEntity2);
+            expect(savedItem).toBeDefined();
+            expect(savedItem.barId).toBe(barEntityId2);
+            expect(savedItem.barName).toBe('Hello world');
+            expect(savedItem.barDate).toBe(undefined);
+
+            savedItem.barDate = "2023-05-12T13:42:09Z";
+
+            expect( await barRepository.count() ).toBe(4);
+
+            const reSavedItem = await barRepository.save(savedItem);
+            expect(reSavedItem).toBeDefined();
+            expect(reSavedItem?.barId).toBe(barEntityId2);
+            expect(reSavedItem?.barName).toBe('Hello world');
+            expect(reSavedItem?.barDate).toBe("2023-05-12T13:42:09Z");
 
         });
 
