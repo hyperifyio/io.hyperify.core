@@ -536,7 +536,7 @@ export const basicCrudTests = (context : RepositoryTestContext) : void => {
 
         it('can save fresh entity with timezone dates', async () => {
 
-            LogService.setLogLevel(LogLevel.DEBUG);
+            // LogService.setLogLevel(LogLevel.DEBUG);
 
             expect( await fooRepository.count() ).toBe(0);
 
