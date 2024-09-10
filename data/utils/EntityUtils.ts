@@ -273,7 +273,7 @@ export class EntityUtils {
         return `${input}`;
     }
 
-    public static parseDateAsString (input : Date | string | undefined) : string | undefined {
+    public static parseDateAsString (input : Date | string | number | undefined) : string | undefined {
         if ( (isString(input) && trim(input)) === '' || input === undefined ) return undefined;
         return parseIsoDateStringWithMilliseconds(input, true);
     }
