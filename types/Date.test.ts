@@ -60,21 +60,39 @@ describe('Date', () => {
         describe('#parseIsoDateStringWithMilliseconds', () => {
 
             it('can parse valid values with milliseconds', () => {
+
                 expect( parseIsoDateStringWithMilliseconds('2023-04-23T10:51:32.000Z') ).toBe('2023-04-23T10:51:32.000Z');
+                expect( parseIsoDateStringWithMilliseconds('2023-04-23T10:51:32.000Z', true) ).toBe('2023-04-23T10:51:32Z');
+                expect( parseIsoDateStringWithMilliseconds('2023-04-23T10:51:32.000Z', false) ).toBe('2023-04-23T10:51:32.000Z');
+
                 expect( parseIsoDateStringWithMilliseconds('2023-04-30T10:03:12.000Z') ).toBe('2023-04-30T10:03:12.000Z');
+                expect( parseIsoDateStringWithMilliseconds('2023-04-30T10:03:12.000Z', true) ).toBe('2023-04-30T10:03:12Z');
+                expect( parseIsoDateStringWithMilliseconds('2023-04-30T10:03:12.000Z', false) ).toBe('2023-04-30T10:03:12.000Z');
+
                 expect( parseIsoDateStringWithMilliseconds(new Date('2023-04-23T10:51:32.000Z')) ).toBe('2023-04-23T10:51:32.000Z');
+                expect( parseIsoDateStringWithMilliseconds(new Date('2023-04-23T10:51:32.000Z'), true) ).toBe('2023-04-23T10:51:32Z');
+                expect( parseIsoDateStringWithMilliseconds(new Date('2023-04-23T10:51:32.000Z'), false) ).toBe('2023-04-23T10:51:32.000Z');
+
                 expect( parseIsoDateStringWithMilliseconds(1682247092123) ).toBe('2023-04-23T10:51:32.123Z');
+                expect( parseIsoDateStringWithMilliseconds(1682247092123, true) ).toBe('2023-04-23T10:51:32Z');
+                expect( parseIsoDateStringWithMilliseconds(1682247092123, false) ).toBe('2023-04-23T10:51:32.123Z');
+
             });
 
             it('can parse valid values without milliseconds', () => {
                 expect( parseIsoDateStringWithMilliseconds('2023-04-23T10:51:32Z') ).toBe('2023-04-23T10:51:32.000Z');
+                expect( parseIsoDateStringWithMilliseconds('2023-04-23T10:51:32Z', true) ).toBe('2023-04-23T10:51:32Z');
+                expect( parseIsoDateStringWithMilliseconds('2023-04-23T10:51:32Z', false) ).toBe('2023-04-23T10:51:32.000Z');
             });
 
             it('can parse valid values without milliseconds', () => {
                 expect( parseIsoDateStringWithMilliseconds('"Sun Apr 30 2023 10:03:12 GMT+0300 (Eastern European Summer Time)') ).toBe('2023-04-30T07:03:12.000Z');
+                expect( parseIsoDateStringWithMilliseconds('"Sun Apr 30 2023 10:03:12 GMT+0300 (Eastern European Summer Time)', true) ).toBe('2023-04-30T07:03:12Z');
+                expect( parseIsoDateStringWithMilliseconds('"Sun Apr 30 2023 10:03:12 GMT+0300 (Eastern European Summer Time)', false) ).toBe('2023-04-30T07:03:12.000Z');
             });
 
             it('can parse invalid values', () => {
+
                 expect( parseIsoDateStringWithMilliseconds('2023-04-99T10:51:32.000Z') ).toBeUndefined();
                 expect( parseIsoDateStringWithMilliseconds('') ).toBeUndefined();
                 expect( parseIsoDateStringWithMilliseconds(undefined) ).toBeUndefined();
@@ -88,6 +106,35 @@ describe('Date', () => {
                 expect( parseIsoDateStringWithMilliseconds([1, 2, 3]) ).toBeUndefined();
                 expect( parseIsoDateStringWithMilliseconds('hello world') ).toBeUndefined();
                 expect( parseIsoDateStringWithMilliseconds(new Date('2023-04-99T10:51:32.000Z')) ).toBeUndefined();
+
+                expect( parseIsoDateStringWithMilliseconds('2023-04-99T10:51:32.000Z', true) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds('', true) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds(undefined, true) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds(false, true) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds(true, true) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds(null, true) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds([null], true) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds([], true) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds({}, true) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds({hello: 'world'}, true) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds([1, 2, 3], true) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds('hello world', true) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds(new Date('2023-04-99T10:51:32.000Z'), true) ).toBeUndefined();
+
+                expect( parseIsoDateStringWithMilliseconds('2023-04-99T10:51:32.000Z', false) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds('', false) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds(undefined, false) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds(false, false) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds(true, false) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds(null, false) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds([null], false) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds([], false) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds({}, false) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds({hello: 'world'}, false) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds([1, 2, 3], false) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds('hello world', false) ).toBeUndefined();
+                expect( parseIsoDateStringWithMilliseconds(new Date('2023-04-99T10:51:32.000Z'), false) ).toBeUndefined();
+
             });
 
         });
