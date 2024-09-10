@@ -60,6 +60,10 @@ export function isIsoDateStringWithMilliseconds (value: unknown): value is IsoDa
     return d.toISOString() === value;
 }
 
+export function isIsoDateEqualWithoutMilliseconds (a: any, b: any) : boolean {
+    return parseIsoDateStringWithMilliseconds(a, true) === parseIsoDateStringWithMilliseconds(b, true);
+}
+
 export function parseIsoDateStringWithMilliseconds (
     value: any,
     trimFractions ?: boolean
