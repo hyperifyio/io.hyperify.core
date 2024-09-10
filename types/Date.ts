@@ -64,10 +64,16 @@ export function parseIsoDateStringWithMilliseconds (
     value: any,
     trimFractions ?: boolean
 ): IsoDateStringWithMilliseconds | undefined {
-    if ( isIsoDateStringWithMilliseconds( value ) ) return value;
-    const date = parseValidDate( value );
-    if ( !date ) return undefined;
-    const str = date.toISOString();
+
+    let str;
+    if ( isIsoDateStringWithMilliseconds( value ) ) {
+        str = value;
+    } else {
+        const date = parseValidDate( value );
+        if ( !date ) return undefined;
+        str = date.toISOString();
+    }
+
     if ( trimFractions !== true ) {
         return str;
     } else {
@@ -75,6 +81,7 @@ export function parseIsoDateStringWithMilliseconds (
         if ( i < 0 ) return str;
         return str.substring( 0, i ) + trimStart( str.substring( i + 1 ), '0123456789' );
     }
+
 }
 
 export function createIsoDateStringWithMilliseconds (
