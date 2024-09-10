@@ -1,4 +1,4 @@
-// Copyright (c) 2023. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2023-2024. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { isString } from "./types/String";
 import { map } from "./functions/map";
@@ -31,6 +31,30 @@ export class LogUtils {
             return JSON.stringify(value);
         } catch (err) {
             return `${value}`;
+        }
+    }
+
+    /**
+     * Stringifies the value in a way that type is clear.
+     *
+     * @param value
+     */
+    public static stringifyValueClearly (value: any) : string {
+        try {
+            if ( isString(value) ) return `"${value}"`;
+            if ( value === undefined ) return 'undefined';
+            if ( value === null ) return 'null';
+            if ( isBoolean(value) ) return value ? 'true' : 'false';
+            if ( value && isObject(value) ) {
+                if ( value instanceof Error ) return `Error: ${value}`;
+                if ( value instanceof Date ) return `Date: ${value.toISOString()}`;
+                if ( has(value, 'toString') && isFunction(value?.toString) ) {
+                    return `Object: ${value.toString()}`;
+                }
+            }
+            return JSON.stringify(value);
+        } catch (err) {
+            return `Exception: ${value}`;
         }
     }
 
