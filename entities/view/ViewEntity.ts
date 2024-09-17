@@ -111,7 +111,7 @@ export class ViewEntity
             ]);
         }
 
-        console.log(`WOOT: value = `, value);
+        //console.log(`WOOT: value = `, value);
         throw new TypeError(`${this.getEntityType().getEntityName()}.addContent: Invalid argument: ${LogUtils.stringifyValue(value)}`);
 
     }

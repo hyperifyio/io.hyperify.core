@@ -1,5 +1,6 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
+import { CpuShare } from "../types/product/features/CpuShare";
 import { DiskUsageType } from "../types/product/features/DiskUsageType";
 import { EmailOption } from "../types/product/features/EmailOption";
 import { PHPVersion } from "../types/product/features/PHPVersion";
@@ -99,6 +100,10 @@ export function getWebServerTranslation (value: WebServer): string {
 
 export function getPHPSoftwareTranslation (value: PHPVersion): string {
     return `php.${value}`;
+}
+
+export function getCPUShareTranslation (value: CpuShare): string {
+    return `cpuShare.${value}`;
 }
 
 export function getEmailOptionTranslation (value: EmailOption): string {
