@@ -29,6 +29,14 @@ export class FacebookPixel {
         return `https://www.facebook.com/tr?id=${pixelId}&ev=${FacebookPixelEvent.Purchase}&cd[currency]=${currency}&cd[value]=${value.toFixed(2)}`;
     }
 
+    public static getLeadURL (
+        pixelId: string,
+        value: number,
+        currency : Currency = Currency.EUR,
+    ) : string {
+        return `https://www.facebook.com/tr?id=${pixelId}&ev=${FacebookPixelEvent.Lead}&cd[currency]=${currency}&cd[value]=${value.toFixed(2)}`;
+    }
+
     public static getInitiateCheckoutURL (
         pixelId: string,
         value: number,
