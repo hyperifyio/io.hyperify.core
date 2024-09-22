@@ -3,7 +3,7 @@
 import { Currency } from "../types/Currency";
 import { FacebookPixelEvent } from "./types/FacebookPixelEvent";
 
-export class FacebookPixel {
+export class FacebookPixelUtils {
 
     public static getURL (
         pixelId: string,
